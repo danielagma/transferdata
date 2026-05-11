@@ -1,3 +1,1 @@
-Hi Maksim, a quick update. I had to dedicate some time to other tasks, in addition to helping a new QA member who joined the US Bonds team.
-
-I had a lock on my EU Bonds account, but I'll check it tomorrow so I can continue working on the automation task.
+Hi Suguna, Gabriella already introduced herself to the team at the daily stand-up. She now has access to Darwin, Confluence, and Jira, so today she spent time exploring the documentation and the Jira and Darwin support tickets. She also mentioned that she had an AI training session.
