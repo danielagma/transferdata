@@ -1,6 +1,3 @@
+Hi Maksim, a quick update. I had to dedicate some time to other tasks, in addition to helping a new QA member who joined the US Bonds team.
 
-Hi Suguna, Gabriella already has access to Darwin.
-
-She also mentioned that she would speak with Murat to follow up on obtaining the rest of the credentials she needs.
-
-I told her to continue reading the documentation and to start exploring Darwin and Jira.
+I had a lock on my EU Bonds account, but I'll check it tomorrow so I can continue working on the automation task.
