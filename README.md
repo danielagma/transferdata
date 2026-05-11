@@ -1,43 +1,51 @@
-Feature: Dynamic vertical resizing of the Contracts section
+Feature: Vertical display of the Order Book (Escalator View MVP)
   As a Trader
-  I want the contracts table to utilize all available vertical space
-  So that I can view the maximum number of records without needing to scroll internally
+  I want to see the market depth widget stacked vertically
+  So that I can quickly scan price levels and order flow
 
   Background: 
     Given that the user is authenticated in Darwin UAT
-    And navigates to the "Futures Maintenance" screen
-    And opens the "View/Edit Futures Details" window of an instrument with multiple contracts
-    And the application window is not maximized to full screen
+    And navigates to the "Bond Pricer" screen
+    And right-clicks on an instrument that has available market depth
 
-  Scenario: dynamic vertical expansion of the contracts table
-    # Covers AC1: In-line expansion with empty space
-    When the user dynamically increases the height of the application window
-    Then the height of the "Contracts" section proportionally increases to fill the new empty space
-    And the number of visible rows within the table increases without needing to use the internal scroll
+  Scenario: validation of widget access from the context menu
+    # Covers AC3: Inclusion of the option in the menu
+    When the context menu is displayed
+    Then the system shows the "View Escalator" option
+    And the option is spatially located just below "View Order Book"
 
-  Scenario: static preservation of top attributes
-    # Covers AC2: No impact on the top form
-    Given that the user visually records the position and size of the top form fields (e.g., Prefix, Description, Currency)
-    When the user resizes the application window vertically (increasing and decreasing)
-    Then the top form fields maintain their original dimensions, alignment, and spacing
-    But they must not stretch, shrink, or overlap with one another
+  Scenario: validation of the stacked visual structure (Top/Bottom) and column omission
+    # Covers AC1 and AC2: Asks on top, Bids on bottom, no MKT, quantity alignment
+    Given that the user selects the "View Escalator" option
+    When the market depth widget renders on the screen
+    Then the "Asks" section (offers in pink) is positioned in the upper half of the widget
+    And the "Bids" section (bids in blue) is positioned in the lower half
+    And the market columns ("MKT") are excluded from the display in both sections
+    And the Ask quantities (Q) are aligned to the right of the price
+    And the Bid quantities (Q) are aligned to the left of the price
 
-  Scenario: preservation of dynamic horizontal resizing
-    # Covers AC3: Original horizontal behavior remains intact
-    When the user dynamically widens the application window horizontally
-    Then the "Contracts" section expands its width adapting to the new resolution
-    And the internal columns of the table are distributed correctly
-    And the vertical resizing behavior continues to function independently
+  Scenario: preservation of the own order indicator (Own Order)
+    # Covers AC4 (Regression 1): Maintain "Own Order" functionality
+    Given that the user has active own orders in the market for the selected instrument
+    When the user opens the "Escalator View"
+    Then the system displays the visual indicator with the user's initials (e.g., "JC") inside the price cell corresponding to their order
+    But the indicator does not deform the cell alignment nor hide the numerical values
 
-  Scenario Outline: UI protection against extreme height reductions (Edge Case QA)
-    # Prevents the table from disappearing if the monitor is very small
-    When the user reduces the height of the application window to an extreme size (e.g., "<vertical_resolution>px")
-    Then the system protects the legibility of the top form
-    And the "Contracts" section respects a minimum visible height (min-height)
-    But the table never collapses to 0 pixels in height
-    And a general scrollbar appears in the main window to allow navigation
+  Scenario: intentional deactivation of parameter auto-population (Click behavior)
+    # Covers AC4 (Regression 2): Click must not auto-populate
+    Given that the "Escalator View" widget is open and displaying data
+    When the user left-clicks on a price or quantity cell
+    Then the system does not auto-populate the order parameters in the transaction ticket
+    And the application remains stable without showing uncontrolled errors in the interface
+
+  Scenario Outline: tolerance to partial absence of market depth (Edge Case QA)
+    # Shift-Left scenario to prevent UI collapses
+    Given that the selected instrument has market conditions of type "<book_condition>"
+    When the user opens the "Escalator View"
+    Then the widget renders without collapsing the main structure
+    And the dataless section is handled correctly without misaligning the populated section
 
     Examples:
-      | vertical_resolution | qa_justification                      |
-      | 768                 | Standard resolution for older laptops |
-      | 600                 | Forced limit to evaluate CSS behavior |
+      | book_condition      | qa_justification                                          |
+      | Only Asks (No Bids) | Prevents the bottom table from collapsing the visual grid |
+      | Only Bids (No Asks) | Prevents the top table from deforming the layout          |
