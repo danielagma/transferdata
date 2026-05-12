@@ -1,1 +1,1 @@
-Hi Suguna, Gabriella already introduced herself to the team at the daily stand-up. She now has access to Darwin, Confluence, and Jira, so today she spent time exploring the documentation and the Jira and Darwin support tickets. She also mentioned that she had an AI training session.
+
