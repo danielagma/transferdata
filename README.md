@@ -1,67 +1,73 @@
-# AGENTS.md — Master Agent Context (Darwin Automation Framework)
+# DARWIN_AGENT.md — Specialized Agent (Darwin / Playwright / CDP)
 
-## Mission
-Build and maintain E2E tests for Darwin Bonds + TradeWeb with minimal risk, high stability, and clean reviewable diffs.
+## Scope
+Use this agent for Darwin Bonds automation in:
+- `src/pages/darwin/**`
+- `src/tests/functional/bonds/**`
+- Related fixtures/hooks/utils for Darwin flows.
 
-## Core Tech Stack
-- Language: TypeScript 5.3.3
-- Runtime: Node.js (project baseline: 16.19.1)
-- Test framework: Playwright / `@playwright/test` 1.58.2
-- Desktop automation: AutoIt via `node-autoit-koffi`
-- Reporting: Playwright HTML + JUnit + Xray reporter
-- Quality: ESLint + Prettier + Husky hooks
+## Context
+Darwin is an OpenFin desktop app automated through CDP and Playwright. UI flows include pricer, RFQ, blotter, static page and user settings.
 
-## Runtime Model (Critical)
-- Dual app orchestration:
-  - Darwin Bonds desktop app (OpenFin) via CDP/Playwright.
-  - TradeWeb desktop app via AutoIt + image resources.
-- Tests run sequentially (`workers: 1`) because apps are shared single-instance on local machine.
+## Implementation Rules
+1. Apply Page Object Pattern strictly.
+   - Keep locators and UI operations in `src/pages/darwin/**`.
+   - Keep scenario logic in specs.
+2. Reuse existing fixtures/page-object injection (`src/fixtures/**`).
+3. Selector priority:
+   - `getByTestId` > `getByRole` > exact text > scoped CSS fallback.
+4. Scope selectors by row/component to avoid ambiguity.
+5. Prefer stable, auto-retry assertions (`toHave...`) through project assertion wrappers.
+6. Avoid transient assertions on unstable input states after re-render.
+7. Add setup cleanup and teardown for deterministic runs.
+8. Keep changes surgical; do not modify shared components unless required and justified.
 
-## Strict Coding Rules (Repository Policy)
-1. Follow Page Object Pattern.
-   - Empty constructor + `initPage()` for locator initialization.
-2. Use framework fixtures; do not recreate setup manually.
-3. Keep concerns separated:
-   - Page Objects = UI interactions/helpers.
-   - Specs = scenario flow + assertions.
-4. Use `softExpect` from project assertions helper (no bare `expect` in specs unless explicitly required by existing pattern).
-5. Reuse existing helpers before creating new ones.
-6. No duplicated selector logic in tests.
-7. No arbitrary sleeps (`waitForTimeout`) unless justified as last resort.
-8. No dead code, no temporary comments, no unrelated refactors.
-9. Keep diffs small, scoped, and reversible.
-10. Before finishing: lint + format + targeted test execution.
+## Anti-Flake Playbook
+- Wait for real UI state transitions, not fixed delays.
+- Use `scrollIntoViewIfNeeded()` before actions on potentially hidden controls.
+- Use forced clicks only as controlled fallback.
+- Close blocking overlays/popups when needed.
 
-## Stability/Anti-Flake Rules
-- Prefer state-based waits (`toHave...`, visibility, attach/detach) over time-based waits.
-- Scope selectors to stable containers/rows.
-- Verify preconditions before interaction.
-- Clean pre-existing data/state before creating new records.
-- Always perform teardown for event-driven flows.
+## Expected Output Style
+- New feature helper methods in Darwin POM with clear names (`open...`, `set...`, `check...`, `verify...`).
+- Specs organized with `test.step()` and one intent per step.
+- Metadata included (`test_key`, optional `bug`).
+- Minimal, auditable diff.
 
-## File & Folder Placement Map
-- `src/tests/functional/**` → functional test specs.
-- `src/tests/performance/**` → performance specs.
-- `src/pages/darwin/**` → Darwin web/OpenFin Page Objects.
-- `src/pages/trade-web/autoit/**` → TradeWeb AutoIt flows.
-- `src/pages/trade-web/nuts/**` + `resources/**` → image-based desktop automation.
-- `src/fixtures/**` → fixtures and dependency injection.
-- `src/hooks/**` → setup/teardown orchestration.
-- `src/components/**` → reusable UI components.
-- `src/utils/**` → cross-cutting utilities (assertions, data, messaging, state).
-- `src/test-data/**` → static data/payloads/screenshots.
-- `src/env/**` → environment variables and config contracts.
-- `src/reporters/**` → custom reporting integrations.
 
-## Delivery Checklist
-- Test is deterministic and passes repeatedly.
-- Correct placement of new files in framework structure.
-- Reusable logic moved to Page Object/fixtures/utils.
-- Lint/format clean.
-- No unrelated changes.
-- Commit/PR message references ticket and execution evidence.
 
-## Sub-Agent Routing
-- If task targets Darwin web/OpenFin UI flows, use `DARWIN_AGENT.md`.
-- If task targets TradeWeb desktop automation/AutoIt/images, use `TRADEWEB_AGENT.md`.
-- If task spans both apps, split work by domain and integrate only at spec/fixture level.
+# TRADEWEB_AGENT.md — Specialized Agent (TradeWeb / AutoIt / Images)
+
+## Scope
+Use this agent for TradeWeb desktop automation in:
+- `src/pages/trade-web/autoit/**`
+- `src/pages/trade-web/nuts/**`
+- `src/pages/trade-web/nuts/resources/**`
+- Specs that trigger/validate TradeWeb behaviors.
+
+## Context
+TradeWeb is a Windows desktop application automated via AutoIt and image-based interactions. Reliability depends on robust window targeting, control focus, and stable image anchors.
+
+## Implementation Rules
+1. Keep desktop action logic in TradeWeb page modules, not in specs.
+2. Reuse existing AutoIt abstractions (`tw-base-page.ts`, feature modules).
+3. Keep image resources centralized in `nuts/resources` and reference them consistently.
+4. Validate window/app readiness before interaction.
+5. Use deterministic action sequences (activate window → focus control → input/click → verify state).
+6. Add resilience for timing/focus issues with condition-based waits where possible.
+7. Keep cross-app boundaries clear:
+   - TradeWeb actions in TradeWeb pages.
+   - Darwin validations in Darwin pages.
+8. Cleanup/rollback state when flow can pollute subsequent runs.
+
+## Reliability Rules (Desktop-specific)
+- Avoid brittle coordinates when image/control targeting exists.
+- Prefer explicit window activation before every critical action.
+- Reuse known-good image assets; avoid duplicates.
+- Keep fallback logic bounded and documented in method naming.
+
+## Expected Output Style
+- Feature methods with clear intent (`open...`, `send...`, `submit...`, `verify...`).
+- No raw AutoIt/image details in test specs.
+- Specs remain business-oriented and concise.
+- Minimal, reviewable changes aligned to scope.
