@@ -1,73 +1,37 @@
-# DARWIN_AGENT.md — Specialized Agent (Darwin / Playwright / CDP)
+@workspace Read #AGENTS.md, #DARWIN_AGENT.md, and the definitive Playwright guide. I need to automate Jira tickets DWB-2521 / DWB-4180 for the Darwin Bonds application strictly following the framework's architecture, surgical implementation rules, and delivery checklist.
 
-## Scope
-Use this agent for Darwin Bonds automation in:
-- `src/pages/darwin/**`
-- `src/tests/functional/bonds/**`
-- Related fixtures/hooks/utils for Darwin flows.
+User Story & Business Context (DWB-2521 / DWB-4180):
+"As a Trader, I want to see the Net Delta value in Butterfly and Switch Inquiries to determine how to reply to the inquiry and have the Price/Yield spinner area collapsed by default. This feature involves adding a 'Net Delta' label, computing the value based on the direction logic, highlighting the Net Delta label in red if it exceeds a user-defined limit (e.g. 5k, both positive and negative values)."
 
-## Context
-Darwin is an OpenFin desktop app automated through CDP and Playwright. UI flows include pricer, RFQ, blotter, static page and user settings.
+Acceptance Criteria to Validate:
+- AC1: Verify the presence of the "Net Delta" label and correct delta calculation. The UI must display a clearly labeled "Net Delta" value computed based on the direction of each Leg: -Delta for Buy Leg, +Delta for Sell Leg.
+- AC2: Verify user-configurable limit applies in the RFQ Window. Users must be able to configure the limit (e.g. 5.000) under User Settings -> RFQ Layouts tab ("NET DELTA LIMIT" option). If the absolute Net Delta exceeds this limit, it gets highlighted in Red.
+- AC3: Verify accordion default state is collapsed. The pricing section accordion must be collapsed by default when the page loads.
+- AC4: Verify user-initiated accordion expansion. Users must have the ability to manually expand the accordion to input prices per Leg.
 
-## Implementation Rules
-1. Apply Page Object Pattern strictly.
-   - Keep locators and UI operations in `src/pages/darwin/**`.
-   - Keep scenario logic in specs.
-2. Reuse existing fixtures/page-object injection (`src/fixtures/**`).
-3. Selector priority:
-   - `getByTestId` > `getByRole` > exact text > scoped CSS fallback.
-4. Scope selectors by row/component to avoid ambiguity.
-5. Prefer stable, auto-retry assertions (`toHave...`) through project assertion wrappers.
-6. Avoid transient assertions on unstable input states after re-render.
-7. Add setup cleanup and teardown for deterministic runs.
-8. Keep changes surgical; do not modify shared components unless required and justified.
+Strict Implementation Rules (from Framework MDs):
+1. RMQ Injection Mold: Strictly replicate the granular injection pattern from `src/tests/functional/bonds/rfq-flow/rfq-window/break-even-switches-tests.spec.ts`. Use RMQ helpers like `generateRmqBreakEvenSwitchData` and `raiseSwitchRfqFromRabbitMq`. Find and utilize their 3-leg/Butterfly equivalents in the framework factories/utils. Do NOT use TradeWeb/AutoIt flows.
+2. Sizes Placeholders: Pass cleanly marked placeholders (`/* TODO: Insert calculated test sizes here */`) into the payload generator functions for the Buy/Sell legs. I will manually test in Darwin later to inject the exact large sizes needed to ensure the absolute Net Delta exceeds `5.000`.
+3. Deterministic Teardown (CRITICAL): Always perform teardown for event-driven flows. Use the captured RMQ `rfqIdNumber` to cleanly reject the RFQ inside a dedicated `test.step` at the end of the flow or via `test.afterEach` to guarantee the shared single-instance environment remains pristine.
+4. Coding Style & Naming: 
+   - POM classes MUST have empty constructors. Initialize locators strictly inside `initPage()`.
+   - Use high-level POM method names strictly prefixed with `set*`, `expand*`, or `verify*`.
+   - Specs must be organized using explicit `test.step('intention', async () => { ... })` blocks (one intent per step).
+   - Assertions must use `softExpect` wrapping auto-retrying matchers (e.g., `toHaveText`, `toHaveClass`, `toHaveAttribute`).
+   - Include metadata traceability (`test_key: 'DWB-2521'`) per repository conventions.
 
-## Anti-Flake Playbook
-- Wait for real UI state transitions, not fixed delays.
-- Use `scrollIntoViewIfNeeded()` before actions on potentially hidden controls.
-- Use forced clicks only as controlled fallback.
-- Close blocking overlays/popups when needed.
+Exact Verified DOM Mapping (Inject these into POM updates):
+- User Settings POM Updates:
+  - Switch Limit Input: `locator('#bondMultiLegSwitch')`
+  - Butterfly Limit Input: `locator('#bondMultiLegButterfly')`
+  - Methods to generate: `setSwitchNetDeltaLimit(...)`, `setButterflyNetDeltaLimit(...)`.
+- RFQ Window POM Updates:
+  - Net Delta Value Container: `locator('#rfqNetDeltaValue')` (Verify text inside matches AC1 math logic).
+  - Red Highlight (AC2): Assert `#rfqNetDeltaValue span` using `.toHaveClass(/text-color-error/)`.
+  - Pricing Section Accordion Header: `getByRole('button', { name: /pricing section/i })`.
+  - Accordion State (AC3/AC4): Assert attribute `aria-expanded` using `.toHaveAttribute('aria-expanded', 'false')` (collapsed) or `'true'` (expanded).
+  - Methods to generate: `verifyNetDeltaCalculation(...)`, `verifyNetDeltaHighlight(...)`, `verifyPricingSectionCollapsed(...)`, `expandPricingSection(...)`.
 
-## Expected Output Style
-- New feature helper methods in Darwin POM with clear names (`open...`, `set...`, `check...`, `verify...`).
-- Specs organized with `test.step()` and one intent per step.
-- Metadata included (`test_key`, optional `bug`).
-- Minimal, auditable diff.
-
-
-
-# TRADEWEB_AGENT.md — Specialized Agent (TradeWeb / AutoIt / Images)
-
-## Scope
-Use this agent for TradeWeb desktop automation in:
-- `src/pages/trade-web/autoit/**`
-- `src/pages/trade-web/nuts/**`
-- `src/pages/trade-web/nuts/resources/**`
-- Specs that trigger/validate TradeWeb behaviors.
-
-## Context
-TradeWeb is a Windows desktop application automated via AutoIt and image-based interactions. Reliability depends on robust window targeting, control focus, and stable image anchors.
-
-## Implementation Rules
-1. Keep desktop action logic in TradeWeb page modules, not in specs.
-2. Reuse existing AutoIt abstractions (`tw-base-page.ts`, feature modules).
-3. Keep image resources centralized in `nuts/resources` and reference them consistently.
-4. Validate window/app readiness before interaction.
-5. Use deterministic action sequences (activate window → focus control → input/click → verify state).
-6. Add resilience for timing/focus issues with condition-based waits where possible.
-7. Keep cross-app boundaries clear:
-   - TradeWeb actions in TradeWeb pages.
-   - Darwin validations in Darwin pages.
-8. Cleanup/rollback state when flow can pollute subsequent runs.
-
-## Reliability Rules (Desktop-specific)
-- Avoid brittle coordinates when image/control targeting exists.
-- Prefer explicit window activation before every critical action.
-- Reuse known-good image assets; avoid duplicates.
-- Keep fallback logic bounded and documented in method naming.
-
-## Expected Output Style
-- Feature methods with clear intent (`open...`, `send...`, `submit...`, `verify...`).
-- No raw AutoIt/image details in test specs.
-- Specs remain business-oriented and concise.
-- Minimal, reviewable changes aligned to scope.
+Expected Deliverables:
+1. Surgical POM Updates: Provide ONLY the new class properties, `initPage()` additions, and highly readable action/verification methods to be added to the existing User Settings POM and RFQ Window POM files. Output this code first.
+2. Granular Test Spec: Generate the complete `.spec.ts` file inside `src/tests/functional/bonds/rfq-flow/rfq-window/` executing the Switch and Butterfly flows deterministically using the POM updates, RMQ injection, and standard framework fixtures.
