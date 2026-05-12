@@ -1,3 +1,5 @@
+LOCAL_GUIA_DEFINITIVA_TESTS_PLAYWRIGHT_DARWIN.md
+
 # Guía Definitiva para Crear Tests E2E en Darwin (Playwright)
 
 ## 1) Objetivo
