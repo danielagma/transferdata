@@ -1,10 +1,16 @@
+**Overview:**
+The "Trader Order" working quantity badge (e.g., the indicator displaying "30") in the Escalator View does not update in real-time via the data stream. 
 
-Hi Suguna, I had a session with Gabriela.
+**Steps to Reproduce:**
+1. Open the **Escalator View** widget for an instrument.
+2. Place an active working order at a specific price level.
+3. Observe the order book UI.
 
-We focused on the purpose of Darwin and Tradeweb, clarified some terms related to the Bond Pricer window and I showed her how to send an RFQ.
+**Actual Result:**
+The trader's order badge is not displayed automatically. It only updates/renders when manually clicking on the cells or refreshing the component.
 
-Explained the trader mindset, how they work under high pressure making split-second decisions, so she understands the critical importance of what we test.
+**Expected Result:**
+The badge must render, update, and clear dynamically in real-time via WebSocket/stream updates without requiring any manual UI interaction.
 
-Also I mentioned to her the necessary QA mindset, the need to be meticulous with every detail, every unfamiliar term we encounter in the UI and in Jira user stories, and how we should be able to investigate on our own, find solutions, and exhaust resources.
-
-She mentioned that today she spent time reading documentation and reviewing user stories, focusing on those closest to being tested.
+**Note:**
+Artur Moreira Dobler mentioned on Slack that he already found the solution and the fix is ready to be merged.
