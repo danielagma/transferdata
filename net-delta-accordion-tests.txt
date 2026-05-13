@@ -1,0 +1,179 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { testBonds } from '@bondsData/test-bonds'
+import { test } from '@fixtures'
+import { softExpect } from '@helpers/assertions'
+import { raiseSwitchRfqFromRabbitMq, raiseButterflyRfqFromRabbitMq, rejectRmqRfq } from '@rabbitmq'
+import { generateRmqBreakEvenSwitchData, generateRmqButterflyData } from 'src/factories/rabbitmq.factory'
+
+test('Should verify Net Delta label, calculation, and accordion default state on Switch RFQ @critical @rfq-flow', async ({
+    darwinLauncher,
+    request,
+    darwinRfq,
+    darwinSettings,
+}, testInfo) => {
+    testInfo.annotations.push({ type: 'test_key', description: 'DWB-2521' })
+    let rfqIdNumber: number
+
+    await test.step('I configure a high Net Delta limit in User Settings', async () => {
+        await darwinSettings.openNetDeltaLimitSettings()
+        await darwinSettings.netDeltaLimitPage.setSwitchNetDeltaLimit('10')
+        await darwinSettings.saveChanges()
+    })
+
+    await test.step('I raise a Switch RFQ via RMQ', async () => {
+        const rfqData = generateRmqBreakEvenSwitchData(
+            'Buy',
+            'Sell',
+            2000000,
+            1000000,
+        )
+        rfqIdNumber = rfqData.rfqIdNumber
+        await raiseSwitchRfqFromRabbitMq(request, rfqData)
+    })
+
+    await test.step('I verify the pricing section accordion is collapsed by default', async () => {
+        await darwinRfq.verifyPricingSectionCollapsed()
+    })
+
+    await test.step('I expand the pricing section accordion manually', async () => {
+        await darwinRfq.expandPricingSection()
+        await darwinRfq.verifyPricingSectionExpanded()
+    })
+
+    await test.step('I verify Net Delta label is present with a computed value', async () => {
+        await softExpect(darwinRfq.netDeltaValueContainer).toBeVisible()
+        const netDelta = await darwinRfq.netDeltaValueContainer.textContent()
+        softExpect(netDelta).toBeTruthy()
+    })
+
+    await test.step('I verify Net Delta is NOT highlighted when within limit', async () => {
+        await darwinRfq.verifyNetDeltaNoHighlight()
+    })
+
+    await test.step('I reject the RFQ to clean up', async () => {
+        await rejectRmqRfq(request, rfqIdNumber)
+        await darwinRfq.waitForRfqStackToBeEmpty()
+    })
+})
+
+test('Should verify Net Delta red highlight when limit exceeded on Switch RFQ @critical @rfq-flow', async ({
+    darwinLauncher,
+    request,
+    darwinRfq,
+    darwinSettings,
+}, testInfo) => {
+    testInfo.annotations.push({ type: 'test_key', description: 'DWB-4180' })
+    let rfqIdNumber: number
+
+    await test.step('I configure a low Net Delta limit in User Settings', async () => {
+        await darwinSettings.openNetDeltaLimitSettings()
+        await darwinSettings.netDeltaLimitPage.setSwitchNetDeltaLimit('5')
+        await darwinSettings.saveChanges()
+    })
+
+    await test.step('I raise a Switch RFQ with large sizes to exceed the limit', async () => {
+        const rfqData = generateRmqBreakEvenSwitchData(
+            'Buy',
+            'Sell',
+            2000000,
+            1000000,
+        )
+        rfqIdNumber = rfqData.rfqIdNumber
+        await raiseSwitchRfqFromRabbitMq(request, rfqData)
+    })
+
+    await test.step('I verify Net Delta is highlighted in red', async () => {
+        await darwinRfq.verifyNetDeltaHighlight()
+    })
+
+    await test.step('I reject the RFQ to clean up', async () => {
+        await rejectRmqRfq(request, rfqIdNumber)
+        await darwinRfq.waitForRfqStackToBeEmpty()
+    })
+})
+
+test('Should verify Net Delta and accordion on Butterfly RFQ @critical @rfq-flow', async ({
+    darwinLauncher,
+    request,
+    darwinRfq,
+}, testInfo) => {
+    testInfo.annotations.push({ type: 'test_key', description: 'DWB-2521' })
+    let rfqIdNumber: number
+
+    await test.step('I raise a Butterfly RFQ via RMQ', async () => {
+        const rfqData = generateRmqButterflyData(
+            1,
+            1,
+            1,
+            'Buy',
+            'Sell',
+            'Buy',
+            /* TODO: Insert calculated test sizes here */ 5000,
+            /* TODO: Insert calculated test sizes here */ 5000,
+            /* TODO: Insert calculated test sizes here */ 5000,
+        )
+        rfqIdNumber = rfqData.rfqIdNumber
+        await raiseButterflyRfqFromRabbitMq(request, rfqData)
+    })
+
+    await test.step('I verify the pricing section accordion is collapsed by default', async () => {
+        await darwinRfq.verifyPricingSectionCollapsed()
+    })
+
+    await test.step('I expand the pricing section accordion', async () => {
+        await darwinRfq.expandPricingSection()
+        await darwinRfq.verifyPricingSectionExpanded()
+    })
+
+    await test.step('I verify Net Delta label is present with a computed value', async () => {
+        await softExpect(darwinRfq.netDeltaValueContainer).toBeVisible()
+        const netDelta = await darwinRfq.netDeltaValueContainer.textContent()
+        softExpect(netDelta).toBeTruthy()
+    })
+
+    await test.step('I reject the RFQ to clean up', async () => {
+        await rejectRmqRfq(request, rfqIdNumber)
+        await darwinRfq.waitForRfqStackToBeEmpty()
+    })
+})
+
+test('Should verify Net Delta red highlight when limit exceeded on Butterfly RFQ @critical @rfq-flow', async ({
+    darwinLauncher,
+    request,
+    darwinRfq,
+    darwinSettings,
+}, testInfo) => {
+    testInfo.annotations.push({ type: 'test_key', description: 'DWB-4180' })
+    let rfqIdNumber: number
+
+    await test.step('I configure a low Butterfly Net Delta limit in User Settings', async () => {
+        await darwinSettings.openNetDeltaLimitSettings()
+        await darwinSettings.netDeltaLimitPage.setButterflyNetDeltaLimit('5000')
+        await darwinSettings.saveChanges()
+    })
+
+    await test.step('I raise a Butterfly RFQ with large sizes to exceed the limit', async () => {
+        const rfqData = generateRmqButterflyData(
+            1,
+            1,
+            1,
+            'Buy',
+            'Sell',
+            'Buy',
+            /* TODO: Insert calculated test sizes here */ 50000,
+            /* TODO: Insert calculated test sizes here */ 1000,
+            /* TODO: Insert calculated test sizes here */ 50000,
+        )
+        rfqIdNumber = rfqData.rfqIdNumber
+        await raiseButterflyRfqFromRabbitMq(request, rfqData)
+    })
+
+    await test.step('I verify Net Delta is highlighted in red', async () => {
+        await darwinRfq.verifyNetDeltaHighlight()
+    })
+
+    await test.step('I reject the RFQ to clean up', async () => {
+        await rejectRmqRfq(request, rfqIdNumber)
+        await darwinRfq.waitForRfqStackToBeEmpty()
+    })
+})
