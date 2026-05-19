@@ -22,12 +22,12 @@ Feature: Dynamic vertical resizing of the Contracts section
     Then the top form fields maintain their original dimensions, alignment, and spacing
     But they must not stretch, shrink, or overlap with one another
 
-  Scenario: preservation of dynamic horizontal resizing
+  Scenario: Preservation of the existing horizontal layout behavior (Non-regression)
     # Covers AC3: Original horizontal behavior remains intact
-    When the user dynamically widens the application window horizontally
-    Then the "Contracts" section expands its width adapting to the new resolution
-    And the internal columns of the table are distributed correctly
-    And the vertical resizing behavior continues to function independently
+    When the user dynamically resizes the application window horizontally
+    Then the horizontal layout and width behavior of the "Contracts" section remains exactly as its baseline (as-is)
+    And no new horizontal scrolling issues or UI distortions are introduced by the vertical enhancements
+    And resizing the window horizontally and vertically at the same time does not cause UI conflicts
 
   Scenario Outline: UI protection against extreme height reductions (Edge Case QA)
     # Prevents the table from disappearing if the monitor is very small
