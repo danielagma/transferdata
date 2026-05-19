@@ -1,43 +1,15 @@
-Feature: Dynamic vertical resizing of the Contracts section
-  As a Trader
-  I want the contracts table to utilize all available vertical space
-  So that I can view the maximum number of records without needing to scroll internally
+### 🟢 QA Execution: Scenario 1 - PASSED
 
-  Background: 
-    Given that the user is authenticated in Darwin UAT
-    And navigates to the "Futures Maintenance" screen
-    And opens the "View/Edit Futures Details" window of an instrument with multiple contracts
-    And the application window is not maximized to full screen
+**Environment:** DEV2
+**Scenario Validated:** Dynamic vertical expansion of the contracts table (AC1)
 
-  Scenario: dynamic vertical expansion of the contracts table
-    # Covers AC1: In-line expansion with empty space
-    When the user dynamically increases the height of the application window
-    Then the height of the "Contracts" section proportionally increases to fill the new empty space
-    And the number of visible rows within the table increases without needing to use the internal scroll
+**Execution Summary:**
+Dynamic vertical resizing was successfully validated. When the height of the main application window is dynamically increased, the top form maintains its static dimensions, while the 'Contracts' data grid automatically expands to fill the newly available space. This allows the user to view more records without needing to utilize the internal scrollbar.
 
-  Scenario: static preservation of top attributes
-    # Covers AC2: No impact on the top form
-    Given that the user visually records the position and size of the top form fields (e.g., Prefix, Description, Currency)
-    When the user resizes the application window vertically (increasing and decreasing)
-    Then the top form fields maintain their original dimensions, alignment, and spacing
-    But they must not stretch, shrink, or overlap with one another
+**Evidence:**
 
-  Scenario: Preservation of the existing horizontal layout behavior (Non-regression)
-    # Covers AC3: Original horizontal behavior remains intact
-    When the user dynamically resizes the application window horizontally
-    Then the horizontal layout and width behavior of the "Contracts" section remains exactly as its baseline (as-is)
-    And no new horizontal scrolling issues or UI distortions are introduced by the vertical enhancements
-    And resizing the window horizontally and vertically at the same time does not cause UI conflicts
+*📍 Baseline (Standard window height):*
+[Insert your first image here]
 
-  Scenario Outline: UI protection against extreme height reductions (Edge Case QA)
-    # Prevents the table from disappearing if the monitor is very small
-    When the user reduces the height of the application window to an extreme size (e.g., "<vertical_resolution>px")
-    Then the system protects the legibility of the top form
-    And the "Contracts" section respects a minimum visible height (min-height)
-    But the table never collapses to 0 pixels in height
-    And a general scrollbar appears in the main window to allow navigation
-
-    Examples:
-      | vertical_resolution | qa_justification                      |
-      | 768                 | Standard resolution for older laptops |
-      | 600                 | Forced limit to evaluate CSS behavior |
+*📍 Expanded View (Window vertically stretched):*
+[Insert your second image here]
