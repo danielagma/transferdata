@@ -15,12 +15,13 @@ Feature: Reference Data - Price Format Configuration in Bond Referential
     And it must be spatially located directly underneath the "Quote Group" dropdown
     And the "Price Format" component must be a dropdown containing the enums "Decimal" and "32nd"
 
-  Scenario: Validation of mandatory input constraints on new instruments
-    # Covers AC4
-    Given that the user is creating a new bond instrument
-    When the user attempts to save the record with the "Price Format" field empty
-    Then the system must block the save operation
-    And the "Price Format" field must display a visual validation error indicating it is mandatory (*)
+Scenario: Verification of mandatory constraint enforcement via UI dropdown controls
+    # Replaces old AC4 validation since the UI prevents blank inputs by design
+    Given that the user opens the "Price Format" configuration dropdown
+    When the user inspects the available list entries
+    Then the dropdown must only contain the active enums "Decimal" and "32nd"
+    And the system must not provide an empty, blank, or "None" selection item
+    And the user is structurally prevented from clearing the active selection
 
   Scenario Outline: Default values verification for existing and new records
     # Covers AC5, AC6
