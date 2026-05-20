@@ -8,12 +8,19 @@ Feature: Reference Data - Price Format Configuration in Bond Referential
     And navigates to the "Static Data" window
     And opens the "Bond Referential" screen under View/Edit mode
 
-  Scenario: Verification of Price Format field positioning and elements
-    # Covers AC1, AC2, AC3
-    When the user inspects the "Classifications" section of a selected bond
+  Scenario Outline: Validation of Price Format field properties, location, and defaults
+    # Covers AC1, AC2, AC3, AC5, and AC6 in a single optimized execution flow
+    Given that the user loads an instrument record categorized as "<instrument_lifecycle>"
+    When the user inspects the "Classifications" section of the form
     Then the "Price Format" field must be visible
     And it must be spatially located directly underneath the "Quote Group" dropdown
     And the "Price Format" component must be a dropdown containing the enums "Decimal" and "32nd"
+    And the active selection must display "<default_value>" by default
+
+    Examples:
+      | instrument_lifecycle | default_value | qa_justification                                  |
+      | Existing Legacy Bond | Decimal       | Verifies DB migration scripts set correct default |
+      | Newly Created Bond   | Decimal       | Verifies UI initialization rule sets correct enum |
 
 Scenario: Verification of mandatory constraint enforcement via UI dropdown controls
     # Replaces old AC4 validation since the UI prevents blank inputs by design
@@ -23,14 +30,6 @@ Scenario: Verification of mandatory constraint enforcement via UI dropdown contr
     And the system must not provide an empty, blank, or "None" selection item
     And the user is structurally prevented from clearing the active selection
 
-  Scenario Outline: Default values verification for existing and new records
-    Given that the user loads an instrument record categorized as "<instrument_lifecycle>"
-    Then the "Price Format" dropdown must display "<default_value>" by default
-
-    Examples:
-      | instrument_lifecycle | default_value |
-      | Existing Bond        | Decimal       |
-      | Newly Created Bond   | Decimal       |
 
   Scenario: End-to-End API payload mapping confirmation
     # Shift-Left QA covering integration from Dev Evidence logs
