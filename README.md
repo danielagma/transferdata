@@ -1,6 +1,6 @@
-**🟢 SCENARIO 2: Validation of the stacked visual structure and column omission (AC1 & AC2) - PASSED**
+**🟢 SCENARIO 1: Validation of widget access from the context menu (AC3) - PASSED**
 * **Env:** DEV2
-* **Result:** The market depth widget successfully renders in a vertical 'Escalator' format. Asks (pink) are stacked in the upper half with quantities right-aligned, and Bids (blue) are in the lower half with quantities left-aligned. The "MKT" columns have been correctly omitted.
+* **Result:** The "View Escalator..." option is successfully displayed in the instrument's right-click context menu within the Bond Pricer. It is correctly positioned immediately below "View Order Book...".
 
-*Escalator View Rendering:*
+*Context Menu View:*
 [Inserta la imagen aquí]
