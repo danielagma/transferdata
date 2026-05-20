@@ -4,9 +4,9 @@ Feature: Reference Data - Price Format Configuration in Bond Referential
   So that instrument prices display according to market convention (Decimal or 32nd)
 
   Background:
-    Given that the user is authenticated in Darwin UAT
+    Given that the user is authenticated in Darwin
     And navigates to the "Static Data" window
-    And opens the "Bond Referential" screen under View/Edit mode
+    And opens the "Bond Referential" for an specific instrument
 
   Scenario Outline: Validation of Price Format field properties, location, and defaults
     # Covers AC1, AC2, AC3, AC5, and AC6 in a single optimized execution flow
