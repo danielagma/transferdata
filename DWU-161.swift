@@ -1,15 +1,6 @@
-**🟢 SCENARIO 1: Dynamic vertical expansion (AC1) - PASSED**
+**🟢 SCENARIO 3: Preservation of horizontal layout behavior (AC3) - PASSED**
 * **Env:** DEV2
-* **Result:** The 'Contracts' grid successfully expands proportionally, increasing the number of visible rows without requiring internal scroll. 
+* **Result:** The original horizontal resizing behavior remains exactly as-is. When the window is resized horizontally, the horizontal scrollbar correctly appears to allow navigation of the 'Contracts' columns without introducing UI conflicts with the new vertical logic.
 
-*Baseline vs. Expanded:*
-[Inserta la imagen aquí]
-
----
-
-**🟢 SCENARIO 2: Static preservation of top attributes (AC2) - PASSED**
-* **Env:** DEV2
-* **Result:** Top form fields maintained their original dimensions, alignment, and spacing without stretching or overlapping during vertical resize.
-
-*Baseline vs. Resized:*
+*Baseline vs. Horizontally Resized:*
 [Inserta la imagen aquí]
