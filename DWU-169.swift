@@ -24,14 +24,13 @@ Scenario: Verification of mandatory constraint enforcement via UI dropdown contr
     And the user is structurally prevented from clearing the active selection
 
   Scenario Outline: Default values verification for existing and new records
-    # Covers AC5, AC6
     Given that the user loads an instrument record categorized as "<instrument_lifecycle>"
     Then the "Price Format" dropdown must display "<default_value>" by default
 
     Examples:
-      | instrument_lifecycle | default_value | qa_justification                                  |
-      | Existing Legacy Bond | Decimal       | Verifies DB migration scripts set correct default |
-      | Newly Created Bond   | Decimal       | Verifies UI initialization rule sets correct enum |
+      | instrument_lifecycle | default_value |
+      | Existing Bond        | Decimal       |
+      | Newly Created Bond   | Decimal       |
 
   Scenario: End-to-End API payload mapping confirmation
     # Shift-Left QA covering integration from Dev Evidence logs
