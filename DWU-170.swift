@@ -4,7 +4,7 @@ Feature: Decimal precision configuration for Bond Referential
   So that I can support the 1/32 price format in the Bond Pricer
 
   Background: 
-    Given that the user is authenticated in the UAT environment
+    Given that the user is authenticated in Darwin
     And navigates to the "Bond Referential" screen
     And opens the "View/Edit" configuration of an active bond
     And selects the "View Defaults" tab
