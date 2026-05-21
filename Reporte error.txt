@@ -1,17 +1,22 @@
-### 🔴 BUG: 400 Bad Request / Deserialization Error when saving Bond Reference Data as 32nd
+QA Testing: PASSED WITH UI DEFECT
+Environment: DEV2
 
-**Environment:** DEV2
-**Component:** Backend (Ref Data CAPI)
+ISIN Used: ES0000011868 (SPGB 6.000 01/29)
 
-**Description:**
-When attempting to save a bond configuration with the "32nd" Pricing Format, the CAPI backend rejects the execution returning a 400 Bad Request due to a schema validation/conversion error.
+All 5 precision fields (Driver, Bid Offer Spread, Price, Yield, and Relative Value Measures) can be successfully adjusted to the new maximum limit of 8 decimal places.
 
-**Root Cause (From DevTools Network Analysis):**
-1. **PricingFormat Enum Mismatch:** The CAPI backend fails to convert the incoming string value `"ThirtySecond"` into the internal type `Santander.Darwin.Bonds.ReferenceData.Contracts.Bonds.PricingFormat`.
-2. **Missing Property:** The backend validation demands a `"contract"` parameter which is causing a secondary validation failure.
+(Here goes your first image: image_dd6c6d.png)
 
-**Payload sent by FE:**
-`"pricingFormat": "ThirtySecond"`
+The system successfully processes the maximum configuration, showing the green 'The bond was updated successfully' toast notification upon saving.
 
-**API Error Response:**
-"Error converting value \"ThirtySecond\" to type 'Santander.Darwin.Bonds.ReferenceData.Contracts.Bonds.PricingFormat'. Path 'pricingFormat', line 1, position 86."
+(Here goes your second image: image_dd6c8c.png)
+
+Developer Tools network inspection confirms a successful backend synchronization (HTTP 200 OK), with the JSON response payload correctly storing the value of 8 for all precision fields.
+
+(Here goes your third image: image_dd6cc6.png)
+
+UI Defect Identified: Entering out-of-bounds numbers or decimal values (e.g., 9.5) correctly triggers the error block. However, the label text says "Must be smaller than 8", which is a logical bug since 8 is a completely valid and allowed input. The message string should be corrected to "Must be smaller than 9" or "Must be smaller than or equal to 8".
+
+(Here goes your fourth/fifth image: image_dd6ceb.png / image_ddbe69.png)
+
+Boundary conditions are enforced: spin-box inputs successfully block and reject the insertion of negative numbers, maintaining 0 as the absolute floor limit.
