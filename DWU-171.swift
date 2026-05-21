@@ -4,7 +4,7 @@ Feature: Display of prices in 32nd format in the Bond Pricer
   So that I can view fractions in 32nd format according to market convention
 
   Background: 
-    Given that the user is authenticated in Darwin UAT
+    Given that the user is authenticated in Darwin
     And navigates to the "Bond Pricer" screen
 
   Scenario: preservation of decimal format for non-configured bonds
