@@ -31,12 +31,12 @@ Scenario: dynamic synchronization and preservation of the own order indicator (O
   Then the Escalator dynamically displays the visual indicator with the trader's volume or initials (e.g., "10" or "GAC") inside the corresponding price cell
   But the indicator does not deform the cell alignment nor hide the numerical values
 
-  Scenario: intentional deactivation of parameter auto-population (Click behavior)
-    # Covers AC4 (Regression 2): Click must not auto-populate
-    Given that the "Escalator View" widget is open and displaying data
-    When the user left-clicks on a price or quantity cell
-    Then the system does not auto-populate the order parameters in the transaction ticket
-    And the application remains stable without showing uncontrolled errors in the interface
+Scenario: prevention of legacy order parameters auto-population from the Escalator view
+  # Covers AC4 (Regression 2): Insulate Escalator clicks from legacy order inputs
+  Given that the user has both the "Escalator View" and legacy "Market Depth" widgets open
+  When the user clicks on any price or quantity cell within the Escalator grid
+  Then the system must not auto-populate the legacy ticket input fields (Price, Show Qty, Total Qty)
+  And these legacy fields must maintain their original state or remain empty
 
   Scenario Outline: tolerance to partial absence of market depth (Edge Case QA)
     # Shift-Left scenario to prevent UI collapses
