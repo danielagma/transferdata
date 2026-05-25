@@ -1,22 +1,6 @@
-QA Testing: PASSED WITH UI DEFECT
-Environment: DEV2
+Regression 1 (Own Order Sychronization) - PASSED: Active "Own Orders" are successfully mapped and visually aligned in the vertical ladder.
 
-ISIN Used: ES0000011868 (SPGB 6.000 01/29)
+A pink badge with 10 at 92.510 and GAC (Trader initials) at 92.39 correctly render on the left side of the price cells in the Ask zone.
 
-All 5 precision fields (Driver, Bid Offer Spread, Price, Yield, and Relative Value Measures) can be successfully adjusted to the new maximum limit of 8 decimal places.
-
-(Here goes your first image: image_dd6c6d.png)
-
-The system successfully processes the maximum configuration, showing the green 'The bond was updated successfully' toast notification upon saving.
-
-(Here goes your second image: image_dd6c8c.png)
-
-Developer Tools network inspection confirms a successful backend synchronization (HTTP 200 OK), with the JSON response payload correctly storing the value of 8 for all precision fields.
-
-(Here goes your third image: image_dd6cc6.png)
-
-UI Defect Identified: Entering out-of-bounds numbers or decimal values (e.g., 9.5) correctly triggers the error block. However, the label text says "Must be smaller than 8", which is a logical bug since 8 is a completely valid and allowed input. The message string should be corrected to "Must be smaller than 9" or "Must be smaller than or equal to 8".
-
-(Here goes your fourth/fifth image: image_dd6ceb.png / image_ddbe69.png)
-
-Boundary conditions are enforced: spin-box inputs successfully block and reject the insertion of negative numbers, maintaining 0 as the absolute floor limit.
+A blue badge with 30 at 92.26 correctly renders on the right side of the price cell in the Bid zone.
+All indicators successfully mirror their horizontal counterpart in the Market Depth widget without deforming the vertical price grid layout.
