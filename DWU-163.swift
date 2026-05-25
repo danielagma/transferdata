@@ -24,12 +24,12 @@ Feature: Vertical display of the Order Book (Escalator View MVP)
     And the Ask quantities (Q) are aligned to the right of the price
     And the Bid quantities (Q) are aligned to the left of the price
 
-  Scenario: preservation of the own order indicator (Own Order)
-    # Covers AC4 (Regression 1): Maintain "Own Order" functionality
-    Given that the user has active own orders in the market for the selected instrument
-    When the user opens the "Escalator View"
-    Then the system displays the visual indicator with the user's initials (e.g., "JC") inside the price cell corresponding to their order
-    But the indicator does not deform the cell alignment nor hide the numerical values
+Scenario: dynamic synchronization and preservation of the own order indicator (Own Order)
+  # Covers AC4 (Regression 1): Maintain "Own Order" functionality dynamically
+  Given that the user has the "Escalator View" widget open for the selected instrument
+  When an own order is actively placed or updated in the market for this instrument
+  Then the Escalator dynamically displays the visual indicator with the trader's volume or initials (e.g., "10" or "GAC") inside the corresponding price cell
+  But the indicator does not deform the cell alignment nor hide the numerical values
 
   Scenario: intentional deactivation of parameter auto-population (Click behavior)
     # Covers AC4 (Regression 2): Click must not auto-populate
