@@ -1,6 +1,1 @@
-Regression 1 (Own Order Sychronization) - PASSED: Active "Own Orders" are successfully mapped and visually aligned in the vertical ladder.
-
-A pink badge with 10 at 92.510 and GAC (Trader initials) at 92.39 correctly render on the left side of the price cells in the Ask zone.
-
-A blue badge with 30 at 92.26 correctly renders on the right side of the price cell in the Bid zone.
-All indicators successfully mirror their horizontal counterpart in the Market Depth widget without deforming the vertical price grid layout.
+Interacting with any price or quantity step on the vertical Escalator grid does not trigger any auto-population events in the legacy order panel. Click events are successfully isolated.
