@@ -1,1 +1,10 @@
-Interacting with any price or quantity step on the vertical Escalator grid does not trigger any auto-population events in the legacy order panel. Click events are successfully isolated.
+**🟢 SCENARIO 1: Successful Price Format update to 32nd (AC1, AC2, AC4) - PASSED**
+* **Env:** DEV2
+* **ISIN Tested:** PTOTE40E0008
+* **Result:** The "Price Format" was successfully updated to "32nd" via the UI. The CAPI backend correctly processed the POST request (HTTP 200 OK) and the payload updated the `pricingFormat` property to `"ThirtySeconds"`. 
+
+*UI Success Confirmation:*
+[Inserta la imagen del mensaje verde de success aquí]
+
+*Backend 200 OK Confirmation:*
+[Inserta la imagen de las DevTools con la flecha azul aquí]
