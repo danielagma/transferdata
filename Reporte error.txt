@@ -1,10 +1,16 @@
-**🟢 SCENARIO 1: Successful Price Format update to 32nd (AC1, AC2, AC4) - PASSED**
-* **Env:** DEV2
-* **ISIN Tested:** PTOTE40E0008
-* **Result:** The "Price Format" was successfully updated to "32nd" via the UI. The CAPI backend correctly processed the POST request (HTTP 200 OK) and the payload updated the `pricingFormat` property to `"ThirtySeconds"`. 
+### 🔴 SCENARIO 2: Price Format update failure on specific ISINs (Bug/Data Issue) - FAILED
 
-*UI Success Confirmation:*
-[Inserta la imagen del mensaje verde de success aquí]
+**Environment:** DEV2
+**ISIN Tested:** PTOTE3OE0025 (and others)
+**Result:** While the update works for some instruments (e.g., PTOTE40E0008), the exact same "32nd" format update fails critically for other valid ISINs like PTOTE3OE0025. 
 
-*Backend 200 OK Confirmation:*
-[Inserta la imagen de las DevTools con la flecha azul aquí]
+**Technical Observation:**
+The CAPI backend rejects the POST request returning an unhandled **500 Internal Server Error**. The Response body drops a plain text message: `Bond Update failed for ISIN PTOTE3OE0025.` instead of a valid JSON. This strongly indicates a backend/database data integrity issue or unhandled exception mapping the Enum for certain bonds in DEV2.
+
+*UI Error Confirmation:*
+[Inserta la imagen de la UI con el banner rojo aquí]
+
+*Backend 500 Error Confirmation:*
+[Inserta la imagen de las DevTools con el Response text aquí]
+
+**QA Status:** Marking execution as **FAILED** pending backend investigation of the CAPI logs for these specific failing ISINs.
