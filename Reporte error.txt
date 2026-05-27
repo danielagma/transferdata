@@ -1,16 +1,17 @@
-### 🔴 SCENARIO 2: Price Format update failure on specific ISINs (Bug/Data Issue) - FAILED
+Scenario 1: Successful submission of a passive Buy order - FAILED ❌
 
-**Environment:** DEV2
-**ISIN Tested:** PTOTE3OE0025 (and others)
-**Result:** While the update works for some instruments (e.g., PTOTE40E0008), the exact same "32nd" format update fails critically for other valid ISINs like PTOTE3OE0025. 
+Validated the submission of a passive Buy order by clicking the left column (Bid zone). The system successfully submits the LMT order without crossing the spread, triggering the green confirmation banner and displaying the own order indicator. HOWEVER, the UI mathematical calculation for the updated Bid quantity is incorrect. The grid adds double the selected volume to the initial quantity Initial Qty + (Selected Qty * 2) instead of the exact selected amount. This violates AC3 and corrupts the visual depth integrity (AC6).
 
-**Technical Observation:**
-The CAPI backend rejects the POST request returning an unhandled **500 Internal Server Error**. The Response body drops a plain text message: `Bond Update failed for ISIN PTOTE3OE0025.` instead of a valid JSON. This strongly indicates a backend/database data integrity issue or unhandled exception mapping the Enum for certain bonds in DEV2.
+(Here goes your image: buy_math_bug_screenshot.png)
 
-*UI Error Confirmation:*
-[Inserta la imagen de la UI con el banner rojo aquí]
+Scenario 2: Successful submission of a passive Sell order - FAILED ❌
 
-*Backend 500 Error Confirmation:*
-[Inserta la imagen de las DevTools con el Response text aquí]
+Validated the submission of a passive Sell order by clicking the right column (Ask zone) at the 100.055 price level (Initial Qty: 14) with a selected quantity of 10. The system submitted the order, displayed the green banner ("EBM SELL 10MM @ 100.055 CONFIRMED"), and rendered the own order indicator [10]. HOWEVER, the updated Ask quantity displayed 34 instead of the expected 24. The system incorrectly added (10 * 2) + 14, reflecting a critical calculation bug on the grid refresh.
 
-**QA Status:** Marking execution as **FAILED** pending backend investigation of the CAPI logs for these specific failing ISINs.
+(Here goes your image: image_6942c2.png)
+
+Scenario 3: Block passive order submission when VWAP is active - PASSED ✅
+
+Validated that enabling the VWAP mode successfully acts as a kill switch for passive execution. Clicking on any column within the Escalator grid while VWAP is ON does not trigger any order submission, no confirmation banners are displayed, and the market depth remains completely unchanged. This successfully meets AC5.
+
+(Here goes your image: vwap_active_block_screenshot.png)
