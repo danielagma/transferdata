@@ -1,0 +1,40 @@
+Structured Feedback for Code Review
+Here are the key takeaways from your Gherkin draft. You captured the general idea of what needs to be tested, but we need to refine the syntax and logical organization to meet BDD (Behavior-Driven Development) standards.
+
+1. The Golden Rule: One Feature per User Story
+
+Observation: You created four distinct Feature blocks in your document.
+
+Correction: The .feature file represents the complete User Story. There should be only one Feature at the very beginning of the file. What you labeled as "Features" (e.g., Selection of quantity reflect on the other size) are actually Scenarios (test cases) that belong inside that single story.
+
+2. The True Purpose of the Background
+
+Observation: You are using the Background to describe the previous state of the app ("the application window has the quantity bar horizontally") and to write assertions/expected results ("And the quantity bar respond to the click changing color").
+
+Correction: The Background is strictly used to group preconditions (Given steps) that repeat across all scenarios (like logging in and navigating to the right screen). It should never be used to validate results or explain how the app used to work. It simply sets the stage for the current scenarios.
+
+3. BDD Logical Syntax (Given, When, Then)
+
+Observation: In several scenarios, you end the block with an And without ever using a Then first (e.g., When the user select any value button -> And the order change size).
+
+Correction: You must always respect the causal flow of BDD:
+
+Given: The initial state or context (e.g., The widget is open).
+
+When: The trigger or user action (e.g., The user clicks the "25" button).
+
+Then: The expected result or validation (e.g., Then the button is highlighted).
+
+And: Used to chain multiple Givens, Whens, or Thens together.
+
+4. Scenario Consolidation (Efficiency)
+
+Observation: You separated the order size change (AC3) and the button color change (AC4) into two completely different scenarios.
+
+Correction: Both outcomes are a direct result of the exact same action (clicking the quantity button). In Gherkin, we aim to test complete user flows. Since a single click triggers both validations, they should be grouped together using Then and And within the same scenario. This keeps our test suite DRY (Don't Repeat Yourself) and efficient.
+
+5. Grammar and Syntax Polish
+
+Observation: There are a few typos (like "teh" instead of "the") and missing third-person verb conjugations ("the user select" instead of "the user selects"; "the widget show" instead of "the widget shows").
+
+Correction: Gherkin files act as "living documentation" and are often parsed by automation frameworks into official reports. It is crucial to maintain clean, polished, and professional technical English at all times.
