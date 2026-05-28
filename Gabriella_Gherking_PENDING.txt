@@ -1,0 +1,55 @@
+
+
+Feature: Display of a vertical quantity selection bar
+  As a Trader
+  I want the quantity selection bar in the D2D Market Depth “Escalator” widget to be displayed vertically with predefined fixed quantities, so that I can quickly select commonly used sizes during fast market conditions.
+  Background:
+    Given that the user is authenticated in Darwin
+    And navigates to the "Order Management" screen
+    And opens the "Widgets" dropdown selecting "Escalator"
+    And the application window has the quantity bar horizontally
+  Scenario: Vertical quantity selection bar in the Escalator widget
+    When the user select the "Escalator" option 
+    And the widget show the quantity bar Vertically
+
+
+Feature: Display of a vertical quantity selection bar with fixed and configurable values 
+  As a Trader
+  I want the quantity bar contains fixed, configurable values (10, 25, 50, 75, 100)
+  Background:
+    Given that the user is authenticated in Darwin
+    And navigates to the "Order Management" screen
+    And opens the "Widgets" dropdown selecting "Escalator"
+    And the application window has the quantity bar horizontally
+    And the values are in crescent order
+  Scenario: Quantity bar values fixed
+    When the user select the "Escalator" option 
+    Then the widget show the quantity bar Vertically
+    And the Values are fixed in 10, 25, 50, 75, 100
+
+
+Feature: Selection of quantity reflect on the other size
+  As a Trader
+  I want to change the order size in just one click
+  Background:
+    Given that the user is authenticated in Darwin
+    And navigates to the "Order Management" screen
+    And opens the "Widgets" dropdown selecting "Escalator"
+    And the application window has the quantity bar horizontally
+    And the quantity bar respond to the click changing the order size
+  Scenario: Changing teh order size in the vertical bar
+    When the user select any value button
+    And the order change size
+
+Feature: Selected quantity is clearly highlighted
+  As a Trader
+  I want to change to see a visual confirmation of my selection
+  Background:
+    Given that the user is authenticated in Darwin
+    And navigates to the "Order Management" screen
+    And opens the "Widgets" dropdown selecting "Escalator"
+    And the application window has the quantity bar horizontally
+    And the quantity bar respond to the click changing color
+  Scenario: Changing teh order size in the vertical bar
+    When the user select any value button
+    And the button change to a bright color
