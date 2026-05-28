@@ -1,13 +1,13 @@
-Structured Feedback for Code Review
+Structured Feedback
 Here are the key takeaways from your Gherkin draft. You captured the general idea of what needs to be tested, but we need to refine the syntax and logical organization to meet BDD (Behavior-Driven Development) standards.
 
-1. The Golden Rule: One Feature per User Story
+1. Golden Rule: One Feature per User Story
 
-Observation: You created four distinct Feature blocks in your document.
+Observation: You created four distinct Features for each scenario.
 
-Correction: The .feature file represents the complete User Story. There should be only one Feature at the very beginning of the file. What you labeled as "Features" (e.g., Selection of quantity reflect on the other size) are actually Scenarios (test cases) that belong inside that single story.
+Correction: There should be only one Feature at the very beginning of the Gherkin file (Create an specifc file for your test cases, so that you have a clearer and more organize view). What you labeled as "Features" (e.g., Selection of quantity reflect on the other size) are actually Scenarios (test cases) that belong inside that single story.
 
-2. The True Purpose of the Background
+2. Purpose of the Background
 
 Observation: You are using the Background to describe the previous state of the app ("the application window has the quantity bar horizontally") and to write assertions/expected results ("And the quantity bar respond to the click changing color").
 
