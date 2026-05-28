@@ -1,1 +1,5 @@
+Attempted to execute both aggressive Buy and Sell orders by selecting a quantity and clicking the opposing columns (Buy track on the pink Ask zone, and Sell track on the blue Bid zone). The system completely ignores the click actions. No orders are submitted, no confirmation banners are displayed, and the market depth remains unchanged.
 
+Note: Passive order submission works correctly on the same widget, isolating the issue strictly to aggressive execution routing. Scenario 3 (VWAP block) is blocked pending this fix.
+
+(Here goes your video evidence: aggressive_execution_bug.mp4)
