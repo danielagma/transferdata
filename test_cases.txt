@@ -1,13 +1,3 @@
-Scenario: Total column coverage and strict conversion to 32nd format - PASSED WITH NOTES ⚠️
+Validated editing restrictions on in-scope price cells (e.g., Price Mid). As required by AC5, entering a non-decimal format like 100-00 is correctly blocked, and the system displays the error banner: "Calibration value cannot be converted to decimal".
 
-Validated the rendering of a bond configured as "32nd". The backend formatting engine successfully converts decimal raw prices into the correct Bloomberg fractional convention.
-Math Verification Example: A raw decimal of 100.01563 was accurately transformed to 100-00 1/2, proving the mathematical logic (Handle separation, 32nd multiplier, and 1/8th simplification) aligns perfectly with the AC4 mapping table.
-
-⚠️ QA NOTES ON AC2 & AC3 (Column Scope):
-While the formatting logic is correct, there are discrepancies and limitations in the column scope requested by the Data Dictionary:
-
-Missing Column: The PDiff column is completely missing from the "Choose Columns" selector and cannot be verified.
-
-Naming Discrepancy: The requested column T+2MidP is not present under that exact name. It appears to be aliased as MidPrice 1DayFwd. Pending Product Owner confirmation to validate if this alias is acceptable or if a label update is required.
-
-Empty Data Fields: Several columns currently have no data (empty cells). While no UI formatting errors are present, deep fractional logic validation is implicitly bypassed for these specific fields until market data is populated.
+(Here goes your image: image_e64cee.png)
