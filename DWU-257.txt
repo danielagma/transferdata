@@ -1,0 +1,31 @@
+Feature: Align Price Ladder and Trader Order Indicators In Market Depth Widget (DWU-137 / DWU-257)
+
+  As a trader
+  I want the Escalator Market Depth widget to display price levels and trader order indicators consistently
+  So that the ladder is easier to read and active orders are clearly associated with the correct side of the market
+
+  Background:
+    Given the user is logged into Darwin
+    And the user navigates to the "Order Management" screen
+    And the user opens an Escalator Market Depth widget for a selected instrument
+
+  # Covers AC1, AC2, and AC6
+  Scenario: Single centered price ladder layout structural alignment
+    When the Escalator Market Depth widget renders the market data
+    Then the sell price levels (pink) are displayed completely above the buy price levels (blue)
+    And both sell and buy price values are horizontally aligned within a single, centralized price column
+    And the layout structurally matches the approved Escalator Market Depth design
+
+  # Covers AC3 and AC5
+  Scenario: Display and positioning of trader order indicators for active Sell orders
+    Given the user successfully submits a passive Sell order at a specific price level
+    When the Escalator Market Depth widget updates to reflect the active order
+    Then the trader order indicator appears exactly at the same price level row as the associated active sell order
+    And the trader order indicator is explicitly positioned on the right side of the pink sell price cell
+
+  # Covers AC4 and AC5
+  Scenario: Display and positioning of trader order indicators for active Buy orders
+    Given the user successfully submits a passive Buy order at a specific price level
+    When the Escalator Market Depth widget updates to reflect the active order
+    Then the trader order indicator appears exactly at the same price level row as the associated active buy order
+    And the trader order indicator is explicitly positioned on the left side of the blue buy price cell
