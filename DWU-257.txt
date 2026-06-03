@@ -1,4 +1,4 @@
-Feature: Align Price Ladder and Trader Order Indicators In Market Depth Widget (DWU-137 / DWU-257)
+Feature: Align Price Ladder and Trader Order Indicators In Market Depth Widget
 
   As a trader
   I want the Escalator Market Depth widget to display price levels and trader order indicators consistently
