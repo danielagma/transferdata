@@ -1,0 +1,39 @@
+Feature: Market Depth Widget - Pause Button (DWU-137 / DWU-190)
+
+  As a trader
+  I want to pause real-time updates of the market depth
+  So that I can review and take order actions without the price levels shifting
+
+  Background:
+    Given the user is logged into Darwin
+    And the user navigates to the "Order Management" screen
+    And the user opens a Market Depth (Escalator) widget for a selected instrument
+
+  # Covers AC6 and AC4
+  Scenario: Default state and live updates upon widget launch
+    When the system successfully renders the newly launched Market Depth widget
+    Then the display state button defaults to the "Play" mode
+    And the market depth grid continuously updates with the latest real-time market data
+
+  # Covers AC1 and AC5
+  Scenario: Pausing the market depth widget freezes visual updates
+    Given the Market Depth widget is currently in "Play" state and receiving live updates
+    When the user clicks the "Pause" button on the widget
+    Then the market depth grid immediately stops visually updating
+    And the displayed rows, price levels, and quantities remain fixed exactly as they were at the time of the click
+
+  # Covers AC7
+  Scenario: Resuming to play state instantly fetches live data without lag
+    Given the Market Depth widget is currently in the "Pause" state with a frozen grid
+    When the user clicks the "Play" button on the widget
+    Then the widget immediately transitions to the "Play" state
+    And the market depth grid instantly displays the most recent real-time market data
+    But the grid must not replay old data or show any lag from the paused timeframe
+
+  # Covers AC3
+  Scenario: Independence of play/pause states across multiple widgets
+    Given the user has opened "Market Depth A" and "Market Depth B" side-by-side in the layout
+    And both Market Depth widgets are currently in the default "Play" state
+    When the user clicks the "Pause" button exclusively on "Market Depth A"
+    Then "Market Depth A" stops updating and its market depth data is frozen
+    And "Market Depth B" remains entirely unaffected and continues to update continuously with real-time data
