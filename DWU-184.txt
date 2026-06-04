@@ -1,0 +1,46 @@
+Feature: Market Depth Widget - Cancel Button (DWU-137 / DWU-184)
+
+  As a trader
+  I want a cancel button within the D2D Market Depth widget
+  So that I can quickly cancel the last submitted active working order directly from the ladder without navigating away
+
+  Background:
+    Given the user is logged into Darwin
+    And the user navigates to the "Order Management" screen
+    And the user opens an Escalator Market Depth widget for a selected instrument
+
+  # Covers AC1
+  Scenario: Display of the cancel button next to active orders
+    When the user submits an active working order at a specific price level
+    Then a cancel "x" button is displayed inline next to the active order indicator on that price level
+    And the placement matches the approved ladder layout
+
+  # Covers AC2, AC3, AC4, AC5, and AC8
+  Scenario: Immediate cancellation of a single order
+    Given the user has exactly one active working order at a specific price level
+    When the user clicks the "x" cancel button on that price level
+    Then the cancellation request is processed immediately
+    And the order is removed from the ladder display in real-time dynamically
+    And the system provides a visual confirmation message that the order was cancelled
+    And the "x" cancel button disappears from that price level
+
+  # Covers AC6 (LIFO Logic)
+  Scenario: LIFO (Last In, First Out) cancellation of multiple orders at the same price level
+    Given the user has submitted "Order A" at a specific price level
+    And the user subsequently submits "Order B" at that same price level
+    When the user clicks the "x" cancel button on that price level once
+    Then the system cancels "Order B" (the last submitted order)
+    And "Order A" remains active on the ladder
+    And the "x" cancel button remains visible at that price level
+    When the user clicks the "x" cancel button again
+    Then the system cancels "Order A"
+    And the "x" cancel button disappears from the price level
+
+  # Covers AC7
+  Scenario: Clear error feedback upon a failed cancellation request
+    Given the user has an active working order with a visible "x" cancel button
+    And the backend system is temporarily unavailable or rejects the cancellation
+    When the user clicks the "x" cancel button
+    Then the cancellation fails
+    And the system displays clear error feedback to the trader explaining the failure
+    And the order remains visible on the market depth ladder
