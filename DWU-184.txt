@@ -1,4 +1,4 @@
-Feature: Market Depth Widget - Cancel Button (DWU-137 / DWU-184)
+Feature: Market Depth Widget - Cancel Button
 
   As a trader
   I want a cancel button within the D2D Market Depth widget
