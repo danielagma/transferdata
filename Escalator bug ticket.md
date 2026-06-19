@@ -1,28 +1,27 @@
-**QA Testing: PASSED ✅**
+QA Testing: PASSED
 
-**Environment:** DEV2
+Environment: DEV2
+ISIN Used: ES0000012L29
 
-**Results:**
-The functional testing for the Aggressive Order Submission feature on the Escalator/Ladder View has been successfully executed. All Acceptance Criteria have been met seamlessly.
+Business Logic Note: As confirmed with Business, the Escalator accurately respects the MTS market mirroring behavior when using the MULTI view. The system correctly aggregates the liquidity mirrored across submarkets (e.g., ESP + EBM), and the UI dynamically updates to reflect this expected business logic without filtering the backend data.
 
-Below is the detailed breakdown of the execution:
+Scenario: Successful submission of a passive Sell order
 
-**1. Aggressive Buy Order Execution**
-Clicking on the Buy column at a price level within the Ask zone successfully executes an aggressive Buy order against available liquidity. The system correctly applies the quantity selected from the quantity bar, displays the green immediate execution confirmation banner, and the UI dynamically shifts the ladder to reflect the consumed liquidity.
+Validated the submission of a passive Sell order by clicking the right column at the 100.055 price level (Initial Qty: 14) with a selected quantity of 10. The system submitted the order, displayed the green banner, and rendered the own order indicator [10]. The updated Ask quantity displayed 34, correctly reflecting the aggregated mirrored liquidity ((10 * 2) + 14) across submarkets as expected in the MULTI view.
 
-*(Insert Buy Order screenshot below)*
-[ 🖼️ INSERT BUY ORDER IMAGE HERE ]
+(Insert Passive Sell Order screenshots below)
+[ 🖼️ INSERT PASSIVE SELL ORDER IMAGES HERE ]
 
+Scenario: Successful submission of a passive Buy order
 
-**2. Aggressive Sell Order Execution**
-Clicking on the Sell column at a price level within the Bid zone successfully executes an aggressive Sell order. Similar to the Buy action, the selected quantity is respected, the green confirmation banner is triggered, and the market depth grid updates instantly.
+Validated the submission of a passive Buy order by clicking the left column at the 99.960 price level (Initial Qty: 4) with a selected quantity of 100. The system successfully submits the order, triggering the green confirmation banner and displaying the own order indicator [100]. The updated Bid quantity displayed 204, accurately reflecting the aggregated mirrored liquidity ((100 * 2) + 4) across submarkets as expected in the MULTI view.
 
-*(Insert Sell Order screenshot below)*
-[ 🖼️ INSERT SELL ORDER IMAGE HERE ]
+(Insert Passive Buy Order screenshots below)
+[ 🖼️ INSERT PASSIVE BUY ORDER IMAGES HERE ]
 
+Block passive order submission when VWAP is active - PASSED
 
-**3. VWAP Mode Execution Block**
-As per the business rules, aggressive execution is completely disabled when the VWAP mode toggle is active. Interacting with the opposing column price levels does not trigger any order submission, no confirmation banner is displayed, and the ladder structure remains unchanged.
+Validated that enabling the VWAP mode successfully acts as a kill switch for passive execution. Clicking on any column within the Escalator grid while VWAP is ON does not trigger any order submission, no confirmation banners are displayed, and the market depth remains completely unchanged.
 
-*(Insert VWAP Active screenshot below)*
+(Insert VWAP Active screenshot below)
 [ 🖼️ INSERT VWAP ACTIVE IMAGE HERE ]
