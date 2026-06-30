@@ -1,0 +1,22 @@
+2. Configure Environment Variables (PATH)
+If you already installed Node.js but the error persists, the problem is that the installation path wasn't added to your system's environment variables (PATH). This is very common on Windows.
+
+To fix it on Windows:
+
+Press the Windows key and type "Environment variables".
+
+Select the option "Edit the system environment variables".
+
+In the window that opens, click on the "Environment Variables..." button (bottom right).
+
+In the "System variables" section (the bottom box), look for the variable named Path, select it, and click "Edit...".
+
+Click "New" and paste the path where Node.js was installed. Usually, it is:
+C:\Program Files\nodejs\
+
+Click OK on all windows to save the changes.
+
+(If you use macOS or Linux, this error is rare, but it is usually fixed by reinstalling Node.js using a version manager like nvm or via Homebrew).
+
+3. The most important step: Restart your terminal!
+Your current console has the old configuration loaded. For it to recognize the changes you just made, you must completely close the terminal (or your code editor, like VS Code) and open it again.
