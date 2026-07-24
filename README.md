@@ -1,22 +1,41 @@
-QA Testing: IN PROGRESS
-Environment: DEV2
-ISIN Used: ES0000012000 (SPGB 2.700 01/30)
+Feature: Fast Order Cancellation Buttons in Market Depth Widget (DWU-284)
+  As a trader
+  I want to cancel my active orders directly from the Market Depth Ladder
+  So that I can manage my orders without opening another screen
 
-Results:
+  Background:
+    Given the user is logged into Darwin
+    And the user navigates to the "Order Management" screen
+    And the user opens an Escalator Market Depth widget for a selected instrument
 
-The new mandatory parameter 'Price Format:*' has been successfully integrated into the 'Classifications' section of the Bond Referential form.
+  # Covers AC1 and AC9
+  Scenario: Visibility of the cancellation trash icon based on active orders
+    Given the logged-in trader has active orders at a specific price level
+    And the trader has zero active orders at a different price level
+    When the Escalator Market Depth widget renders the "My Bids" and "My Asks" columns
+    Then a trash icon is displayed exclusively on the row where the trader has active orders
+    And no trash icon is displayed on the row without active own orders
 
-UI spatial mapping is correct, positioned exactly underneath the 'Quote Group' dropdown field.
+  # Covers AC3, AC7, AC8 and AC10
+  Scenario: Immediate cancellation of a single active order
+    Given the trader has exactly one active working order at a specific price level
+    When the user single-clicks the trash icon on that price level
+    Then the cancellation request is processed immediately
+    And a green confirmation banner is displayed confirming the order cancellation
+    And the active order is removed from the dedicated own orders column
+    And the trash icon disappears from that price level
+    And the Order Blotter updates dynamically to reflect the cancelled status
+    And the market depth quantities belonging to other traders remain entirely unaffected
 
-Initial state validation confirmed that the field automatically defaults to 'Decimal' upon loading existing instruments, successfully preventing unpopulated or null fields by design.
-
-Baseline Search & Initial Field Load:
-(Aquí colocas tu primera imagen: image_394f40.png)
-
-Field Positioning & Default Value Validation:
-(Aquí colocas tu segunda imagen: image_395340.png - Te sugiero agregarle un recuadro azul o verde alrededor del nuevo campo 'Price Format: Decimal')*
-
-Dropdown Options Verification (Enforcement of UI Constraints):
-(Aquí colocas tu tercera imagen: image_3955e7.png - Donde se ve tu flecha azul apuntando a la lista desplegable)
-
-The dropdown list exclusively exposes 'Decimal' and '32nds' as selectable options. The interface structurally bars the user from clearing the field or leaving it blank, fulfilling the mandatory constraint requirement via input restriction.
+  # Covers AC2, AC4 and AC7
+  Scenario: LIFO cancellation of multiple aggregated orders at the same price level
+    Given the trader has successfully submitted "Order A" at a specific price level
+    And the trader subsequently submits "Order B" at that exact same price level
+    When the user single-clicks the trash icon on that price level once
+    Then the system immediately cancels "Order B" applying Last-In-First-Out (LIFO) logic
+    And "Order A" remains active in the dedicated own orders column
+    And the trash icon remains visible on that price level
+    When the user single-clicks the trash icon again
+    Then the system successfully cancels "Order A"
+    And the trash icon disappears from that price level
+    And the Order Blotter updates dynamically to reflect both cancellations
