@@ -1,40 +1,19 @@
-Feature: Fast Order Cancellation Buttons in Market Depth Widget (DWU-284)
-  As a trader
-  I want to cancel my active orders directly from the Market Depth Ladder
-  So that I can manage my orders without opening another screen
+**QA Retest: PASSED ✅**
 
-  Background:
-    Given the user is logged into Darwin
-    And the user navigates to the "Order Management" screen
-    And the user opens an Escalator Market Depth widget for a selected instrument
+* **Environment:** DEV2
+* **ISIN Used:** SPGB 1.300 10/26
 
-  # Covers AC1 and AC9
-  Scenario: Visibility of the cancellation trash icon is strictly bound to own active orders
-    Given the logged-in trader has active working orders at one or more price levels
-    When the user observes the active orders column in the Escalator Market Depth widget
-    Then a trash icon is displayed inline on every price level row where the trader has an active order
-    And the trash icon is completely absent from any price level row where the trader does not have active orders
+**Execution Summary:**
+Successfully verified the bug fix and the implementation of the Fast Order Cancellation buttons within the Escalator widget. All Acceptance Criteria have been met.
 
-  # Covers AC3, AC7, AC8 and AC10
-  Scenario: Immediate cancellation of a single active order
-    Given the trader has exactly one active working order at a specific price level
-    When the user single-clicks the trash icon on that price level
-    Then the cancellation request is processed immediately
-    And a green confirmation banner is displayed confirming the order cancellation
-    And the active order is removed from the dedicated own orders column
-    And the trash icon disappears from that price level
-    And the Order Blotter updates dynamically to reflect the cancelled status
-    And the market depth quantities belonging to other traders remain entirely unaffected
+**1. Single Order Cancellation & UI Rendering:**
+Submitted individual passive Buy and Sell orders. Verified that the red trash icon correctly renders exclusively on the price levels containing the active own orders. Single-clicking the icon successfully processed the cancellation immediately, removed the trash icon, displayed the green confirmation banner, and accurately updated the Order Blotter status to 'Cancel'. 
 
-  # Covers AC2, AC4 and AC7
-  Scenario: Cancellation of the most recently placed order when multiple orders are aggregated
-    Given the trader has successfully submitted "Order A" at a specific price level
-    And the trader subsequently submits "Order B" at that exact same price level
-    When the user single-clicks the trash icon on that price level once
-    Then the system immediately cancels "Order B" (the most recently placed order)
-    And "Order A" remains active in the dedicated own orders column
-    And the trash icon remains visible on that price level
-    When the user single-clicks the trash icon again
-    Then the system successfully cancels "Order A"
-    And the trash icon disappears from that price level
-    And the Order Blotter updates dynamically to reflect both cancellations
+**2. Multiple Orders Aggregation & Sequential Cancellation:**
+Submitted two consecutive passive Buy orders (25MM each) at the exact same price level (99.480). 
+* **First click:** Verified the system successfully aggregated the quantity (50) and that a single click on the trash icon canceled only the most recently placed order, updating the remaining active quantity to 25 while keeping the trash icon visible. 
+* **Second click:** Verified the subsequent click successfully canceled the remaining order and completely removed the trash icon from the grid.
+
+Approved to close.
+
+*(Please see attached my verification evidence: image_d87e56.jpg, image_d8d0b4.png, image_d8d412.png)*
