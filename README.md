@@ -8,13 +8,12 @@ Feature: Fast Order Cancellation Buttons in Market Depth Widget (DWU-284)
     And the user navigates to the "Order Management" screen
     And the user opens an Escalator Market Depth widget for a selected instrument
 
-  # Covers AC1 and AC9
-  Scenario: Visibility of the cancellation trash icon based on active orders
-    Given the logged-in trader has active orders at a specific price level
-    And the trader has zero active orders at a different price level
-    When the Escalator Market Depth widget renders the "My Bids" and "My Asks" columns
-    Then a trash icon is displayed exclusively on the row where the trader has active orders
-    And no trash icon is displayed on the row without active own orders
+# Covers AC1 and AC9
+  Scenario: Visibility of the cancellation trash icon is strictly bound to own active orders
+    Given the logged-in trader has active working orders at one or more price levels
+    When the user observes the active orders column in the Escalator Market Depth widget
+    Then a trash icon is displayed inline on every price level row where the trader has an active order
+    And the trash icon is completely absent from any price level row where the trader does not have active orders
 
   # Covers AC3, AC7, AC8 and AC10
   Scenario: Immediate cancellation of a single active order
