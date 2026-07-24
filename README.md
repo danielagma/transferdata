@@ -8,7 +8,7 @@ Feature: Fast Order Cancellation Buttons in Market Depth Widget (DWU-284)
     And the user navigates to the "Order Management" screen
     And the user opens an Escalator Market Depth widget for a selected instrument
 
-# Covers AC1 and AC9
+  # Covers AC1 and AC9
   Scenario: Visibility of the cancellation trash icon is strictly bound to own active orders
     Given the logged-in trader has active working orders at one or more price levels
     When the user observes the active orders column in the Escalator Market Depth widget
@@ -27,11 +27,11 @@ Feature: Fast Order Cancellation Buttons in Market Depth Widget (DWU-284)
     And the market depth quantities belonging to other traders remain entirely unaffected
 
   # Covers AC2, AC4 and AC7
-  Scenario: LIFO cancellation of multiple aggregated orders at the same price level
+  Scenario: Cancellation of the most recently placed order when multiple orders are aggregated
     Given the trader has successfully submitted "Order A" at a specific price level
     And the trader subsequently submits "Order B" at that exact same price level
     When the user single-clicks the trash icon on that price level once
-    Then the system immediately cancels "Order B" applying Last-In-First-Out (LIFO) logic
+    Then the system immediately cancels "Order B" (the most recently placed order)
     And "Order A" remains active in the dedicated own orders column
     And the trash icon remains visible on that price level
     When the user single-clicks the trash icon again
