@@ -1,20 +1,46 @@
-**QA Retest: PASSED ✅**
+Feature: Manual Quantity Input Field in Escalator Quantity Bar (DWU-261)
+  As a trader
+  I want to manually enter a custom quantity directly from the quantity bar
+  So that I can quickly trade using quantities that are not available in the preset buttons
 
-* **Environment:** DEV2
-* **Instruments Used:** SPGB 5.900 07/26 / FGBL M6
+  Background:
+    Given the user is logged into Darwin
+    And the user opens an Escalator Market Depth widget for a selected instrument
 
-**Execution Summary:**
-Successfully verified the bug fix regarding the missing UI error notifications for failed MULTI order creations. 
+  # Covers AC1, AC2 and AC3
+  Scenario: Default state and saving a custom manual quantity
+    Given the Escalator widget is displayed
+    Then the "Man Qty" field is editable and empty by default
+    When the user enters a valid integer into the "Man Qty" field
+    And the user exits edit mode by pressing Enter or clicking outside the cell
+    Then the custom quantity is saved and actively selected
 
-**Test Scenario & Business Logic:**
-To accurately trigger the condition where "no orders are produced for MULTI", it is necessary to simulate a complete loss of market connectivity for the specific asset. 
-1. Accessed the Bank master toggle dropdown and manually turned `OFF` all active subvenues associated with the test ISIN (disabling multiple subvenues like SENAF, MTS, and BROKERTEC for `SPGB`, or exclusively EUREX for `FGBL M6`).
-2. Attempted to execute an aggressive/passive MULTI order from the Market Depth / Escalator widget.
+  # Covers AC4 and AC6
+  Scenario: Custom quantity selection overrides and unhighlights preset buttons
+    Given the user has selected one or more preset quantity buttons
+    And the selected preset buttons are highlighted with an orange background
+    When the user enters and saves a custom quantity in the "Man Qty" field
+    Then the "Man Qty" field is highlighted with an orange background
+    And the orange highlight is immediately removed from all previously selected preset buttons
 
-**Result:**
-The frontend now successfully catches the failed event from the backend. The system correctly blocks the order creation and immediately surfaces the red error toast on the UI with the exact expected message:
-`"MULTI [BUY/SELL] [QTY] @ [PRICE] FAILED: No matching price found and no 'active' markets configured for quantity allocation. Cannot create any orders."`
+  # Covers AC5
+  Scenario: Preset button selection overrides and clears the manual quantity
+    Given the user has a custom quantity saved and highlighted in the "Man Qty" field
+    When the user selects any preset quantity button
+    Then the selected preset button is highlighted with an orange background
+    And the orange highlight is removed from the "Man Qty" field
+    And the numerical value within the "Man Qty" field is completely cleared
 
-Approved to close.
+  # Covers AC8
+  Scenario: CLR button resets all quantity selections and highlights
+    Given the user has an active quantity selection highlighted in orange
+    When the user clicks the "CLR" button
+    Then the "Man Qty" numerical value is cleared
+    And all active orange background highlights are removed from the "Man Qty" field and all preset buttons
+    And the user must reselect a quantity before placing a new order
 
-*(Please see attached my verification evidence: image_a27f4e.png, image_a27ebb.png, image_a22c82.png)*
+  # Covers AC7
+  Scenario: Order execution strictly uses the currently active selected quantity
+    Given the user has an actively selected quantity highlighted in orange
+    When the user submits an order by clicking on a price level in the Escalator ladder
+    Then the system creates and submits the order using the exact total quantity that was selected
