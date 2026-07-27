@@ -39,8 +39,23 @@ Feature: Manual Quantity Input Field in Escalator Quantity Bar (DWU-261)
     And all active orange background highlights are removed from the "Man Qty" field and all preset buttons
     And the user must reselect a quantity before placing a new order
 
-  # Covers AC7
-  Scenario: Order execution strictly uses the currently active selected quantity
-    Given the user has an actively selected quantity highlighted in orange
+  # Covers AC7 (Path 1: Custom Manual Quantity)
+  Scenario: Order execution uses the exact custom manual quantity
+    Given the user has entered and saved a custom value in the "Man Qty" field
+    And the "Man Qty" field is highlighted with an orange background
     When the user submits an order by clicking on a price level in the Escalator ladder
-    Then the system creates and submits the order using the exact total quantity that was selected
+    Then the system creates and submits the order using the exact custom numerical value entered manually
+
+  # Covers AC7 (Path 2: Single Preset Button)
+  Scenario: Order execution uses a single selected preset quantity
+    Given the user has clicked a single preset quantity button (e.g., 50)
+    And only that specific preset button is highlighted in orange
+    When the user submits an order by clicking on a price level in the Escalator ladder
+    Then the system creates and submits the order using the exact value of the selected preset button
+
+  # Covers AC7 (Path 3: Aggregation of Multiple Presets)
+  Scenario: Order execution uses the mathematical sum of multiple preset quantities
+    Given the user has clicked multiple preset quantity buttons (e.g., 10 and 25)
+    And all selected preset buttons are highlighted in orange
+    When the user submits an order by clicking on a price level in the Escalator ladder
+    Then the system creates and submits the order using the mathematical sum of the selected preset buttons (e.g., 35)
