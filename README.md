@@ -1,42 +1,46 @@
-Feature: Apply Existing Pricing Format in Market Depth and Escalator Widgets (DWU-344)
-  As a trader
-  I want prices displayed in the Market Depth and Ladder widgets to use the Pricing Format configured for each bond
-  So that prices are displayed consistently throughout Darwin
+**QA Execution: FAILED ❌**
 
-  Background:
-    Given the user is logged into Darwin
-    And the user navigates to the "Order Management" screen
+* **Environment:** DEV2
+* **Instrument Configured:** PGB 3.000 06/35 (32nds config) / Decimal configured bonds
 
-  # --- MARKET DEPTH WIDGET SCENARIOS ---
+**Execution Summary:**
+The core logic for inheriting the Referential Data pricing format is working and successfully matching the Bond Pricer in almost all areas. However, the story fails AC5 and AC6 specifically within the Market Depth widget. The manual `Price:*` order entry field does not support or render the 32nds format, reverting to decimal values instead.
 
-  # Covers AC1, AC3, AC4, AC6, AC7 and AC8 for Market Depth
-  Scenario: Market Depth widget consistently renders the Decimal pricing format
-    Given a specific bond is configured with the "Decimal" Pricing Format in Referential Data (DWU-169)
-    When the user opens the "Market Depth" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Market Depth grid are displayed in decimal format
-    And the manual order entry price fields display the value in decimal format
-    And the displayed decimal format visually matches the formatting shown in the Bond Pricer widget
+---
 
-  # Covers AC1, AC3, AC5, AC6, AC7 and AC8 for Market Depth
-  Scenario: Market Depth widget consistently renders the 32nds pricing format
-    Given a specific bond is configured with the "32nds" Pricing Format in Referential Data (DWU-169)
-    When the user opens the "Market Depth" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Market Depth grid are displayed in 32nds fractional format
-    And the manual order entry price fields display the value in 32nds fractional format
-    And the displayed 32nds format visually matches the formatting shown in the Bond Pricer widget
+### 1. Market Depth: Decimal Pricing Format (AC1, AC3, AC4, AC6, AC7, AC8)
+**Status: PASSED ✅**
+Verified that when a bond is configured as Decimal, all price values inside the Market Depth grid and the manual order entry price fields display accurately in decimal format, perfectly matching the Bond Pricer widget.
 
-  # --- ESCALATOR (LADDER) WIDGET SCENARIOS ---
+*(Please see execution video below)*
+[ 📎 ARRASTRA Y SUELTA TU VIDEO 1 AQUÍ ]
 
-  # Covers AC2, AC3, AC4, AC6, AC7 and AC8 for Escalator
-  Scenario: Escalator widget consistently renders the Decimal pricing format
-    Given a specific bond is configured with the "Decimal" Pricing Format in Referential Data (DWU-169)
-    When the user opens the "Escalator" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Escalator price ladder grid are displayed in decimal format
-    And the displayed decimal format visually matches the formatting shown in the Bond Pricer widget
+---
 
-  # Covers AC2, AC3, AC5, AC6, AC7 and AC8 for Escalator
-  Scenario: Escalator widget consistently renders the 32nds pricing format
-    Given a specific bond is configured with the "32nds" Pricing Format in Referential Data (DWU-169)
-    When the user opens the "Escalator" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Escalator price ladder grid are displayed in 32nds fractional format
-    And the displayed 32nds format visually matches the formatting shown in the Bond Pricer widget
+### 2. Market Depth: 32nds Pricing Format (AC1, AC3, AC5, AC6, AC7, AC8)
+**Status: FAILED ❌**
+Verified the grid displays 32nds correctly, but the manual `Price:*` entry field fails to inherit the format (Violating AC5 and AC6). 
+* **Defect detail:** When clicking a 32nds price level on the grid (e.g., `97-01 1/2`), the system populates the `Price:*` input field with its decimal translation (e.g., `97.05`) instead of the fractional format. Manual typing of 32nds formatting is also rejected by the input field.
+
+*(Please see execution video/image below)*
+[ 📎 ARRASTRA Y SUELTA TU CAPTURA/VIDEO 2 AQUÍ ]
+
+---
+
+### 3. Escalator: Decimal Pricing Format (AC2, AC3, AC4, AC6, AC7, AC8)
+**Status: PASSED ✅**
+Verified that when a bond is configured as Decimal, all price values inside the Escalator price ladder grid render consistently in decimal format, matching the Bond Pricer.
+
+*(Please see execution video below)*
+[ 📎 ARRASTRA Y SUELTA TU VIDEO 3 AQUÍ ]
+
+---
+
+### 4. Escalator: 32nds Pricing Format (AC2, AC3, AC5, AC6, AC7, AC8)
+**Status: PASSED ✅**
+Verified that when a bond is configured in 32nds, all price values inside the Escalator price ladder grid successfully render in the 32nds fractional format (e.g., `97-01 1/2`), completely matching the Bond Pricer formatting.
+
+*(Please see execution video below)*
+[ 📎 ARRASTRA Y SUELTA TU VIDEO 4 AQUÍ ]
+
+**Sign-off:** Blocked. Returning to Development to fix the Market Depth Order Entry Price field parsing for 32nds.
