@@ -1,30 +1,46 @@
-**Summary:**
-[Bug] Escalator: Pressing 'Enter/Return' does not exit edit mode in "Man Qty" field
+Feature: Apply Existing Pricing Format in Market Depth and Escalator Widgets (DWU-344)
+  As a trader
+  I want prices displayed in the Market Depth and Ladder widgets to use the Pricing Format configured for each bond
+  So that prices are displayed consistently throughout Darwin
 
-**Environment:**
-* DEV2
+  Background:
+    Given the user is logged into Darwin
+    And the user navigates to the "Order Management" screen
 
-**Linked to Story:** DWU-261
+  # --- MARKET DEPTH WIDGET SCENARIOS ---
 
-**Severity:** Minor / Low
+  # Covers AC1, AC3, AC4, AC6, AC7 and AC8 for Market Depth
+  Scenario: Market Depth widget consistently renders the Decimal pricing format
+    Given a specific bond is configured with the "Decimal" Pricing Format in Referential Data (DWU-169)
+    When the user opens the "Market Depth" and "Bond Pricer" widgets for this specific bond
+    Then all price values inside the Market Depth price ladder grid are displayed in decimal format
+    And the manual order entry price fields display the value in decimal format
+    And any active working order prices displayed within the widget use the decimal format
+    And the displayed decimal format visually matches the formatting shown in the Bond Pricer widget
 
-**Description:**
+  # Covers AC1, AC3, AC5, AC6, AC7 and AC8 for Market Depth
+  Scenario: Market Depth widget consistently renders the 32nds pricing format
+    Given a specific bond is configured with the "32nds" Pricing Format in Referential Data (DWU-169)
+    When the user opens the "Market Depth" and "Bond Pricer" widgets for this specific bond
+    Then all price values inside the Market Depth price ladder grid are displayed in 32nds fractional format
+    And the manual order entry price fields display the value in 32nds fractional format
+    And any active working order prices displayed within the widget use the 32nds fractional format
+    And the displayed 32nds format visually matches the formatting shown in the Bond Pricer widget
 
-**Overview:**
-As per the Acceptance Criteria (AC3) for the Manual Quantity feature in the Escalator widget, users should be able to exit the cell edit mode by either hitting the 'Enter/Return' key or changing the context (clicking outside). Currently, the keyboard event for 'Enter/Return' is unresponsive, forcing the user to use the mouse to click outside the cell to save the custom quantity.
+  # --- ESCALATOR (LADDER) WIDGET SCENARIOS ---
 
-**Steps to Reproduce:**
-1. Navigate to the **Order Management** screen.
-2. Open an **Escalator Market Depth** widget for any valid instrument.
-3. Click on the **"Man Qty"** input field to activate edit mode.
-4. Type a valid custom integer (e.g., `15`).
-5. Press the **Enter** (or Return) key on the keyboard.
+  # Covers AC2, AC3, AC4, AC6, AC7 and AC8 for Escalator
+  Scenario: Escalator widget consistently renders the Decimal pricing format
+    Given a specific bond is configured with the "Decimal" Pricing Format in Referential Data (DWU-169)
+    When the user opens the "Escalator" and "Bond Pricer" widgets for this specific bond
+    Then all price values inside the Escalator price ladder grid are displayed in decimal format
+    And any active working order prices displayed within the widget use the decimal format
+    And the displayed decimal format visually matches the formatting shown in the Bond Pricer widget
 
-**Expected Result:**
-The system must exit edit mode, highlight the "Man Qty" field with an orange background, and successfully set the custom quantity for the next order (Matching the behavior of the Bond Pricer).
-
-**Actual Result:**
-The 'Enter/Return' keystroke is ignored. The cursor remains active inside the "Man Qty" input field, and edit mode is not exited.
-
-**Workaround:**
-The user can successfully exit edit mode and save the custom quantity by clicking anywhere outside the "Man Qty" cell (changing context).
+  # Covers AC2, AC3, AC5, AC6, AC7 and AC8 for Escalator
+  Scenario: Escalator widget consistently renders the 32nds pricing format
+    Given a specific bond is configured with the "32nds" Pricing Format in Referential Data (DWU-169)
+    When the user opens the "Escalator" and "Bond Pricer" widgets for this specific bond
+    Then all price values inside the Escalator price ladder grid are displayed in 32nds fractional format
+    And any active working order prices displayed within the widget use the 32nds fractional format
+    And the displayed 32nds format visually matches the formatting shown in the Bond Pricer widget
