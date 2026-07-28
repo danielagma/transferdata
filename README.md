@@ -1,50 +1,30 @@
-**QA Execution: PASSED (WITH MINOR DEVIATION) ✅⚠️**
+**Summary:**
+[Bug] Escalator: Pressing 'Enter/Return' does not exit edit mode in "Man Qty" field
 
-* **Environment:** DEV2
-* **ISIN Used:** SPGB 1.300 10/26
+**Environment:**
+* DEV2
 
-**Execution Summary by Scenario:**
+**Linked to Story:** DWU-261
 
-### 1. Default State & Saving Custom Quantity (AC1, AC2, AC3)
-Verified that the "Man Qty" field is editable and empty by default. The system accepts valid integer inputs and saves the custom quantity successfully when changing context (clicking outside the cell). 
-*⚠️ **Deviation Noted:** Exiting edit mode by pressing the 'Enter/Return' key is currently unresponsive (violating AC3). A minor bug has been raised and linked to this story to address the keyboard event.*
+**Severity:** Minor / Low
 
-*(Please see execution video below)*
-[ 📎 ARRASTRA Y SUELTA TU VIDEO 1 AQUÍ ]
+**Description:**
 
----
+**Overview:**
+As per the Acceptance Criteria (AC3) for the Manual Quantity feature in the Escalator widget, users should be able to exit the cell edit mode by either hitting the 'Enter/Return' key or changing the context (clicking outside). Currently, the keyboard event for 'Enter/Return' is unresponsive, forcing the user to use the mouse to click outside the cell to save the custom quantity.
 
-### 2. Mutual Exclusivity: Custom Qty Overrides Presets (AC4, AC6)
-Verified that entering and saving a custom quantity correctly highlights the "Man Qty" field in orange. Simultaneously, the system accurately removes the orange highlight from all previously selected preset buttons, strictly enforcing the mutual exclusivity rule.
+**Steps to Reproduce:**
+1. Navigate to the **Order Management** screen.
+2. Open an **Escalator Market Depth** widget for any valid instrument.
+3. Click on the **"Man Qty"** input field to activate edit mode.
+4. Type a valid custom integer (e.g., `15`).
+5. Press the **Enter** (or Return) key on the keyboard.
 
-*(Please see execution video below)*
-[ 📎 ARRASTRA Y SUELTA TU VIDEO 2 AQUÍ ]
+**Expected Result:**
+The system must exit edit mode, highlight the "Man Qty" field with an orange background, and successfully set the custom quantity for the next order (Matching the behavior of the Bond Pricer).
 
----
+**Actual Result:**
+The 'Enter/Return' keystroke is ignored. The cursor remains active inside the "Man Qty" input field, and edit mode is not exited.
 
-### 3. Mutual Exclusivity: Presets Override Custom Qty (AC5)
-Verified the reverse flow. When a custom quantity is currently active, selecting any preset button (e.g., 10, 25) successfully highlights the preset button, completely clears the numerical value inside the "Man Qty" input field, and removes its orange highlight.
-
-*(Please see execution video below)*
-[ 📎 ARRASTRA Y SUELTA TU VIDEO 3 AQUÍ ]
-
----
-
-### 4. System Reset: CLR Button (AC8)
-Verified that clicking the "CLR" button acts as a full reset. It successfully clears any typed numerical value in the "Man Qty" field and completely removes the active orange highlight from all preset buttons and the manual field.
-
-*(Please see execution video below)*
-[ 📎 ARRASTRA Y SUELTA TU VIDEO 4 AQUÍ ]
-
----
-
-### 5. Order Execution Accuracy (AC7)
-Verified the core trading functionality for all 3 quantity paths. Successfully submitted and confirmed orders using:
-1. **Custom Manual Quantity:** System executed the exact typed value.
-2. **Single Preset:** System executed the exact preset button value.
-3. **Aggregated Presets:** System successfully executed the mathematical sum of multiple selected preset buttons.
-
-*(Please see execution video below)*
-[ 📎 ARRASTRA Y SUELTA TU VIDEO 5 AQUÍ ]
-
-**Sign-off:** Approved to close. (Enter key defect tracked separately).
+**Workaround:**
+The user can successfully exit edit mode and save the custom quantity by clicking anywhere outside the "Man Qty" cell (changing context).
