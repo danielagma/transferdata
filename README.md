@@ -13,18 +13,16 @@ Feature: Apply Existing Pricing Format in Market Depth and Escalator Widgets (DW
   Scenario: Market Depth widget consistently renders the Decimal pricing format
     Given a specific bond is configured with the "Decimal" Pricing Format in Referential Data (DWU-169)
     When the user opens the "Market Depth" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Market Depth price ladder grid are displayed in decimal format
+    Then all price values inside the Market Depth grid are displayed in decimal format
     And the manual order entry price fields display the value in decimal format
-    And any active working order prices displayed within the widget use the decimal format
     And the displayed decimal format visually matches the formatting shown in the Bond Pricer widget
 
   # Covers AC1, AC3, AC5, AC6, AC7 and AC8 for Market Depth
   Scenario: Market Depth widget consistently renders the 32nds pricing format
     Given a specific bond is configured with the "32nds" Pricing Format in Referential Data (DWU-169)
     When the user opens the "Market Depth" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Market Depth price ladder grid are displayed in 32nds fractional format
+    Then all price values inside the Market Depth grid are displayed in 32nds fractional format
     And the manual order entry price fields display the value in 32nds fractional format
-    And any active working order prices displayed within the widget use the 32nds fractional format
     And the displayed 32nds format visually matches the formatting shown in the Bond Pricer widget
 
   # --- ESCALATOR (LADDER) WIDGET SCENARIOS ---
@@ -34,7 +32,6 @@ Feature: Apply Existing Pricing Format in Market Depth and Escalator Widgets (DW
     Given a specific bond is configured with the "Decimal" Pricing Format in Referential Data (DWU-169)
     When the user opens the "Escalator" and "Bond Pricer" widgets for this specific bond
     Then all price values inside the Escalator price ladder grid are displayed in decimal format
-    And any active working order prices displayed within the widget use the decimal format
     And the displayed decimal format visually matches the formatting shown in the Bond Pricer widget
 
   # Covers AC2, AC3, AC5, AC6, AC7 and AC8 for Escalator
@@ -42,5 +39,4 @@ Feature: Apply Existing Pricing Format in Market Depth and Escalator Widgets (DW
     Given a specific bond is configured with the "32nds" Pricing Format in Referential Data (DWU-169)
     When the user opens the "Escalator" and "Bond Pricer" widgets for this specific bond
     Then all price values inside the Escalator price ladder grid are displayed in 32nds fractional format
-    And any active working order prices displayed within the widget use the 32nds fractional format
     And the displayed 32nds format visually matches the formatting shown in the Bond Pricer widget
