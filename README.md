@@ -1,30 +1,20 @@
-**Summary:**
-[Bug] Fast Size Buttons: Missing 'Max Order Size' validation allows astronomical numbers, breaking Escalator UI
+Hi team,
 
-**Environment:**
-* DEV2
+I have recently raised three bugs following the QA execution of our latest User Stories. All the details, steps to reproduce, and visual evidence have been added to the tickets.
 
-**Linked to Story:** DWU-260
+Here are the bugs and the specific User Stories they affect:
 
-**Severity:** High (Blocks AC14 / UI Breakage)
+Bug: [DWU-475] [Bug] Fast Size Buttons: Missing 'Max Order Size' validation allows astronomical numbers, breaking Escalator UI
+Affects Story: [DWU-260] Allow User Customization of Quantity Bar Values
 
-**Description:**
+Bug: [DWU-470] [Bug] Market Depth: "Price:*" order entry field does not support 32nds format, reverts to decimal translation
+Affects Story: [DWU-344] Apply Existing Pricing Format in Market Depth Widget
 
-**Overview:**
-As per AC14, quantity values must not exceed, or be able to save, the maximum order size configured for the selected instrument. Currently, this validation is missing. The user can input infinitely large numbers in the Fast Size Buttons settings, which save successfully and cause the Escalator quantity bar UI to break due to text overflow.
+Bug: [DWU-462] [Bug] Escalator: Pressing 'Enter/Return' does not exit edit mode in "Man Qty" field
+Affects Story: [DWU-261] Manual Quantity Input Field in Escalator Quantity Bar
 
-**Steps to Reproduce:**
-1. Navigate to **Settings -> Order Management -> Fast Size Buttons**.
-2. Input an astronomically large integer in one of the fields (e.g., `10000000000000000000000`).
-3. Click **Save** (Note that a success toast appears).
-4. Open an **Escalator** widget for any instrument.
-5. Observe the Quantity Bar at the bottom.
+Could you please review them when you have a chance to define their priority and move them from "for triage" to "raised"?
 
-**Expected Result:**
-The Settings page must trigger a validation error preventing the save if the number exceeds the instrument's maximum order size (or at a minimum, enforce standard platform limits for numerical inputs).
+Please let me know if you would like me to schedule a quick meeting to discuss them.
 
-**Actual Result:**
-The massive number is saved and pushed to the Escalator widget. The text overflows its designated button container, visually overlapping other elements and breaking the quick bar's layout.
-
-**Evidence:**
-Please see attached screenshot: `image_47685f.png`
+Thanks!
