@@ -14,19 +14,17 @@ Feature: Allow User Customization of Quantity Bar Values (DWU-260)
     And the newly created configuration displays the default values: 1, 5, 10, 25, 50, and 100
     And the configuration is tied specifically to the current user profile
 
-  # Covers AC9, AC13
+# Covers AC9, AC13
   Scenario: Validation restricts invalid data types, zero, negative numbers, and duplicates
     Given the user is on the Fast Size Buttons settings page
-    When the user attempts to enter invalid values (e.g., decimals, 0, negative numbers, or letters)
-    Or the user attempts to enter duplicate quantity values
+    When the user attempts to enter invalid values (e.g., decimals, 0, negative numbers, letters, or duplicate quantities)
     Then the system triggers the appropriate validation error messages (e.g., "Must be an integer number", "Must not be zero")
     And the system strictly prevents saving the configuration
 
-  # Covers AC8, AC14
-  Scenario: Validation strictly enforces button quantity limits and instrument maximum sizes
+  # Covers AC8
+  Scenario: Validation strictly enforces button quantity limits
     Given the user is on the Fast Size Buttons settings page
     When the user attempts to save a configuration with 0 buttons or more than 6 buttons
-    Or the user inputs a quantity value that strictly exceeds the configured maximum order size for the instrument
     Then the system triggers a validation error message
     And the system prevents saving the configuration
 
