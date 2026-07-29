@@ -1,60 +1,72 @@
-Feature: Allow User Customization of Quantity Bar Values (DWU-260)
-  As a trader
-  I want to configure the quantity bar values shown in the Escalator Market Depth widget
-  So that the preset quantities match my specific trading preference
+**QA Execution: FAILED ❌**
 
-  Background:
-    Given the user is logged into Darwin
-    And the Escalator Market Depth widget is open
+* **Environment:** DEV2
 
-  # Covers AC1, AC4, AC5
-  Scenario: Navigation to settings and default values verification
-    When the user navigates to "Settings" -> "Order Management" -> "Fast Size Buttons"
-    Then the Fast Size Buttons configuration page is successfully displayed
-    And the newly created configuration displays the default values: 1, 5, 10, 25, 50, and 100
-    And the configuration is tied specifically to the current user profile
+**Execution Summary:**
+The feature works perfectly for sorting, persistence, standard validations, and execution. However, the story fails AC14. The system is not validating the configured maximum order size, allowing users to save astronomical values that subsequently break the Escalator UI layout.
 
-  # Covers AC9, AC13
-  Scenario: Validation restricts invalid data types, zero, negative numbers, and duplicates
-    Given the user is on the Fast Size Buttons settings page
-    When the user attempts to enter invalid values (e.g., decimals, 0, negative numbers, or letters)
-    Or the user attempts to enter duplicate quantity values
-    Then the system triggers the appropriate validation error messages (e.g., "Must be an integer number", "Must not be zero")
-    And the system strictly prevents saving the configuration
+---
 
-  # Covers AC8, AC14
-  Scenario: Validation strictly enforces button quantity limits and instrument maximum sizes
-    Given the user is on the Fast Size Buttons settings page
-    When the user attempts to save a configuration with 0 buttons or more than 6 buttons
-    Or the user inputs a quantity value that strictly exceeds the configured maximum order size for the instrument
-    Then the system triggers a validation error message
-    And the system prevents saving the configuration
+### 1. Navigation & Default Values (AC1, AC4, AC5)
+**Status: PASSED ✅**
+Verified that the Fast Size Buttons settings page is accessible via the correct path. New configurations correctly display the default values (1, 5, 10, 25, 50, 100) and are saved independently per user profile.
 
-  # Covers AC10, AC2, AC3, AC12
-  Scenario: Auto-sorting logic and real-time Escalator widget update
-    Given the user is on the Fast Size Buttons settings page
-    When the user enters valid quantity values in a random, non-sequential order (e.g., 50, 5, 100, 10)
-    And the user saves the configuration
-    Then the system automatically sorts and saves the values in ascending numerical order from left to right
-    And the configured values immediately replace the default buttons in the active Escalator widget without requiring a restart
+*(Please see execution video/image below)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 1 AQUÍ ]
 
-  # Covers AC11
-  Scenario: Quantity bar maintains strict width and visual layout with fewer than 6 buttons
-    Given the user is on the Fast Size Buttons settings page
-    When the user successfully configures and saves fewer than 6 quantity values (e.g., 4 values)
-    Then the quantity bar in the Escalator widget consistently occupies its original full width
-    And the unused button positions (e.g., the last 2 slots) remain visually blank
+---
 
-  # Covers AC6
-  Scenario: User-defined quantity values persist across platform sessions
-    Given the user has successfully saved a custom Fast Size Buttons configuration
-    When the user closes and reopens the Escalator widget
-    And the user logs out and logs back into the Darwin platform
-    Then the custom quantity values strictly persist and are displayed accurately in the Escalator widget
+### 2. Validation: Data Types, Zero, Negatives & Duplicates (AC9, AC13)
+**Status: PASSED ✅**
+Verified that the system correctly rejects decimals, zero, negative numbers, and letters, displaying the proper error messages. Duplicate values are also successfully blocked from being saved.
 
-  # Covers AC7
-  Scenario: Custom preset quantity buttons successfully apply to order execution
-    Given the Escalator widget displays a custom configured quantity button
-    When the user selects the custom quantity button
-    And the user submits an order from the Escalator widget
-    Then the system applies the exact customized quantity to the generated order
+*(Please see execution video/image below)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 2 AQUÍ ]
+
+---
+
+### 3. Validation: Button Limits & Max Order Size (AC8, AC14)
+**Status: FAILED ❌**
+Verified that the 1-to-6 button quantity limit is respected. However, AC14 is severely violated. 
+* **Defect detail:** The system does not validate against the instrument's maximum order size. It allows the user to input and save astronomical numbers (e.g., `10000000000000000000000`). Saving these massive values successfully applies them to the Escalator widget, causing severe text overflow and breaking the UI of the quantity bar.
+
+*(Please see attached evidence: image_47685f.png)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 3 AQUÍ ]
+
+---
+
+### 4. Auto-Sorting & Real-Time UI Updates (AC2, AC3, AC10, AC12)
+**Status: PASSED ✅**
+Verified that entering values in a random order auto-sorts them in ascending numerical order upon saving. The active Escalator widget instantly updates its quantity bar with the new values without requiring a widget refresh.
+
+*(Please see execution video/image below)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 4 AQUÍ ]
+
+---
+
+### 5. Quantity Bar Width & Blank Slots (AC11)
+**Status: PASSED ✅**
+Verified that when configuring fewer than 6 buttons (e.g., 2 buttons), the quantity bar in the Escalator strictly maintains its original width. The unused slots remain structurally present in the DOM but render completely blank visually, matching the requirement.
+
+*(Please see attached evidence: image_476176.png, image_476192.png)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 5 AQUÍ ]
+
+---
+
+### 6. Session Persistence (AC6)
+**Status: PASSED ✅**
+Verified that the customized quantity values persist accurately after closing/reopening the widget and after completely logging out and logging back into the Darwin platform.
+
+*(Please see execution video/image below)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 6 AQUÍ ]
+
+---
+
+### 7. Order Execution Accuracy (AC7)
+**Status: PASSED ✅**
+Verified that clicking a custom preset button (e.g., 1) successfully applies that exact quantity to the next order submitted directly from the Escalator widget.
+
+*(Please see attached evidence: image_475e14.png)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 7 AQUÍ ]
+
+**Sign-off:** Blocked. Returning to Development to implement the maximum order size validation (AC14) and prevent UI overflow.
