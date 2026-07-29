@@ -1,42 +1,30 @@
-Feature: Apply Existing Pricing Format in Market Depth and Escalator Widgets (DWU-344)
-  As a trader
-  I want prices displayed in the Market Depth and Ladder widgets to use the Pricing Format configured for each bond
-  So that prices are displayed consistently throughout Darwin
+**Summary:**
+[Bug] Market Depth: "Price:*" order entry field does not support 32nds format, reverts to decimal translation
 
-  Background:
-    Given the user is logged into Darwin
-    And the user navigates to the "Order Management" screen
+**Environment:**
+* DEV2
 
-  # --- MARKET DEPTH WIDGET SCENARIOS ---
+**Linked to Story:** DWU-344
 
-  # Covers AC1, AC3, AC4, AC6, AC7 and AC8 for Market Depth
-  Scenario: Market Depth widget consistently renders the Decimal pricing format
-    Given a specific bond is configured with the "Decimal" Pricing Format in Referential Data (DWU-169)
-    When the user opens the "Market Depth" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Market Depth grid are displayed in decimal format
-    And the manual order entry price fields display the value in decimal format
-    And the displayed decimal format visually matches the formatting shown in the Bond Pricer widget
+**Severity:** High (Blocks AC5 & AC6)
 
-  # Covers AC1, AC3, AC5, AC6, AC7 and AC8 for Market Depth
-  Scenario: Market Depth widget consistently renders the 32nds pricing format
-    Given a specific bond is configured with the "32nds" Pricing Format in Referential Data (DWU-169)
-    When the user opens the "Market Depth" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Market Depth grid are displayed in 32nds fractional format
-    And the manual order entry price fields display the value in 32nds fractional format
-    And the displayed 32nds format visually matches the formatting shown in the Bond Pricer widget
+**Description:**
 
-  # --- ESCALATOR (LADDER) WIDGET SCENARIOS ---
+**Overview:**
+As per AC5 and AC6 of DWU-344, all price fields within the Market Depth widget, specifically including the "order entry prices", must display in the 32nds fractional format if the bond is configured this way in Referential Data. Currently, the manual `Price:*` input field fails to inherit this format, translating the fractional value into a decimal format when a price is selected from the grid. Additionally, the field does not accept manual input in the 32nds format.
 
-  # Covers AC2, AC3, AC4, AC6, AC7 and AC8 for Escalator
-  Scenario: Escalator widget consistently renders the Decimal pricing format
-    Given a specific bond is configured with the "Decimal" Pricing Format in Referential Data (DWU-169)
-    When the user opens the "Escalator" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Escalator price ladder grid are displayed in decimal format
-    And the displayed decimal format visually matches the formatting shown in the Bond Pricer widget
+**Steps to Reproduce:**
+1. Navigate to the **Order Management** screen.
+2. Open a **Market Depth** widget for a bond configured with the 32nds Pricing Format (e.g., `PGB 3.000 06/35`).
+3. Verify that the BID/ASK grid correctly displays prices in fractions (e.g., `97-01 1/2`).
+4. Click on any of these fractional price levels in the grid to auto-populate the order entry section at the bottom.
+5. Observe the value populated in the **`Price:*`** input field.
 
-  # Covers AC2, AC3, AC5, AC6, AC7 and AC8 for Escalator
-  Scenario: Escalator widget consistently renders the 32nds pricing format
-    Given a specific bond is configured with the "32nds" Pricing Format in Referential Data (DWU-169)
-    When the user opens the "Escalator" and "Bond Pricer" widgets for this specific bond
-    Then all price values inside the Escalator price ladder grid are displayed in 32nds fractional format
-    And the displayed 32nds format visually matches the formatting shown in the Bond Pricer widget
+**Expected Result:**
+The `Price:*` input field must display the exact 32nds format selected from the grid (e.g., `97-01 1/2`), and it must allow the user to manually type and edit prices using this specific fractional format.
+
+**Actual Result:**
+The `Price:*` input field converts the fractional price into its decimal equivalent (e.g., clicking `97-01 1/2` populates the field with `97.05`). The field also rejects manual typing of fractions.
+
+**Evidence:**
+Please see attached screenshot: `image_e089f8.jpg` (Note the discrepancy between the selected grid level and the Price field below).
