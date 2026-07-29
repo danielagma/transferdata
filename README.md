@@ -1,30 +1,60 @@
-**Summary:**
-[Bug] Market Depth: "Price:*" order entry field does not support 32nds format, reverts to decimal translation
+Feature: Allow User Customization of Quantity Bar Values (DWU-260)
+  As a trader
+  I want to configure the quantity bar values shown in the Escalator Market Depth widget
+  So that the preset quantities match my specific trading preference
 
-**Environment:**
-* DEV2
+  Background:
+    Given the user is logged into Darwin
+    And the Escalator Market Depth widget is open
 
-**Linked to Story:** DWU-344
+  # Covers AC1, AC4, AC5
+  Scenario: Navigation to settings and default values verification
+    When the user navigates to "Settings" -> "Order Management" -> "Fast Size Buttons"
+    Then the Fast Size Buttons configuration page is successfully displayed
+    And the newly created configuration displays the default values: 1, 5, 10, 25, 50, and 100
+    And the configuration is tied specifically to the current user profile
 
-**Severity:** High (Blocks AC5 & AC6)
+  # Covers AC9, AC13
+  Scenario: Validation restricts invalid data types, zero, negative numbers, and duplicates
+    Given the user is on the Fast Size Buttons settings page
+    When the user attempts to enter invalid values (e.g., decimals, 0, negative numbers, or letters)
+    Or the user attempts to enter duplicate quantity values
+    Then the system triggers the appropriate validation error messages (e.g., "Must be an integer number", "Must not be zero")
+    And the system strictly prevents saving the configuration
 
-**Description:**
+  # Covers AC8, AC14
+  Scenario: Validation strictly enforces button quantity limits and instrument maximum sizes
+    Given the user is on the Fast Size Buttons settings page
+    When the user attempts to save a configuration with 0 buttons or more than 6 buttons
+    Or the user inputs a quantity value that strictly exceeds the configured maximum order size for the instrument
+    Then the system triggers a validation error message
+    And the system prevents saving the configuration
 
-**Overview:**
-As per AC5 and AC6 of DWU-344, all price fields within the Market Depth widget, specifically including the "order entry prices", must display in the 32nds fractional format if the bond is configured this way in Referential Data. Currently, the manual `Price:*` input field fails to inherit this format, translating the fractional value into a decimal format when a price is selected from the grid. Additionally, the field does not accept manual input in the 32nds format.
+  # Covers AC10, AC2, AC3, AC12
+  Scenario: Auto-sorting logic and real-time Escalator widget update
+    Given the user is on the Fast Size Buttons settings page
+    When the user enters valid quantity values in a random, non-sequential order (e.g., 50, 5, 100, 10)
+    And the user saves the configuration
+    Then the system automatically sorts and saves the values in ascending numerical order from left to right
+    And the configured values immediately replace the default buttons in the active Escalator widget without requiring a restart
 
-**Steps to Reproduce:**
-1. Navigate to the **Order Management** screen.
-2. Open a **Market Depth** widget for a bond configured with the 32nds Pricing Format (e.g., `PGB 3.000 06/35`).
-3. Verify that the BID/ASK grid correctly displays prices in fractions (e.g., `97-01 1/2`).
-4. Click on any of these fractional price levels in the grid to auto-populate the order entry section at the bottom.
-5. Observe the value populated in the **`Price:*`** input field.
+  # Covers AC11
+  Scenario: Quantity bar maintains strict width and visual layout with fewer than 6 buttons
+    Given the user is on the Fast Size Buttons settings page
+    When the user successfully configures and saves fewer than 6 quantity values (e.g., 4 values)
+    Then the quantity bar in the Escalator widget consistently occupies its original full width
+    And the unused button positions (e.g., the last 2 slots) remain visually blank
 
-**Expected Result:**
-The `Price:*` input field must display the exact 32nds format selected from the grid (e.g., `97-01 1/2`), and it must allow the user to manually type and edit prices using this specific fractional format.
+  # Covers AC6
+  Scenario: User-defined quantity values persist across platform sessions
+    Given the user has successfully saved a custom Fast Size Buttons configuration
+    When the user closes and reopens the Escalator widget
+    And the user logs out and logs back into the Darwin platform
+    Then the custom quantity values strictly persist and are displayed accurately in the Escalator widget
 
-**Actual Result:**
-The `Price:*` input field converts the fractional price into its decimal equivalent (e.g., clicking `97-01 1/2` populates the field with `97.05`). The field also rejects manual typing of fractions.
-
-**Evidence:**
-Please see attached screenshot: `image_e089f8.jpg` (Note the discrepancy between the selected grid level and the Price field below).
+  # Covers AC7
+  Scenario: Custom preset quantity buttons successfully apply to order execution
+    Given the Escalator widget displays a custom configured quantity button
+    When the user selects the custom quantity button
+    And the user submits an order from the Escalator widget
+    Then the system applies the exact customized quantity to the generated order
