@@ -1,49 +1,75 @@
 **QA Execution: PASSED ✅ (With Approved Deviation)**
 
 * **Environment:** DEV2
-* **Instrument Configured:** PGB 3.000 06/35 (32nds config) / Decimal configured bonds
 
 **Execution Summary:**
-The core logic for inheriting the Referential Data pricing format is working and successfully matching the Bond Pricer in the main grid areas. 
+The feature works perfectly for sorting, persistence, standard validations, and execution. 
 
-**⚠️ Important Note regarding AC5 & AC6:** 
-The written Acceptance Criteria state that *ALL* prices (including "order entry prices") must reflect the 32nds format. Currently, the manual `Price:*` order entry field in the Market Depth widget does not support this and reverts to decimal values. However, following an offline discussion between the Product Owners and the Development team, it was agreed that the manual entry field is exempt from this formatting rule. Although the written ACs in this ticket were not updated by the BAs to reflect this scope change, I am marking this execution as **PASSED** based on that explicit PO approval.
+**⚠️ Important Note regarding AC14:** 
+The system currently does not validate the configured maximum order size. Users can save astronomically large numbers that subsequently break the quick quantity bar display due to text overflow. During a recent sync meeting with the team, it was clarified that the Business Analysts have not yet defined the "maximum order size" values/logic for the instruments. It was agreed offline that the implementation of AC14 will be deferred until the business rules are clearly defined. The story is approved to move forward with this known deviation.
 
 ---
 
-### 1. Market Depth: Decimal Pricing Format (AC1, AC3, AC4, AC6, AC7, AC8)
+### 1. Navigation & Default Values (AC1, AC4, AC5)
 **Status: PASSED ✅**
-Verified that when a bond is configured as Decimal, all price values inside the Market Depth grid and the manual order entry price fields display accurately in decimal format, perfectly matching the Bond Pricer widget.
-
-*(Please see execution video below)*
-[ 📎 ARRASTRA Y SUELTA TU VIDEO 1 AQUÍ ]
-
----
-
-### 2. Market Depth: 32nds Pricing Format (AC1, AC3, AC5, AC6, AC7, AC8)
-**Status: PASSED ✅ (With PO Exemption)**
-Verified the grid displays 32nds accurately. 
-* **Deviation Accepted:** When clicking a 32nds price level on the grid (e.g., `97-01 1/2`), the system populates the `Price:*` input field with its decimal translation (e.g., `97.05`). Manual typing of 32nds is rejected. As noted in the summary, this specific behavior for the entry field has been approved by the PO despite conflicting with the original written AC comments.
+Verified that the Fast Size Buttons settings page is accessible via the correct path. New configurations correctly display the default values (1, 5, 10, 25, 50, 100) and are saved independently per user profile.
 
 *(Please see execution video/image below)*
-[ 📎 ARRASTRA Y SUELTA TU CAPTURA/VIDEO 2 AQUÍ ]
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 1 AQUÍ ]
 
 ---
 
-### 3. Escalator: Decimal Pricing Format (AC2, AC3, AC4, AC6, AC7, AC8)
+### 2. Validation: Data Types, Zero, Negatives & Duplicates (AC9, AC13)
 **Status: PASSED ✅**
-Verified that when a bond is configured as Decimal, all price values inside the Escalator price ladder grid render consistently in decimal format, matching the Bond Pricer.
+Verified that the system correctly rejects decimals, zero, negative numbers, and letters, displaying the proper error messages. Duplicate values are also successfully blocked from being saved.
 
-*(Please see execution video below)*
-[ 📎 ARRASTRA Y SUELTA TU VIDEO 3 AQUÍ ]
+*(Please see execution video/image below)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 2 AQUÍ ]
 
 ---
 
-### 4. Escalator: 32nds Pricing Format (AC2, AC3, AC5, AC6, AC7, AC8)
+### 3. Validation: Button Limits & Max Order Size (AC8, AC14)
+**Status: PASSED ✅ (With Exemption for AC14)**
+Verified that the 1-to-6 button quantity limit is completely respected (AC8). 
+* **Deviation Accepted (AC14):** As detailed in the summary, the system does not validate against the instrument's maximum order size. It allows the user to input and save massive values (e.g., `1000000000000000000`), which causes text overflow and breaks the quantity bar UI. This is explicitly accepted for this release pending BA definition of the maximum limits.
+
+*(Please see attached evidence: image_633484.png)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 3 AQUÍ ]
+
+---
+
+### 4. Auto-Sorting & Real-Time UI Updates (AC2, AC3, AC10, AC12)
 **Status: PASSED ✅**
-Verified that when a bond is configured in 32nds, all price values inside the Escalator price ladder grid successfully render in the 32nds fractional format (e.g., `97-01 1/2`), completely matching the Bond Pricer formatting.
+Verified that entering values in a random order auto-sorts them in ascending numerical order upon saving. The active Escalator widget instantly updates its quantity bar with the new values without requiring a widget refresh.
 
-*(Please see execution video below)*
-[ 📎 ARRASTRA Y SUELTA TU VIDEO 4 AQUÍ ]
+*(Please see execution video/image below)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 4 AQUÍ ]
 
-**Sign-off:** Approved to close. (Market Depth order entry format deviation approved offline by PO).
+---
+
+### 5. Quantity Bar Width & Blank Slots (AC11)
+**Status: PASSED ✅**
+Verified that when configuring fewer than 6 buttons (e.g., 2 buttons), the quantity bar in the Escalator strictly maintains its original width. The unused slots remain structurally present in the DOM but render completely blank visually, matching the requirement.
+
+*(Please see attached evidence)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 5 AQUÍ ]
+
+---
+
+### 6. Session Persistence (AC6)
+**Status: PASSED ✅**
+Verified that the customized quantity values persist accurately after closing/reopening the widget and after completely logging out and logging back into the Darwin platform.
+
+*(Please see execution video/image below)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 6 AQUÍ ]
+
+---
+
+### 7. Order Execution Accuracy (AC7)
+**Status: PASSED ✅**
+Verified that clicking a custom preset button (e.g., 1) successfully applies that exact quantity to the next order submitted directly from the Escalator widget.
+
+*(Please see attached evidence)*
+[ 📎 ARRASTRA Y SUELTA TU EVIDENCIA 7 AQUÍ ]
+
+**Sign-off:** Approved to close. (AC14 deferred pending business logic definition).
