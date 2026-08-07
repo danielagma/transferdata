@@ -6,6 +6,7 @@ Feature: Show Quantity Redesigned in Market Depth Widget (Iceberg Orders - DWU-4
   Background:
     Given the user is logged into Darwin
     And a Market Depth Escalator (Ladder) widget is open for a selected bond
+    And the selected routing venue is set to a single venue (e.g., EBM, not "MULTI")
 
   # Covers AC1, AC2, AC12
   Scenario: Default UI state and Quick Quantity buttons behavior
@@ -17,9 +18,8 @@ Feature: Show Quantity Redesigned in Market Depth Widget (Iceberg Orders - DWU-4
     And the "Show Qty" field remains blank and unaffected
 
   # Covers AC10, AC11
-  Scenario: Iceberg mode restrictions when using MULTI venue
-    Given the selected routing venue is set to a specific single venue (e.g., EBM)
-    And the user has entered a valid value in the "Show Qty" field
+  Scenario: Iceberg mode restrictions when changing venue to MULTI
+    Given the user has entered a valid value in the "Show Qty" field (Iceberg mode active)
     When the user changes the routing venue to "MULTI"
     Then the system automatically clears the "Show Qty" field
     And Iceberg mode is immediately deactivated
