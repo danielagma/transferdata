@@ -1,49 +1,33 @@
-Feature: Hidden View Functionality of Escalator View in Market Widget (DWU-283)
+Feature: Escalator View: Add scrollbar & Recenter Control to Ladder Widget (DWU-318)
   As a trader
-  I want to expand or collapse the additional order entry controls within the Market Depth widget
-  So that I can reduce screen space usage when those controls are not needed
+  I want to scroll through the Ladder and quickly return to the current market
+  So that I can review different price levels and instantly navigate back to the active trading area
 
   Background:
     Given the user is logged into Darwin
     And a Market Depth Escalator (Ladder) widget is open for a selected bond
 
-  # Covers AC1, AC4, AC9 (Second part)
-  Scenario: Default compact state of a newly opened Escalator widget
-    When the user opens a completely new Market Depth widget
-    Then an accordion control icon is displayed at the bottom right of the widget
-    And the accordion defaults to a closed (compact) state
-    And the ladder section, quantity bar, and cancellation controls are fully visible
-    And the additional order entry controls are hidden from view
+  # Covers AC1, AC4, AC6
+  Scenario: Initial load centers on the best available price levels
+    When the Ladder widget finishes loading
+    Then a vertical scroll bar is successfully displayed on the right side of the grid
+    And a Recenter button (target icon) is displayed next to the cancellation controls
+    And the default view is automatically centered, displaying the current best bid and best ask price levels
 
-  # Covers AC2, AC5
-  Scenario: Expanding the accordion to reveal additional order entry controls
-    Given the accordion control is currently in a closed state
-    When the user clicks the accordion control icon
-    Then the additional controls section successfully expands beneath the ladder
-    And the following controls are displayed: Book, Order Type, Time in Force, VWAP, and Pause
-    And the ladder section remains fully visible above the expanded controls
+  # Covers AC2, AC3
+  Scenario: Safe navigation through price levels using the vertical scroll bar
+    Given the user has active orders placed on specific price levels in the Ladder
+    When the user scrolls up and down using the vertical scroll bar
+    Then the trader can successfully navigate and view all available price levels
+    And the scrolling action updates the visible UI only
+    And live market data continues to stream and update without freezing
+    And no active orders are modified, interrupted, or cancelled during the scroll
 
-  # Covers AC3, AC4
-  Scenario: Collapsing the accordion hides additional controls
-    Given the accordion control is currently in an expanded state
-    When the user clicks the accordion control icon again
-    Then the additional controls section successfully collapses
-    And the Book, Order Type, Time in Force, VWAP, and Pause controls are hidden
-    And the ladder section, quantity bar, and cancellation controls remain fully visible
-
-  # Covers AC6, AC7, AC8
-  Scenario: Accordion state changes do not refresh the widget or clear user data
-    Given the user has populated the widget with active values (e.g., selected a quantity, changed Order Type to MKT, and manually entered a Book)
-    And real-time market data is streaming in the ladder
-    When the user toggles the accordion control multiple times (expands and collapses)
-    Then the widget does not refresh or reload at any point
-    And the live market data streaming remains uninterrupted
-    And all manually entered values, selected quantities, and active orders remain completely intact and unchanged
-
-  # Covers AC9 (First part)
-  Scenario: Accordion state persists across user sessions
-    Given the user expands the accordion control
-    And the user saves the layout/widget settings
-    When the user reloads the Darwin platform or logs out and back in
-    Then the system remembers the exact state the user left it in
-    And the accordion control successfully renders in the expanded state upon reloading
+  # Covers AC5, AC7, AC8
+  Scenario: Recenter button instantly snaps view to current market without impacting orders
+    Given the user has active orders placed in the Ladder
+    And the user has scrolled far away from the current market best bid and ask
+    When the user clicks the Recenter button
+    Then the Ladder view instantly returns to the default market centered position (best bid and best ask visible)
+    And the recenter action is strictly a UI navigation event
+    And no active orders are modified or cancelled by this action
