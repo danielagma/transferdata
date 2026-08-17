@@ -1,44 +1,61 @@
-Feature: Add Bond Sector to Bond Referential (DWU-375)
-  As a reference data user
-  I want Darwin to view and maintain Bond Sector in Bond Referential
-  So that Treasury instruments can be grouped in the correct trading sector
+Feature: PostTrade fields sourced from TOMS with conditional logic (DWU-417)
+  As a backend system
+  I need to apply conditional logic, instrument guards, and default overrides for TOMS trades
+  So that the STP Hub payload is enriched correctly based on TOMS as the source of truth
 
   Background:
-    Given the user is logged into Darwin
-    And navigates to the Bond Referential module
-    And selects a U.S Treasury instrument to View/Edit
+    Given the Darwin Trade Service is running
+    And an incoming ITradeEvent is received
 
-  # Covers AC1, AC3, AC5
-  Scenario: UI placement and strict dropdown validation
-    When the user navigates to the "Bond Reference Data" tab
-    And looks under the "Classifications" section
-    Then a new field named "Bond Sector" is displayed directly below "Internal Sector"
-    And the field is optional and allows a blank value
-    And the field is a strict dropdown containing exactly the following values: Short, 2Y, 3Y, 5Y, 7Y, 10Y, 20Y, 30Y, TIPS, STRIPS
-    And the user is successfully prevented from typing free text or custom values into the field
+  # Covers AC1, AC2
+  Scenario: Gateway scope isolation for conditional logic
+    Given the ITradeEvent originates from a gateway OTHER THAN "Toms.Inbound" (e.g., TransFicc Venue)
+    When the mapping process executes
+    Then the DWU-417 conditional mapping logic is completely bypassed
+    And the payload is not affected by these specific TOMS rules
 
-  # Covers AC4, AC6
-  Scenario: Manual assignment and persistence of Bond Sector
-    When the user selects a valid value (e.g., "10Y") from the Bond Sector dropdown
-    And clicks the Save button
-    Then the instrument is saved successfully without errors
-    When the user reloads the instrument data
-    Then the Bond Sector field correctly displays the saved value ("10Y")
-    And the network payload confirms the "bondSector" attribute was updated successfully
+  # Covers AC4, AC5
+  Scenario: Conditional mapping based on populated XML elements
+    Given the trade originates from the "Toms.Inbound" gateway
+    When the conditional logic evaluates XML elements (e.g., LongNotes, ShortNotes, ClearingBroker)
+    Then the mapping is applied ONLY if the source XML element is present and non-empty
+    And if the element is null or missing, the mapping gracefully falls back or skips as defined
 
-  # Covers AC2 (Happy Path)
-  Scenario: Bulk Upload with valid Bond Sector values
-    Given the user prepares a Bulk Upload CSV file containing U.S Treasury instruments
-    And the "Bond Sector" column contains valid Enum values (e.g., "TIPS", "5Y") or is left blank
-    When the user uploads the file via the Bond Referential Bulk Upload function
-    Then the upload is processed successfully
-    And the instruments are updated with their respective Bond Sector values
+  # Covers AC6, AC11
+  Scenario: Instrument Type Guards correctly block mappings for Futures
+    Given the trade originates from the "Toms.Inbound" gateway
+    And the instrument is identified as a "Future"
+    When the conditional mapping logic evaluates "AccrDays", "AccruedInterest", and "ForwardIsStandard"
+    Then the guard condition prevents mapping these fields
+    And the fields retain their prior value or are set to null/default as specified
+    And the final payload is written to the log with InternalTradeId and gateway source
 
-  # Covers AC2 (Unhappy Path)
-  Scenario: Bulk Upload rejects invalid Bond Sector values with row-level error
-    Given the user prepares a Bulk Upload CSV file
-    And includes an instrument with an invalid "Bond Sector" value (e.g., "15Y", "FreeText")
-    When the user uploads the file via the Bulk Upload function
-    Then the system triggers a row-level validation error for that specific instrument
-    And the instrument's existing Bond Sector is NOT updated
-    And other valid instruments in the same file are processed successfully
+  # Covers AC7, AC9
+  Scenario: Default values unconditionally overwrite prior data
+    Given the trade originates from the "Toms.Inbound" gateway
+    When the mapping process executes
+    Then the "MarketCode" field is explicitly set to "BBG_TOMS"
+    And the "NumberOfLegs" field is explicitly set to "1"
+    And these default values unconditionally overwrite any prior values in the payload
+
+  # Covers AC8
+  Scenario: Trade Model field overrides with specific Voice logic modification
+    Given the trade originates from the "Toms.Inbound" gateway
+    And the trade was executed via Voice (IsVoice = true)
+    When the system maps the "TradeSrc" field
+    Then the modified GetExecutedPlatformName logic is applied
+    And it returns "STW" instead of "VOICE" for the payload
+
+  # Covers AC3, AC9, AC10
+  Scenario: Execution order ensures TOMS is the absolute source of truth
+    Given the mapping steps from DWU-415, 420, 419, 416, and 418 have already populated the payload
+    When the DWU-417 logic executes
+    Then the conditional logic evaluated in this step takes absolute precedence
+    And unconditionally overwrites any pre-existing values in those specific fields
+
+  # Covers AC12
+  Scenario: Error logging contains all required traceability context
+    Given the trade originates from the "Toms.Inbound" gateway
+    When a mapping error or validation failure occurs during the conditional evaluation
+    Then the system generates an error log
+    And the error log strictly includes: trade ID, field name, expected type, actual value, and gateway source
