@@ -1,0 +1,45 @@
+Feature: PostTrade fields sourced from Trade Model for TOMS-originated trades (direct mapping) (DWU-416)
+  As a backend system
+  I need to apply direct mapping and unconditional overrides specifically for TOMS trades
+  So that STP Hub receives deterministic data that overrides any prior gateway rules
+
+  Background:
+    Given the Darwin Trade Service is running
+
+  # Covers AC1, AC3
+  Scenario: Trigger mapping for TOMS-originated trades and log payload
+    Given an ITradeEvent is received from TransFicc via the "Toms.Inbound" gateway
+    When the mapping process executes
+    Then the fields listed in the mapping table are populated in the payload directly from the Trade Model
+    And the assembled payload is written to the log including at minimum the InternalTradeId and the gateway source
+
+  # Covers AC2
+  Scenario: Gateway scope isolation ensures non-TOMS trades are ignored
+    Given an ITradeEvent is received from TransFicc via any inquiry-posttrade gateway OTHER THAN "Toms.Inbound"
+    When the mapping process executes
+    Then this specific mapping logic is completely bypassed
+    And the trade is not affected by this ticket's rules
+
+  # Covers AC4, AC5, AC7
+  Scenario: Direct mapping unconditionally overrides prior mapping steps
+    Given the payload has already been assigned values from prior mapping steps (DWU-415, DWU-420, DWU-419)
+    And an ITradeEvent is received via the "Toms.Inbound" gateway
+    When this mapping step is executed
+    Then the fields are mapped directly with no additional transformation
+    And the new values unconditionally overwrite any pre-existing values or empty spaces
+    And no conditional checks or "only-if-empty" logic is applied
+
+  # Covers AC6
+  Scenario: Null values are gracefully handled and unconditionally override existing data
+    Given a field in the PostTradeEvent payload already has a populated value
+    But the corresponding Trade Model field for this TOMS trade has a null value
+    When the unconditional override step is executed
+    Then the payload field is successfully set to null
+    And no error is thrown during this override process
+
+  # Covers AC8
+  Scenario: Error logging contains strict traceability context
+    Given an incoming ITradeEvent is processed via the "Toms.Inbound" gateway
+    When a mapping error occurs during the process
+    Then the system generates an error log
+    And the error log strictly includes: trade ID, field name, expected type, actual value, and gateway source

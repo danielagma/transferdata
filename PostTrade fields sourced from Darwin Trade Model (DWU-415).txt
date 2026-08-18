@@ -1,0 +1,53 @@
+Feature: PostTrade fields sourced from Darwin Trade Model (DWU-415)
+  As a backend system
+  I need to map and enrich trade fields from the Trade Model to a PostTradeEvent payload
+  So that STP Hub can consume standard, validated trade data
+
+  Background:
+    Given the Darwin Trade Service is running
+
+  # Covers AC1, AC2, AC3, AC4
+  Scenario Outline: Successful field mapping and type transformation across valid gateways
+    Given an ITradeEvent is received from TransFicc via the "<gateway_type>" gateway
+    And the Trade Model contains all required and optional valid fields
+    When the system processes the trade event
+    Then the PostTradeEvent payload is successfully generated
+    And every field in the mapping table is correctly sourced and mapped
+    And type transformations are applied exactly as described (e.g., Side to String, Date to YYYY-MM-DD)
+    And the assembled payload is written to the log including the InternalTradeId and the gateway source
+
+    Examples:
+      | gateway_type      |
+      | inquiry-posttrade |
+      | Toms.Inbound      |
+
+  # Covers AC5, AC9
+  Scenario: Mandatory field validation fails and halts processing
+    Given an ITradeEvent is received from TransFicc
+    But a required field (e.g., Price, Yield, Quantity, SettlementDate, MaturityDate) has a null value in the Trade Model
+    When the system processes the trade event
+    Then the system throws a validation error
+    And does NOT produce a partial payload
+    And the error log strictly includes: trade ID, field name, expected type, actual value, and gateway source
+
+  # Covers AC6
+  Scenario: Optional fields safely fall back to null
+    Given an ITradeEvent is received from TransFicc
+    But an optional field cannot be populated
+    When the system processes the trade event
+    Then the target optional field is set to null in the payload
+
+  # Covers AC4, AC7, AC8 (Happy Path)
+  Scenario: Mifid Transparency and Waiver valid transformations
+    Given an ITradeEvent is received from TransFicc
+    And the Trade Model contains valid Mifid data
+    When the system processes the trade event
+    Then Mifid.Transparency is serialized as a JSON array containing only allowed values (e.g., NODF, ILQD, LRGS, SIZE, TPAC, RFPT, NONE)
+    And Mifid.Waiver takes the first element of the ISet, or null if the set is empty or "NOT_SET"
+
+  # Covers AC7 (Unhappy Path)
+  Scenario: Mifid Transparency validation fails on invalid values
+    Given an ITradeEvent is received from TransFicc
+    But the Mifid.Transparency field contains a value other than the explicitly allowed values
+    When the system processes the trade event
+    Then the system triggers a validation error
