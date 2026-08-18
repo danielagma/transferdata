@@ -1,61 +1,51 @@
-Feature: PostTrade fields sourced from TOMS with conditional logic (DWU-417)
+Feature: Fields that require other data sources to extend TM on Venue trades (DWU-419)
   As a backend system
-  I need to apply conditional logic, instrument guards, and default overrides for TOMS trades
-  So that the STP Hub payload is enriched correctly based on TOMS as the source of truth
+  I need to enrich the PostTradeEvent payload by querying external data sources and applying defaults
+  So that STP Hub receives a complete and fully enriched trade record
 
   Background:
     Given the Darwin Trade Service is running
-    And an incoming ITradeEvent is received
 
-  # Covers AC1, AC2
-  Scenario: Gateway scope isolation for conditional logic
-    Given the ITradeEvent originates from a gateway OTHER THAN "Toms.Inbound" (e.g., TransFicc Venue)
+  # Covers AC1, AC2, AC3
+  Scenario Outline: Trigger mapping across different valid gateways and log payload
+    Given an ITradeEvent is received from TransFicc via the "<gateway_type>" gateway
     When the mapping process executes
-    Then the DWU-417 conditional mapping logic is completely bypassed
-    And the payload is not affected by these specific TOMS rules
+    Then every field in the mapping table is correctly populated in the PostTradeEvent payload from their respective data sources
+    And the assembled payload is written to the log including the InternalTradeId and the gateway source
 
-  # Covers AC4, AC5
-  Scenario: Conditional mapping based on populated XML elements
-    Given the trade originates from the "Toms.Inbound" gateway
-    When the conditional logic evaluates XML elements (e.g., LongNotes, ShortNotes, ClearingBroker)
-    Then the mapping is applied ONLY if the source XML element is present and non-empty
-    And if the element is null or missing, the mapping gracefully falls back or skips as defined
+    Examples:
+      | gateway_type          |
+      | inquiry-posttrade     |
+      | Toms.Inbound          |
 
-  # Covers AC6, AC11
-  Scenario: Instrument Type Guards correctly block mappings for Futures
-    Given the trade originates from the "Toms.Inbound" gateway
-    And the instrument is identified as a "Future"
-    When the conditional mapping logic evaluates "AccrDays", "AccruedInterest", and "ForwardIsStandard"
-    Then the guard condition prevents mapping these fields
-    And the fields retain their prior value or are set to null/default as specified
-    And the final payload is written to the log with InternalTradeId and gateway source
+  # Covers AC5, AC6, AC7
+  Scenario: Successfully resolve fields from external data sources
+    Given an incoming ITradeEvent is being processed
+    When the system performs external data source lookups
+    Then fields sourced from Darwin Reference Stack DataProvider are correctly resolved using the specified entity
+    And fields sourced from Darwin Trade Stack DB are correctly queried from their respective entities
+    And fields sourced from TransFicc are correctly extracted from the TradeEvent payload
+    And the "TradeSrc" field maps to "Electronic" if voiceTradeTimestampNanos is empty, or "Voice" if populated
 
-  # Covers AC7, AC9
-  Scenario: Default values unconditionally overwrite prior data
-    Given the trade originates from the "Toms.Inbound" gateway
+  # Covers AC4
+  Scenario: Unconditional application of exact default values
+    Given an incoming ITradeEvent is being processed
+    When fields sourced from "Default value" are mapped
+    Then they are set to the exact specified values (e.g., AccruedDays = 0, ForwardIsStandard = false, Type = "TRADE")
+    And these values are applied regardless of any other state in the system
+
+  # Covers AC8, AC10
+  Scenario: Mandatory field validation fails and halts payload generation
+    Given an incoming ITradeEvent is being processed
+    But a required field evaluates to a null value after lookup or enrichment
+    When the payload validator evaluates the data
+    Then the system throws an error
+    And does NOT produce a partial payload
+    And the error log strictly includes: trade ID, field name, data source, expected type, actual value, and gateway source
+
+  # Covers AC9
+  Scenario: Optional fields gracefully fall back to null
+    Given an incoming ITradeEvent is being processed
+    But an optional field cannot be populated or its lookup fails
     When the mapping process executes
-    Then the "MarketCode" field is explicitly set to "BBG_TOMS"
-    And the "NumberOfLegs" field is explicitly set to "1"
-    And these default values unconditionally overwrite any prior values in the payload
-
-  # Covers AC8
-  Scenario: Trade Model field overrides with specific Voice logic modification
-    Given the trade originates from the "Toms.Inbound" gateway
-    And the trade was executed via Voice (IsVoice = true)
-    When the system maps the "TradeSrc" field
-    Then the modified GetExecutedPlatformName logic is applied
-    And it returns "STW" instead of "VOICE" for the payload
-
-  # Covers AC3, AC9, AC10
-  Scenario: Execution order ensures TOMS is the absolute source of truth
-    Given the mapping steps from DWU-415, 420, 419, 416, and 418 have already populated the payload
-    When the DWU-417 logic executes
-    Then the conditional logic evaluated in this step takes absolute precedence
-    And unconditionally overwrites any pre-existing values in those specific fields
-
-  # Covers AC12
-  Scenario: Error logging contains all required traceability context
-    Given the trade originates from the "Toms.Inbound" gateway
-    When a mapping error or validation failure occurs during the conditional evaluation
-    Then the system generates an error log
-    And the error log strictly includes: trade ID, field name, expected type, actual value, and gateway source
+    Then the target optional field is safely set to null in the payload
