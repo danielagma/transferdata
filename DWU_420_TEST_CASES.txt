@@ -1,0 +1,47 @@
+Feature: PostTrade fields requiring additional transformation (DWU-420)
+  As a backend system
+  I need to apply specific parsing and transformation logic to Trade Model fields
+  So that STP Hub receives correctly formatted data like split dates and stripped strings
+
+  Background:
+    Given the Darwin Trade Service is running
+
+  # Covers AC1, AC2, AC3
+  Scenario Outline: Trigger transformation mapping across valid gateways and log payload
+    Given an ITradeEvent is received from TransFicc via the "<gateway_type>" gateway
+    When the transformation mapping process executes
+    Then every field in the mapping table is correctly sourced and mapped with the described transformation
+    And the assembled payload is written to the log including at minimum the InternalTradeId and the gateway source
+
+    Examples:
+      | gateway_type      |
+      | inquiry-posttrade |
+      | Toms.Inbound      |
+
+  # Covers AC4, AC8
+  Scenario: Mandatory Date and Time parsing succeeds or halts processing
+    Given an incoming ITradeEvent is being processed
+    When the system parses a mandatory DateTimeOffset field (e.g., Timestamp, ExecutionTimestamp)
+    Then it is correctly split into separate Date formatted as "YYYY-MM-DD" and Time formatted as "HH:mm:ss.SSS"
+    But if the source value is null or parsing fails, the system throws an error and does NOT produce a partial payload
+
+  # Covers AC5, AC9
+  Scenario: Optional string splitting gracefully falls back to null on unexpected formats
+    Given an incoming ITradeEvent is being processed
+    When the system parses Mifid decision maker info strings containing a "/" character
+    Then the first segment maps to the MktId field and the second segment maps to the MktIdType field
+    But if the source is null, empty, or the format is unexpected, the target fields are set to null in the payload
+
+  # Covers AC6, AC7, AC8
+  Scenario: Sentinel logic successfully strips dummy suffix from Counterparty
+    Given an incoming ITradeEvent is being processed
+    When the system maps the Counterparty.Glcs field
+    Then it applies Sentinel logic to strip the dummy suffix from the Counterparty before mapping
+    But if the resulting value is null, the system throws an error and halts payload generation
+
+  # Covers AC10
+  Scenario: Error logging contains strict traceability context
+    Given an incoming ITradeEvent is processed
+    When a mandatory transformation or parsing rule fails
+    Then the system generates an error log
+    And the error log strictly includes: trade ID, field name, expected type, actual value, and gateway source
