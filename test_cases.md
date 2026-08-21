@@ -1,51 +1,35 @@
-Feature: Fields that require other data sources to extend TM on Venue trades (DWU-419)
-  As a backend system
-  I need to enrich the PostTradeEvent payload by querying external data sources and applying defaults
-  So that STP Hub receives a complete and fully enriched trade record
+Feature: Bank state staleness detection in Order Management Client API (DWU-450)
+  As a Trading System
+  I need to detect when the Bank State data is stale
+  So that I prevent order request pile-ups when the Gateway is down or disconnected
 
   Background:
-    Given the Darwin Trade Service is running
+    Given the Order Management Client API is running
+    And the staleness threshold is configured (default: 60 seconds)
 
-  # Covers AC1, AC2, AC3
-  Scenario Outline: Trigger mapping across different valid gateways and log payload
-    Given an ITradeEvent is received from TransFicc via the "<gateway_type>" gateway
-    When the mapping process executes
-    Then every field in the mapping table is correctly populated in the PostTradeEvent payload from their respective data sources
-    And the assembled payload is written to the log including the InternalTradeId and the gateway source
+  # Covers AC: Update IsBankStateOn to check freshness, Update IsAnyMarketOn, Update IsOrderActionAllowed
+  Scenario: Fresh bank state allows normal order processing
+    Given the Order Management Gateway is actively publishing BankState heartbeats
+    And the BankState EventDateTime age is less than the staleness threshold
+    When the system evaluates the bank state
+    Then IsBankStateOn returns true
+    And IsAnyMarketOn and IsOrderActionAllowed respect the freshness check and return true
+    And the Order Management Client API accepts incoming order requests
 
-    Examples:
-      | gateway_type          |
-      | inquiry-posttrade     |
-      | Toms.Inbound          |
+  # Covers AC: Return false if older than threshold, Log warning, Prevent request acceptance
+  Scenario: Stale bank state safely rejects new orders and logs warning
+    Given the Order Management Gateway stops publishing BankState updates (e.g., service goes down)
+    And the BankState EventDateTime age exceeds the staleness threshold
+    When the system evaluates the bank state
+    Then IsBankStateOn immediately returns false
+    And the system treats the bank state as OFF
+    And the Order Management Client API strictly rejects new order requests
+    And a warning log is generated containing the market and the timestamp (StaleBankStateDetected)
 
-  # Covers AC5, AC6, AC7
-  Scenario: Successfully resolve fields from external data sources
-    Given an incoming ITradeEvent is being processed
-    When the system performs external data source lookups
-    Then fields sourced from Darwin Reference Stack DataProvider are correctly resolved using the specified entity
-    And fields sourced from Darwin Trade Stack DB are correctly queried from their respective entities
-    And fields sourced from TransFicc are correctly extracted from the TradeEvent payload
-    And the "TradeSrc" field maps to "Electronic" if voiceTradeTimestampNanos is empty, or "Voice" if populated
-
-  # Covers AC4
-  Scenario: Unconditional application of exact default values
-    Given an incoming ITradeEvent is being processed
-    When fields sourced from "Default value" are mapped
-    Then they are set to the exact specified values (e.g., AccruedDays = 0, ForwardIsStandard = false, Type = "TRADE")
-    And these values are applied regardless of any other state in the system
-
-  # Covers AC8, AC10
-  Scenario: Mandatory field validation fails and halts payload generation
-    Given an incoming ITradeEvent is being processed
-    But a required field evaluates to a null value after lookup or enrichment
-    When the payload validator evaluates the data
-    Then the system throws an error
-    And does NOT produce a partial payload
-    And the error log strictly includes: trade ID, field name, data source, expected type, actual value, and gateway source
-
-  # Covers AC9
-  Scenario: Optional fields gracefully fall back to null
-    Given an incoming ITradeEvent is being processed
-    But an optional field cannot be populated or its lookup fails
-    When the mapping process executes
-    Then the target optional field is safely set to null in the payload
+  # Covers Dev Evidence (Configuration behavior verified)
+  Scenario: System fallback when staleness configuration is missing
+    Given the Order Management Client API starts
+    But the specific configuration key (OrderManagement:BankState:StalenessThresholdSeconds) is missing
+    When the service initializes
+    Then the system safely defaults the staleness threshold to 60 seconds
+    And the service starts successfully without throwing a fatal exception
