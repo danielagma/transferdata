@@ -1,1 +1,1 @@
-https://eu-bonds-dev1.darwin.aws.scib.dev.corp/](https://eu-bonds-dev1.darwin.aws.scib.dev.corp/
+https://eu-bonds-dev1.darwin.aws.scib.dev.corp/_dashboards/
