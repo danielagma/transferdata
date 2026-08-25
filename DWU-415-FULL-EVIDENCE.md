@@ -1,12 +1,14 @@
 # QA Execution Report: STP Hub Payload Generation - Focus: DWU-415
-
+FIRST PART OF CLOSING COMMENTS, CHECK MY TICKETS TO SEE WHAT INFO I USED, DO NOT COPY AND PASTE WITHOUT VERIFYING
 **Environment:** DEV1
 **Trigger Source:** TradeWeb (Manual RFQ via UI)
 **ContextId:** `Tradeweb$20260824.SANT.EUGV.226`
 **Target Event:** `PublishingStpHubEvent`
+
 The foundational mapping logic and type transformations for the STP Hub payload have been fully verified in DEV1 via a TradeWeb RFQ. The payload audit confirms that all pre-enriched Darwin Trade Model data is correctly mapped to the JSON schema. Type transformations functioned exactly as specified: the `Side` enum cast to a string successfully, `Date` objects were formatted strictly to `YYYY-MM-DD`, and the `ISet<string>` collections for Transparency and Waiver resolved to valid JSON arrays or nulls correctly. The successful payload generation confirms that mandatory fields (`Price`, `Quantity`, `Yield`, `SettlementDate`, `MaturityDate`) successfully bypassed the null-rejection guards, while optional fields degraded gracefully. 
 
-## 1. Technical Audit (Raw JSON Payload Extraction)
+GABY, FOCUS ON THESE JSON INFO TO VERIFY USER STORY AC
+Technical Audit (Raw JSON Payload Extraction)
 The following key-value pairs were successfully extracted from the `Payload` property of the `PublishingStpHubEvent` log. These fields directly address the base Trade Model mapping, strict type transformations, and mandatory constraints required for DWU-415:
 
 *   **Logging Context:**
@@ -28,6 +30,7 @@ The following key-value pairs were successfully extracted from the `Payload` pro
 
 ---
 
+CLOSING COMMENTS, PLEASE VERIFY CAREFULLY THAT EVERY SINGLE THING IS TRUE, OPEN THE JSON AND WITH SEARCH TOOL, SEARCH THE KEY WORDS AND CHECK THAT IT MATCHES
 ## 2. Validation Against Acceptance Criteria (AC)
 
 *   **AC 1: TRIGGER:** Each time an `ITradeEvent` is received, the fields are populated in the payload from the Trade Model.
