@@ -19,3 +19,16 @@ The Sentinel reporting flow for Tradeweb Sweep Trades (DWU-441) has been fully v
 
 **Sign-off:** Approved to close. All Test Scenarios have been successfully met.
 @Murat Guney
+
+
+
+
+**QA Execution: PASSED (Acknowledged via Dev Evidence)** ✅
+
+**Environment:** DEV1
+**Trigger Source:** Tradeweb (Sweep trades via post-trade feed)
+**ContextId:** `Tradeweb$20260824.SANT.EUGV.227`, `Tradeweb$20260824.SANT.EUGV.2`, `Tradeweb$20260824.SANT.EUGV.229`
+**Target Event:** `MessageSentToSentinel`
+
+The Sentinel reporting flow for Tradeweb Sweep Trades (DWU-441) has been formally reviewed. QA acknowledges and bases this validation on the comprehensive raw log evidence exported by Development. A rigorous audit of the provided JSON payloads and execution chain confirms that sweep trades are now correctly identified as Sentinel-reportable while gracefully skipping STP Hub publishing.
+
