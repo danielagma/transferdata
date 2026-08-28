@@ -17,3 +17,11 @@ The integration with the U.S. Treasury Fiscal Data API (DWU-509) has been fully 
 
 **Sign-off:** Approved to close. All Test Scenarios have been successfully met.
 @Rodrigo Pereira Da Silva Campos
+
+
+
+Event.Type is TreasuryDirect
+
+Operation is StartupValidation
+
+service.name is Darwin-EU-Bonds-DEV2-BondsReferenceDataService
