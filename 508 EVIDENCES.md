@@ -22,3 +22,5 @@ The dynamic injection of the `CalculateSalesCredit` boolean field for D2C trades
 
 **Sign-off:** Approved to close. All Test Scenarios have been successfully met.
 @Murat Guney @Fation Gjoni
+
+Event.Type is PublishingStpHubEvent
