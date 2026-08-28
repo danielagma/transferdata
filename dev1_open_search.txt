@@ -10,3 +10,10 @@ TransFiccVenueConnectionUp
 
 
 Tradeweb$20260824.SANT.EUGV.226
+
+
+Hi Joana! I was going to start testing some user stories that involve raising RFQs in the DEV1 environment, but I wasn’t able to get the RFQs through. I tried raising them as I normally do through TradeWeb, but I didn’t get any response from Darwin.
+
+Because of that, I wanted to verify whether I could raise RFQs in the QA environment as well. Previously, you helped me troubleshoot a similar issue, which was because TradeWeb was pointing to UAT instead of QA. I verified that it is currently pointing to the QA environment, but I’m still not getting any response.
+
+Could you please help me check what might be going on?
