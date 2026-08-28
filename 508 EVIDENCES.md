@@ -1,9 +1,9 @@
 **QA Execution: PASSED** ✅
 
 **Environment:** DEV1
-**Trigger Source:** Tradeweb (Manual RFQs) & Darwin UI (Static Data)
-**ContextId (False Scenario):** `[TU_CONTEXT_ID_FALSO]`
-**ContextId (True Scenario):** `[TU_CONTEXT_ID_VERDADERO]`
+**Trigger Source:** Tradeweb (Manual RFQs via UI) & Darwin UI (Static Data)
+**ContextId (False Scenario):** `TradewebEUStrd20260828.SANT.EUGV.7`
+**ContextId (True Scenario):** `TradewebSTRD_20260828.SANT_EUGV_8`
 **Target Event:** `PublishingStpHubEvent`
 
 The dynamic injection of the `CalculateSalesCredit` boolean field for D2C trades (DWU-508) has been fully verified in DEV1. Manual RFQs were executed via Tradeweb while toggling the underlying Counterparty static data in the Darwin UI. The OpenSearch payloads were audited to ensure accurate static data lookups and boolean transformations.
