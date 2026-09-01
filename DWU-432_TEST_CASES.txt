@@ -1,0 +1,31 @@
+Feature: Republish trade functionality when triggered from Darwin UI (DWU-432)
+  As a user
+  I want to repeat the enrichment made by Darwin on a single trade using the Trade Manager UI
+  So that I can republish trades that failed due to incorrect reference data or STP hub rejections
+
+  Background:
+    Given the Darwin Trade Blotter UI is loaded
+    And the target trade failed to reach the destination by STP
+
+  # Covers AC 1, 2, 3: Visible in UI, Updates with current reference data, Republishes downstream
+  Scenario: Support user successfully triggers outbound replay for a single trade
+    Given the user has the Production Support role
+    And a single trade is selected in the Blotter
+    When the user triggers "Replay Outbound Enrichment -> STP"
+    Then the trade is successfully re-enriched using the current reference data
+    And the system republishes the trade downstream to the STP Hub bridge
+    And the backend bypasses the sent-once guard to allow the duplicate
+    And no success or failure toast notifications are displayed to the user (fire-and-forget)
+
+  # Covers AC 4: User rights restrictions are observed
+  Scenario: Non-support user is restricted from accessing replay functionality
+    Given the user does not have the Production Support role (IsSupportUser is false)
+    When the user right-clicks a trade in the Blotter
+    Then the "Replay Outbound Enrichment" option is completely hidden from the UI
+    And any direct API POST requests to /api/blotter-trades/{tradeId}/replay-outbound-enrichment are rejected with a 500 error
+
+  # Covers Requirement: Single-trade replay only, no bulk/multi-select
+  Scenario: Bulk replay is restricted
+    Given the user has the Production Support role
+    When the user selects multiple trades simultaneously in the Trade Blotter
+    Then the "Replay Outbound Enrichment" action is disabled or hidden
