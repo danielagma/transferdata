@@ -25,7 +25,7 @@ Feature: Multi "Parent" Orders Display in Order Blotter (DWU-596)
     And the Parent "Avg. Price" correctly calculates the Volume Weighted Average Price (VWAP) of the Child orders
     And the Parent "Create Time" remains unchanged (static)
 
-  # Covers Excel logic for Venue, ISIN, and Instrument Name condensation
+# Covers Excel logic for Venue, ISIN, and Instrument Name condensation
   Scenario: Dynamic condensation of Venue and ISIN on Parent level
     Given the multi order generated Child orders routed to multiple distinct venues
     And the Child orders cover multiple distinct ISINs
@@ -33,23 +33,28 @@ Feature: Multi "Parent" Orders Display in Order Blotter (DWU-596)
     Then the Parent "Venue" column displays "Multi"
     And the Parent "ISIN" column displays "Multi"
     And the Parent "Instrument Name" column is Empty
-    # Alternate path
-    When all Child orders are routed to a single ISIN
+    
+  Scenario: Static propagation of Venue and ISIN on Parent level
+    Given the multi order generated Child orders routed to a single ISIN
+    When the Parent order details are evaluated
     Then the Parent "ISIN" displays the specific ISIN
     And the Parent "Instrument Name" displays the specific product description
 
-  # Covers Excel logic for Order State and Fill Status
-  Scenario: Lifecycle status aggregation on Parent level
+# Covers Excel logic: Order State (Active) and Fill Status (Partial)
+  Scenario: Parent order shows Active and Partial status during execution
     Given at least one Child order is in "Active" state
     And the Parent "Executed Quantity" is greater than zero but less than "Total Quantity"
     When the blotter displays the statuses
     Then the Parent "Order State" is "Active"
     And the Parent "Fill Status" is "Partial"
-    
-    When all Child orders transition to "Inactive" state
-    And the Parent "Executed Quantity" equals "Total Quantity"
-    Then the Parent "Order State" updates to "Inactive"
-    And the Parent "Fill Status" updates to "Complete"
+
+  # Covers Excel logic: Order State (Inactive) and Fill Status (Complete)
+  Scenario: Parent order updates to Inactive and Complete when fully executed
+    Given all Child orders have transitioned to "Inactive" state
+    And the Parent "Executed Quantity" equals the "Total Quantity"
+    When the blotter updates the statuses
+    Then the Parent "Order State" is "Inactive"
+    And the Parent "Fill Status" is "Complete"
 
   # Covers Requirements 1, 2, 8
   Scenario: Child orders and direct-to-venue orders maintain BAU display logic
