@@ -12,6 +12,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Escalator (Market Depth widget layout) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 9** — Best automated after the widget has accumulated most of its controls (TIF/Order Type from [[DWU-188]]/[[DWU-189]], cancel actions from [[DWU-259]]/[[DWU-284]]) — otherwise there's little to meaningfully hide/show. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

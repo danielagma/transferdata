@@ -13,6 +13,7 @@
 | Module / area | Trade Reference Data — Futures Maintenance (Edit Futures Details screen) |
 | Automation status | Not started (recommended: skip / low priority) |
 | Suggested priority | @low |
+| Suggested automation order | **Not tiered / out of sequence** — unrelated to both the Order Management and Reference Data dependency chains covered by the other stories; not blocked by, and does not block, anything else in this backlog. |
 | Automation spec | (pending — see recommendation) |
 
 ## Context

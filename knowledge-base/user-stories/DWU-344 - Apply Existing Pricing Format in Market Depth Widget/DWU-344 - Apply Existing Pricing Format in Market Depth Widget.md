@@ -12,6 +12,7 @@
 | Parent epic | DWU-297 — UST1 Reference Data |
 | Module / area | Reference Data / Bonds — Market Depth + Ladder (price rendering) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 9** — Depends on [[DWU-169]] / [[DWU-171]] (Pricing Format + 32nd conversion logic) AND on the Market Depth/Ladder widget existing ([[DWU-163]]). Bridges the Reference Data and Order Management tracks. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

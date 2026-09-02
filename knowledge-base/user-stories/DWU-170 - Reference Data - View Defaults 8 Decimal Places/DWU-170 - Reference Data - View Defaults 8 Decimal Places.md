@@ -10,6 +10,7 @@
 | Parent epic | DWU-297 — UST1 Reference Data |
 | Module / area | Reference Data — Bond Referential (View Defaults) / Bond Pricer |
 | Automation status | Not started |
+| Suggested automation order | **Tier 2** — Depends conceptually on [[DWU-169]] (the 32nd Price Format is the reason precision was raised to 8 decimals). Automate right after DWU-169. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

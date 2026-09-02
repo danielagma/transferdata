@@ -10,6 +10,7 @@
 | Parent epic | DWU-297 — UST1 Reference Data |
 | Module / area | Reference Data — Bond Referential (Bond Reference Data / Classifications) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 1** — Reference Data foundation; independent of Price Format ([[DWU-169]]) and of the entire Order Management epic. Good starting point. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

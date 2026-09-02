@@ -12,6 +12,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Escalator (My Bids/My Asks columns) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 8** — Depends on [[DWU-253]] (the per-row trash icon is rendered inside the My Bids/My Asks columns). |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

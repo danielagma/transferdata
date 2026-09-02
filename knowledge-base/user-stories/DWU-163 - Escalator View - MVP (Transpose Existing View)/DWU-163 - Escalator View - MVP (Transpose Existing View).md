@@ -10,6 +10,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Bond Pricer (D2D market depth widget) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 4** — Foundational: creates the vertical ladder ("Escalator", later renamed "Ladder" in [[DWU-334]]). No upstream dependency in this backlog; nearly everything else in the Order Management epic builds on this widget existing. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

@@ -10,6 +10,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Market Depth widget |
 | Automation status | Not started |
+| Suggested automation order | **Tier 4** — Market Depth order-entry field; no dependency on the Ladder quantity bar. Can be automated in parallel with [[DWU-163]] / [[DWU-189]]. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

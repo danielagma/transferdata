@@ -10,6 +10,7 @@
 | Parent epic | DWU-298 — UST1 Base Price Generation |
 | Module / area | Bonds — Bond Pricer (price field rendering) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 3** — Depends on [[DWU-169]] (Price Format field) and [[DWU-170]] (8 decimal precision) to exercise the 32nd conversion logic. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

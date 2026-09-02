@@ -12,6 +12,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management (widget rebrand) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 9** — A rebrand/consolidation pass; best automated once most prior "Escalator" features (Tiers 4–8) are stable, since it renames them and its own test is mostly "does the new name appear everywhere". |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

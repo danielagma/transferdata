@@ -10,6 +10,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Ladder (Iceberg orders) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 10** — Built on the redesigned "Ladder" widget from [[DWU-334]]; automate after the rename/consolidation pass is covered. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

@@ -12,6 +12,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Escalator (Market Depth ladder) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 6** — Depends on [[DWU-163]] (widget) and [[DWU-180]] (quantity selection) to have a quantity to submit an order with. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

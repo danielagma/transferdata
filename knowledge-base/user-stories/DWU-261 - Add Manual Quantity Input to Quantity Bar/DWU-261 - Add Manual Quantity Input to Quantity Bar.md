@@ -12,6 +12,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Escalator (Ladder quantity bar) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 8** — Depends on [[DWU-180]] (adds manual quantity entry alongside the preset buttons). Order relative to [[DWU-260]] doesn't matter — both extend the same quantity bar independently. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

@@ -10,6 +10,7 @@
 | Parent epic | DWU-297 — UST1 Reference Data |
 | Module / area | Reference Data — Bond Referential (Classifications section) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 1** — Reference Data foundation; no dependency on any other story in this backlog. Good starting point. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

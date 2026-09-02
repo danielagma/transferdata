@@ -12,6 +12,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Ladder (Take Best execution) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 10** — Built on the redesigned "Ladder" widget from [[DWU-334]] and reuses the accordion pattern from [[DWU-283]]. |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 

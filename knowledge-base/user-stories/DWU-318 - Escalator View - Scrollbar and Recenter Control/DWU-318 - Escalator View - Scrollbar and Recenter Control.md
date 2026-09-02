@@ -10,6 +10,7 @@
 | Parent epic | DWU-300 — UST1 Order Management: Ladder View & Fast ... |
 | Module / area | Bonds — Order Management / Escalator (Ladder navigation) |
 | Automation status | Not started |
+| Suggested automation order | **Tier 9** — Mostly independent structural addition to the ladder; grouped here as widget-maturity polish alongside [[DWU-283]]. Only real dependency is [[DWU-163]] (the ladder must exist). |
 | Suggested priority | @medium |
 | Automation spec | (pending) |
 
