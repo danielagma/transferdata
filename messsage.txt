@@ -1,0 +1,6 @@
+Besides the two issues (Portfolio.Desk and User.TraderUuid), I have some observations/clarifications:
+
+* AccruedDays / AccruedInterest come through as 0 / 0.0, but the TOMS ticket for
+  the same trade shows Accrued (313) = 88,326.03
+* Settlement.SettlementLocation is null; the ticket shows ST
+* InternalTradeType comes through as "Mirror" , is this the expected value?
