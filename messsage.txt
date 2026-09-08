@@ -1,12 +1,3 @@
-Hi Suguna,
+Gabriella has shown a clear improvement this sprint. She is completing her assigned stories at a faster pace, the quality of her test cases has improved, and coming out of her testing she has found and reported bugs to the team. Her availability has improved as well.
 
-Quick update on Gabriella. I have seen a clear improvement since my previous note.
-
-She is now completing her assigned stories at a faster pace, and the quality of her test cases has improved. Coming out of her testing, she has found and reported some bugs to the team. Her availability has improved as well.
-
-That said, there are still areas I would like to see her develop. She could ask more questions when something is unclear, and take stronger ownership of her assignments. I would also like to see her integrate more with the wider team, being more present and active in the shared meetings, and start proposing improvements herself instead of only reacting to what is assigned to her.
-
-Overall the direction is positive. I will keep following her progress closely and will let you know how it evolves.
-
-Regards,
-Daniel
+The main area to develop is speaking up with the team. What we are testing is complex and even the more experienced members of the team come out of every session with plenty of questions, so I would expect her to have many as well, and to raise them openly instead of keeping them to herself. I would also like to see her come forward with her own suggestions, take stronger ownership of her assignments, and be more present and active in the meetings. That is what will show the team she is engaged and interested in learning.
