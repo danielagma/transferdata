@@ -1,6 +1,12 @@
-Besides the two issues (Portfolio.Desk and User.TraderUuid), I have some observations/clarifications:
+Hi Suguna,
 
-* AccruedDays / AccruedInterest come through as 0 / 0.0, but the TOMS ticket for
-  the same trade shows Accrued (313) = 88,326.03
-* Settlement.SettlementLocation is null; the ticket shows ST
-* InternalTradeType comes through as "Mirror" , is this the expected value?
+Quick update on Gabriella. I have seen a clear improvement since my previous note.
+
+She is now completing her assigned stories at a faster pace, and the quality of her test cases has improved. Coming out of her testing, she has found and reported some bugs to the team. Her availability has improved as well.
+
+That said, there are still areas I would like to see her develop. She could ask more questions when something is unclear, and take stronger ownership of her assignments. I would also like to see her integrate more with the wider team, being more present and active in the shared meetings, and start proposing improvements herself instead of only reacting to what is assigned to her.
+
+Overall the direction is positive. I will keep following her progress closely and will let you know how it evolves.
+
+Regards,
+Daniel
