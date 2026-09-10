@@ -1,12 +1,12 @@
-On the last trade (21022133), I still see these:
+Yesterday
 
-* AccruedDays / AccruedInterest come through as 0 / 0.0; the inbound TOMS event
-  has SettlementCcyAccrued 88,890.41 (5.15% x 2,000,000 x 315/365)
-* Settlement.SettlementLocation and InvertFlag are null; the TOMS XML has ST and N
+Tested
+DWU-539 [Market Depth Ladder] Add dynamic expansion resize
+https://darwinjira.atlassian.net/browse/DWU-539
 
+Bug ticket
+DWU-615 [Bug] Ladder: expanding or collapsing an accordion in one Ladder resets a second Ladder's scroll to the top of the book
+https://darwinjira.atlassian.net/browse/DWU-615
 
-Hi Fation, question on the D2C post-trade stories (415, 419, 420).
-The ACs say "any inquiry-posttrade gateway" and the evidence on the tickets is
-Bloomberg and Tradeweb. Nothing on BondVision.
-Which venues are actually in scope for D2C post-trade? Suguna raised it and
-mentioned MTS/BondVision and MarketAxess too.
+Today
+Working on DWU-550, refining the test cases, and running the testing once they are final.
