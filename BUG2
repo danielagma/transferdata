@@ -1,0 +1,9 @@
+
+[Bug] TOMS post-trade: AccruedDays, AccruedInterest, SettlementLocation and InvertFlag are published with their default values instead of the TOMS values
+
+Descripción
+
+* *Environment:* UAT
+
+*Overview*
+DWU-417 maps four TOMS-sourced fields on the post-trade message: PostTradeEvent.Trade.AccrDays (published as AccruedDays) from NumberOfDaysAccrued, PostTradeEvent.Trade.AccruedInterest from SettlementCcyAccrued, PostTradeEvent.Trade.Settlement.InvertFlag from the TOMS InvertFlag field, and PostTradeEvent.Trade.Settlement.SettlementLocation from SettlementLocationAbbreviation. On the message published for TOMS ticket 21022133 none of the four carries its TOMS value: the two accrual fields arrive at the default 0 that DWU-419 defines for AccruedInterest, and the two Settlement fields arrive as null, where DWU-419 defines a default of blank. TOMS holds a value for all four. Both accrual mappings are guarded by the condition "if instrument is not a future" and this trade is a bond, Instrument.SecurityType: "Bond", so the guard is satisfied and the mapping applies. STP Hub acknowledged this message with Status: OK, so the defect does not surface as a validation failure and reaches the downstream systems unflagged.
