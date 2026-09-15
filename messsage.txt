@@ -1,12 +1,5 @@
-Yesterday
+Yesterday, I was testing TOMS trades with Fation, Murat, and Sergio, we can't wrap those up yet, but active progress is being made.
 
-Tested
-DWU-539 [Market Depth Ladder] Add dynamic expansion resize
-https://darwinjira.atlassian.net/browse/DWU-539
+I was also testing Bondsvision to launch RFQs from there, but it seems there is an error involving Darwin, I’m going to check with the US QA team.
 
-Bug ticket
-DWU-615 [Bug] Ladder: expanding or collapsing an accordion in one Ladder resets a second Ladder's scroll to the top of the book
-https://darwinjira.atlassian.net/browse/DWU-615
-
-Today
-Working on DWU-550, refining the test cases, and running the testing once they are final.
+I spoke with Chris Gould about helping me send and test Bloomberg trades, but there is an issue with the gateway; we are getting an "INVALID CREDENTIAL" error. It seems they are already working on it.
