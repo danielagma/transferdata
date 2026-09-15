@@ -1,1 +1,1 @@
-("TradewebEUGV$20260915.SAN3.EUGV.38" or "TradewebEUGV$20260915.SAN3.EUGV.39") and Event.Type: "PublishingStpHubEvent"
+Event.Type: "PublishingStpHubEvent" and ("TradewebEUGV$20260915.SAN3.EUGV.29" or "TradewebEUGV$20260915.SAN3.EUGV.30" or "TradewebEUGV$20260915.SAN3.EUGV.31")
