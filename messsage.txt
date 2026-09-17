@@ -1,1 +1,1 @@
-Event.Type: "PublishingStpHubEvent" and ("TradewebEUGV$20260915.SAN3.EUGV.29" or "TradewebEUGV$20260915.SAN3.EUGV.30" or "TradewebEUGV$20260915.SAN3.EUGV.31")
+TradeAllocationReceivedEventHandled
