@@ -1,3 +1,6 @@
 Event.Type: "PublishingStpHubEvent" and "TradewebEUGV$20260915.SAN3.EUGV.38"
 Event.Type: "PublishingStpHubEvent" and "Mts$20100095_20260915"
 Event.Type: "PublishingStpHubEvent" and "3564:20260917:1:5"
+
+
+"Mts$20100095_20260915" and @log_group: *BondsTradeService*
