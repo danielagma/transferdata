@@ -1,10 +1,3 @@
-TradeAllocationReceivedEventHandled
-
-
-Event.Type: "TradeAllocationReceivedEventHandled" and ContextId: "Bloomberg$3564:20260917:1:5"
-
-
-Event.Type: "PublishingStpHubEvent" and "SANTANDER GLOBAL TECH AND OPS SLU"
-
-
-@log_group: *BBG-Alloc-BSGB* and "3564:20260917:1:5"
+Event.Type: "PublishingStpHubEvent" and "TradewebEUGV$20260915.SAN3.EUGV.38"
+Event.Type: "PublishingStpHubEvent" and "Mts$20100095_20260915"
+Event.Type: "PublishingStpHubEvent" and "3564:20260917:1:5"
