@@ -5,3 +5,6 @@ Event.Type: "TradeAllocationReceivedEventHandled" and ContextId: "Bloomberg$3564
 
 
 Event.Type: "PublishingStpHubEvent" and "SANTANDER GLOBAL TECH AND OPS SLU"
+
+
+@log_group: *BBG-Alloc-BSGB* and "3564:20260917:1:5"
