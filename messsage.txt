@@ -2,3 +2,6 @@ TradeAllocationReceivedEventHandled
 
 
 Event.Type: "TradeAllocationReceivedEventHandled" and ContextId: "Bloomberg$3564:20260917:1:5"
+
+
+Event.Type: "PublishingStpHubEvent" and "SANTANDER GLOBAL TECH AND OPS SLU"
