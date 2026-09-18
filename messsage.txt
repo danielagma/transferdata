@@ -6,5 +6,7 @@ Hi all, I have extended Fation's test case file with five columns so we can tick
 - Bug · the Jira bug, linked
 - Date
 
+Let me know if I missed something or if anything can be improved.
+
 
 The EU team was using the gateways this morning for a pending release. Once they were free I tried to raise RFQs on Tradeweb and I wasn't able to, so I could not get further today. On Monday we continue the testing in a more structured way, following the file.
