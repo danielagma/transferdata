@@ -1,12 +1,5 @@
-Hi all, I have extended Fation's test case file with five columns so we can tick cases off as Murat suggested:
+I checked DWU-419 and PreviousTradeId is typed string | null there, with no "Throw an error if value is null" next to it. So it looks like it falls under AC 9 and not AC 8, meaning we set it to null and still publish rather than stopping the message.
 
-- Stories covered · the stories each scenario exercises
-- Status · Not run / In progress / Pass / Fail / Blocked
-- Blocked by · the story that owns the failing field
-- Bug · the Jira bug, linked
-- Date
+But I'm not fully sure this covers a cancellation. On a New trade there is nothing to point back to, so a null makes sense. On a cancel it's the only field telling you which trade is being cancelled, so publishing it empty feels odd.
 
-Let me know if I missed something or if anything can be improved.
-
-
-The EU team was using the gateways this morning for a pending release. Once they were free I tried to raise RFQs on Tradeweb and I wasn't able to, so I could not get further today. On Monday we continue the testing in a more structured way, following the file.
+@Fation, do you know if a cancel should treat it as mandatory? I have the same doubt here.
