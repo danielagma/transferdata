@@ -17,4 +17,4 @@ Checked the TOMS message for 21023156. ClearingBroker is populated (6ATE), but t
   <TransactionCost><Type>1</Type><Currency>EUR</Currency><Cost>1200.0</Cost></TransactionCost>
 </TransactionCosts>
 
-DWU-417 maps BrokerCommission.Amount from <TransactionCost><Type>2</Type>. There is no Type 2 cost here. Should the mapping read Type 1, or should TOMS be sending the broker commission as Type 2?
+DWU-417 maps BrokerCommission.Amount from <TransactionCost><Type>2</Type><Cost>, so there is no Type 2 cost here. Should Type 1 also be mapped?
