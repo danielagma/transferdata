@@ -1,5 +1,7 @@
-I checked DWU-419 and PreviousTradeId is typed string | null there, with no "Throw an error if value is null" next to it. So it looks like it falls under AC 9 and not AC 8, meaning we set it to null and still publish rather than stopping the message.
+Not sure on this one, but I had a look at DWU-419 to see what it says.
 
-But I'm not fully sure this covers a cancellation. On a New trade there is nothing to point back to, so a null makes sense. On a cancel it's the only field telling you which trade is being cancelled, so publishing it empty feels odd.
+PreviousTradeId is typed string | null there, and it doesn't have the "Throw an error if value is null" that other fields have. So it looks like AC 9 applies rather than AC 8, which would mean we set it to null and still publish instead of stopping the message.
+
+What I'm not sure about is whether that really covers a cancellation. On a New trade there's nothing to point back to, so a null makes sense. On a cancel it's the only field telling you which trade is being cancelled, so sending it empty feels odd.
 
 @Fation, do you know if a cancel should treat it as mandatory? I have the same doubt here.
