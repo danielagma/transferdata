@@ -1,3 +1,6 @@
 Event.Type: "PublishingStpHubEvent" and "20200008_20260921"
 
 "20200008_20260921" and CoverPriceToYieldFailure
+
+
+"20200008_20260921" and Level: Warning
