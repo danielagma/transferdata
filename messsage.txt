@@ -1,4 +1,1 @@
- What I'm not sure about is whether that really covers a cancellation. On a New
-  trade there's nothing to point back to, so a null makes sense there. But on a
-  cancel I think it should probably be a key field to identify the original trade
-  being cancelled, which feels like a different case.
+"20200005_20260921"
