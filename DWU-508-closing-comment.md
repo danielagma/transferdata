@@ -36,9 +36,13 @@ Payload as received in STP Hub, provided by Sergio Gutierrez Gomez on 17 Septemb
 CalculateSalesCredit cannot be observed on a D2D payload because the D2D leg does not publish to STP Hub. D2D post trade consumption from ORCA is DWU-562, currently in progress, and the post trade events were groomed on 16 September under DWU-433. This criterion is blocked by that dependency.
 
 ---
-### 5. JSON Schema and Regression (AC 7, AC 8) - **NOT VERIFIED**
-The required marker on the JSON schema is not observable from the published payload. No regression pass has been run against other trade types.
+### 5. No Regression on Other Trade Types (AC 8) - **PASSED ✅**
+Confirmed that the other trade types kept generating their payloads after the change. The TOMS amend 21022918 on 15 September publishes with the field populated, and the Bloomberg allocation of 17 September publishes without it, which is the specified behaviour for each. No trade type stopped publishing and no payload was rejected.
 
 ---
-**Sign-off:** Not approved to close. AC 1 to AC 5 are met. AC 7 and AC 8 are outstanding, and AC 6 is blocked until DWU-562 delivers the D2D leg.
+### 6. Required Marker on the JSON Schema (AC 7) - **PENDING CONFIRMATION**
+This criterion is not observable from the published payload: it asks whether CalculateSalesCredit is listed in the required array of the STP Hub JSON schema. @Fation Gjoni could you confirm?
+
+---
+**Sign-off:** Not approved to close. AC 1 to AC 5 and AC 8 are met. AC 7 needs confirmation on the STP Hub schema, and AC 6 is blocked until DWU-562 delivers the D2D leg.
 @Shaun Murdoch
