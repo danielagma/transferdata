@@ -1,1 +1,3 @@
 "20200006_20260921"
+
+Event.Type: "PublishingStpHubEvent" and "20200006_20260921"
