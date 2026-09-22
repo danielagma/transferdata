@@ -1,4 +1,19 @@
-"21027096"
-Event.Type: "TradeEvent" and "21027096"
-Event.Type: "PublishingStpHubEvent" and "21027096"
-"<MessageId del payload del cancel>"
+"21027097"
+Event.Type: "TradeEvent" and "21027097"
+Event.Type: "PublishingStpHubEvent" and "21027097"
+
+"21027098"
+Event.Type: "TradeEvent" and "21027098"
+Event.Type: "PublishingStpHubEvent" and "21027098"
+
+"21027099"
+Event.Type: "TradeEvent" and "21027099"
+Event.Type: "PublishingStpHubEvent" and "21027099"
+
+"21027102"
+Event.Type: "TradeEvent" and "21027102"
+Event.Type: "PublishingStpHubEvent" and "21027102"
+
+"21027103"
+Event.Type: "TradeEvent" and "21027103"
+Event.Type: "PublishingStpHubEvent" and "21027103"
