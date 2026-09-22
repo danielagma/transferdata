@@ -1,1 +1,4 @@
 Event.Type: "TradeEvent" and "21027094"
+
+
+Event.Type: "PublishingStpHubEvent" and "21027094"
