@@ -1,4 +1,8 @@
+Trade 2 · 21027095 · los comandos
+
 Event.Type: "TradeEvent" and "21027094"
+Tres filas. Abre la de 07:14:44.131 y la de 07:14:44.391. La de 07:12:00.804 es el trade 1, ignórala.
 
+Event.Type: "PublishingStpHubEvent" and "21027095"
 
-Event.Type: "PublishingStpHubEvent" and "21027094"
+"<el MessageId que salga de la anterior>"
