@@ -1,3 +1,33 @@
+Futures trade 21027097 is published correctly by Darwin, so the DWU-619 fix works. STP Hub then rejects the message with Status: ERROR on eight fields:
+
+Instrument.Class, CountryCode, CouponType, IndustrySector,
+IsInflationLinked, Ticker, VenueCode, Price.Yield
+
+All null found, X expected. The seven instrument ones are bond attributes a future does not carry.
+
+So the future is published but never processed. DWU-619 only covers the Yield on the Darwin side, and fixing that alone leaves seven rejections in place.
+
+
+
+
+
+
+Internal trade 21027102 / 21027103 from today's TOMS session never reaches STP Hub. Both halves are enriched fine, InternalTradeEnrichmentSuccess on each, then both hit StpHubPayloadValidationFailed, retry 31 times and end in StpHubPublicationTimedOut. No PublishingStpHubEvent for either.
+
+I could not open the validation event before losing OpenSearch access, so I do not have the field name yet.
+
+Could someone run this and paste what it says? Index fidw-eu-bonds-uat2*, range Last 2 days:
+
+Event.Type: "StpHubPayloadValidationFailed" and "21027102"
+
+One row, 22 Sep at 13:36:55.673 UTC. The other half is the same query with 21027103.
+
+This blocks DWU-584, the positive case of DWU-538 and the Counterparty.Glcs mapping of DWU-418, since there is no payload to read.
+
+
+
+
+
 Event.Type: "StpHubPayloadValidationFailed"
 "21027101"
 
