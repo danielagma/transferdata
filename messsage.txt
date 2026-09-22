@@ -1,5 +1,10 @@
-Event.Type: "StpHubAcknowledgementReceived"
-"C39Y1319120021027097" and Level: Warning
+Sergio, un booking más cuando puedas.
+
+DWU-619 ya está verificado por el lado del futuro: 21027097 publica con Price.Yield en null, así que Darwin ya no lo bloquea.
+
+La evidencia de Murat pide que QA compruebe también la otra mitad, "continued rejection of a non-future with null Yield". Los cuatro bonos que bookeaste traen yield, así que eso no lo puedo probar.
+
+¿Puedes bookear un bono sin Yield? Con eso DWU-619 queda cerrado del todo.
 
 
 "21027097"
