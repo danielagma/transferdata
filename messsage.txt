@@ -1,4 +1,4 @@
-"21027100"
+Event.Type: "StpHubPayloadValidationFailed"
 "21027101"
 
 "21027097"
