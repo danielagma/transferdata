@@ -1,4 +1,5 @@
-"92b4302f3aff44bdad8e98a1472dbcfd"
+Event.Type: "StpHubAcknowledgementReceived"
+"C39Y1319120021027097" and Level: Warning
 
 
 "21027097"
