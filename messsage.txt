@@ -1,11 +1,4 @@
 "21027096"
-Cuántos contextos hay y a qué hora. Este paso sí hace falta, es un ticket que no hemos tocado.
-
 Event.Type: "TradeEvent" and "21027096"
-El XML de entrada. Van a salir dos o más filas, ábreme todas.
-
 Event.Type: "PublishingStpHubEvent" and "21027096"
-Los payloads. Igual, ábreme todos los que salgan.
-
-"<el MessageId del payload del alta>"
-El ACK.
+"<MessageId del payload del cancel>"
