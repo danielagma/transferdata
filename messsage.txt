@@ -1,10 +1,11 @@
-"TradewebEUGV$20260922.SAN3.EUGV.2241"
-"TradewebEUGV$20260922.SAN3.EUGV.2242"
-"TradewebEUGV$20260922.SAN3.EUGV.2243"
+"21027096"
+Cuántos contextos hay y a qué hora. Este paso sí hace falta, es un ticket que no hemos tocado.
 
+Event.Type: "TradeEvent" and "21027096"
+El XML de entrada. Van a salir dos o más filas, ábreme todas.
 
-Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2241"
+Event.Type: "PublishingStpHubEvent" and "21027096"
+Los payloads. Igual, ábreme todos los que salgan.
 
-Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2242"
-
-Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2243"
+"<el MessageId del payload del alta>"
+El ACK.
