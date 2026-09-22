@@ -1,16 +1,10 @@
-Event.Type: "TradeEvent" and "21027096"
-El XML de entrada. Van a salir dos o más filas, ábreme todas.
-
-Event.Type: "PublishingStpHubEvent" and "21027096"
-Los payloads. Igual, ábreme todos los que salgan.
-
-"<el MessageId del payload del alta>"
-El ACK.
-
-
-
-
-"TradewebEUGV$20260922" and Event.Type: PublishingStpHubEvent and not @log_group: *Orca*
 "TradewebEUGV$20260922.SAN3.EUGV.2241"
 "TradewebEUGV$20260922.SAN3.EUGV.2242"
 "TradewebEUGV$20260922.SAN3.EUGV.2243"
+
+
+Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2241"
+
+Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2242"
+
+Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2243"
