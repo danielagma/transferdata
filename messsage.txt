@@ -1,1 +1,10 @@
  Event.Type: "PublishingStpHubEvent" and "TRD_20260922_SAN3_EUGV_2237"
+
+
+
+Event.Type: "PublishingStpHubEvent" and "TRD_20260922_SAN3_EUGV_2238"
+
+Si no devuelve nada, es que el switch publica por pata, como el butterfly:
+
+Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2239"
+Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2240"
