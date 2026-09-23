@@ -8,3 +8,8 @@ Si no devuelve nada, es que el switch publica por pata, como el butterfly:
 
 Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2239"
 Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2240"
+
+
+Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2241"
+Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2242"
+Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2243"
