@@ -13,3 +13,14 @@ Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2240"
 Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2241"
 Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2242"
 Event.Type: "PublishingStpHubEvent" and "20260922.SAN3.EUGV.2243"
+
+
+DWU-624
+
+Tradeweb outright of 22-Sep, Tradeweb$TRD_20260922_SAN3_EUGV_2237. The payload publishes User.TraderUuid: 31473668 with TraderId: x531532.
+
+31473668 is the Bloomberg External Code of trader N317167. Trader X531532 has no External Codes at all in UAT2.
+
+DWU-419 says ExternalCode where ExternalPlatformName = "Bloomberg" and "throw an error if value is null".
+
+Two questions: which trader should the TraderUuid be taken from, the one on the trade? And what should Darwin publish when that trader has no Bloomberg row?
