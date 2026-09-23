@@ -1,9 +1,9 @@
-[Bug] TOMS trades publish InternalTradeId in the old format instead of DWB + Base62
+[Bug] TOMS trades publish InternalTradeId in the previous format instead of DWB + Base62
 
 * **Environment:** UAT2
 
 **Overview**
-On TOMS trades, `PostTradeEvent.Trade.InternalTradeId` is not generated in the required `DWB` + 11-character Base62 format. It publishes the old format instead. Seen on TOMS ticket `21027189`, booked on 23 September.
+On TOMS trades, `PostTradeEvent.Trade.InternalTradeId` publishes the previous format instead of the `DWB` + 11-character Base62 format that DWU-549 requires. DWU-549 lists TOMS trades explicitly in its scope. Seen on TOMS ticket `21027189`, booked on 23 September.
 
 **Actual result:** `InternalTradeId` publishes `BloombergToms$21027189`.
 
