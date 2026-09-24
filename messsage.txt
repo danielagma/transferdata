@@ -7,3 +7,11 @@ Event.Type: "PublishingStpHubEvent" and "21027291"
 Event.Type: "StpHubPayloadValidationFailed" and "21027291"
 
 "21027291" and Level: Warning
+
+
+
+Event.Type: "PublishingStpHubEvent"
+
+"21027291" and Level: Warning
+
+Event.Type: "TradeEvent" and "21027291"
