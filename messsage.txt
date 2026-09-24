@@ -1,16 +1,9 @@
-Hi Sergio, a few trades for tomorrow, when you have a moment:
+"21027291"
 
-1. Bloomberg (venue)
-- One Outright
-- One Switch
+Event.Type: "TradeEvent" and "21027291"
 
-2. TOMS, three new trades (A, B and C)
-- Trade A: book it, amend it, then cancel the amended trade.
-- Trade B: book it and leave it. We will amend tomorrow.
-- Trade C: book it and leave it. We will cancel it tomorror.
+Event.Type: "PublishingStpHubEvent" and "21027291"
 
-3. TOMS, one bond trade (not a future) with these notes populated, for DWU-417:
-- Long Note 3 (maps to CompNonComp)
-- Long Note 4 (maps to Qualifier)
-- Long Note 7 (maps to ForwardIsStandard)
-- Short Note 3 (maps to DealersInCompetition)
+Event.Type: "StpHubPayloadValidationFailed" and "21027291"
+
+"21027291" and Level: Warning
