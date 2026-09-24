@@ -1,13 +1,1 @@
-1. DWU-418: el payload del 21027094, para comparar los 5 campos que quedaron sin revisar (Axe.IsAxed, Price.PriceType, SourceOriginalName, Mifid.ExecutionMktIdType y InvestmentMktIdType) contra su XML.
-Event.Type: "PublishingStpHubEvent" and "21027094"
-Event.Type: "TradeEvent" and "21027094"
-
-2. AC de error logging de 416, 417 y 418: el rechazo del 21027091 por Mifid.Transparency es el log de error que ese AC pide.
-Event.Type: "StpHubPayloadValidationFailed" and "21027091"
-
-3. DWU-538, AC 7 a 9: en el XML de cada ticket hay que leer ShortNote8 y TransactionType. Un comando por ticket:
-Event.Type: "TradeEvent" and "21027095"
-Event.Type: "TradeEvent" and "21027096"
-Event.Type: "TradeEvent" and "21027097"
-Event.Type: "TradeEvent" and "21027098"
-Event.Type: "TradeEvent" and "21027099"
+Hi Murat, RFQs still don't reach Darwin in UAT2. I sent RFQ 227 from Tradeweb (UKT 0.375 10/22/26) and it stays in Trd-At-Dlr, nothing in Darwin. Bond Pricer shows "NoTraderGroupTraders: trader group not found or has no active members (TG-1437135168547510)" on all GILTS. The Conventional Gilts group is active and I'm in it. Could this come from this morning's Bond Pricer NX deployment?
