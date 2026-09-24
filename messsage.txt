@@ -1,1 +1,16 @@
-Hi Fation, a quick confirmation on the STP test cases file, row "CalculateSalesCredit flag validation". The note says: for switch/butterfly, only one trade event has flag = true. On the Tradeweb switch we ran (20260922.SAN3.EUGV.2238 and 20260922.SAN3.EUGV.2239), the payload of both legs has CalculateSalesCredit = true. Can you confirm which one is expected?
+Hi Sergio, a few trades for tomorrow, when you have a moment:
+
+1. Bloomberg (venue)
+- One Outright
+- One Switch
+
+2. TOMS, three new trades (A, B and C)
+- Trade A: book it, amend it, then cancel the amended trade.
+- Trade B: book it and leave it. We will amend tomorrow.
+- Trade C: book it and leave it. We will cancel it tomorror.
+
+3. TOMS, one bond trade (not a future) with these notes populated, for DWU-417:
+- Long Note 3 (maps to CompNonComp)
+- Long Note 4 (maps to Qualifier)
+- Long Note 7 (maps to ForwardIsStandard)
+- Short Note 3 (maps to DealersInCompetition)
