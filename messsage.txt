@@ -1,1 +1,7 @@
-I checked UAT and set the Trader Group in UAT2 for GILTS and the other 18 quote groups that use Conventional Gilts. The remaining 13 (BELGIUM, FRANCE, GERMANY, SPAIN...) use a trader group called "Eugv" in UAT, which doesn't exist in UAT2, so I left them empty.
+Hola Sergio, ¿qué tal? Sobre lo que comentas de que en las cancelaciones el campo PreviousTradeId aparece como null: puede ser que miraras el evento New y no el Cancel. En el New, PreviousTradeId sale null y es lo esperado, porque es el alta del trade. En el Cancel sí viene informado.
+
+Lo verificamos con el 21027096, uno de los trades que bookeaste el 22 de septiembre. Te paso el PublishingStpHubEvent del New y el del Cancel:
+- New (07:18:01): EventType New, PreviousTradeId null
+- Cancel (07:18:56): EventType Cancel, PreviousTradeId "21027096", con ACK OK de STP Hub
+
+Si lo viste en otro ticket, pásame el número y lo reviso.
