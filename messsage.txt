@@ -5,3 +5,11 @@ Lo verificamos con el 21027096, uno de los trades que bookeaste el 22 de septiem
 - Cancel (07:18:56): EventType Cancel, PreviousTradeId "21027096", con ACK OK de STP Hub
 
 Si lo viste en otro ticket, pásame el número y lo reviso.
+
+
+
+
+What happened this week
+- 24 Sep: someone from the EU team deployed from main to UAT2 and removed most of our services. Murat redeployed. TOMS trades booked that morning never reached STP Hub.
+- 23 Sep: DevOps copied the static data from UAT to UAT2. After that, the Trader Group of every Quote Group was empty, so RFQs did not reach Darwin. I filled the 19 Quote Groups that use "Conventional Gilts", copying UAT. The 13 that use "Eugv" are still empty (that trader group does not exist in UAT2); Murat knows.
+- 25 Sep: the Bond Pricer was still failing. Sergio got two errors on Bloomberg RFQs: "500 Internal Server Error" on derivable-price-change, and "Trader UUID 31473668 is invalid for LEI 5493006QMFDDMYWIAM13". Murat was redeploying the Bond Pricer at 9:55.
