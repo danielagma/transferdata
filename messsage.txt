@@ -80,3 +80,8 @@ ComplexTradeId (00F8...).
    3) ACK:      "3564:20260929:4:5:BloombergBSGB$3564:20260929:4:5:New:ce3471023eeb6cbe"
    Esperado: publicado y ACK OK. MessageId con formato nuevo (pendiente que
    Fation confirme si es correcto).
+
+
+Por el campo exacto del trade. Es el más fiable:
+Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
+Si sale, te da el payload (y quizá también el XML). Para la pata 2 cambia :1:5 por :2:5, y así con :3:5 y :4:5.
