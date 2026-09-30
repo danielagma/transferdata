@@ -34,66 +34,46 @@ Por cada trade, en este orden:
 
 ==================== MARTES 29-SEP · BLOOMBERG (Sergio) ====================
 
-Nota: en Bloomberg no hemos probado estas búsquedas (inferencia). Si el
-TradeEvent no sale con el SourceId (3564:20260929:X:5), probar con el
-ComplexTradeId (00F8...).
+Cómo es Bloomberg (visto el 30-sep con la pata 1 del trade 5):
+- 1) Entrada: PostTradeMessageReceivedEventHandled. Sólo trae IDs, no hay XML.
+     Sirve para confirmar que el trade llegó.
+- 2) Payload: salen 2 resultados (Darwin publica 2 veces, mismo contenido,
+     distinto MessageId). NO abrir los dos: sólo anotar cuántos salen y abrir
+     el de ContextId Bloomberg$00F8... (el que compartió Fation).
+- 3) ACK: sólo del MessageId de ese payload.
+Buscar siempre por Event.TradeId (texto libre no funciona por el $ y los :).
 
 4. Bloomberg$00F800086ABB93A80002 · Switch DE0001135085 vs ES00000124C5 · ~4:30
-   1) XML:      Event.Type: "TradeEvent" and "00F800086ABB93A80002"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and "00F800086ABB93A80002"
-   3) ACK:      no aplica
-   Esperado: sin payload. No llegó a Darwin: Sergio no estaba en el trading
-   group alemán. Problema de datos, no bug.
+   No se conoce su TradeId. Una sola búsqueda:
+   1) ContextId: "Bloomberg$00F800086ABB93A80002"
+   Esperado: sin PublishingStpHubEvent (Sergio no estaba en el trading group alemán).
 
-5. Bloomberg$00F800016ABBB3610002 · Switch español, 2 patas · ~6:48 (12:48 UTC)
+5. Bloomberg$00F800016ABBB3610002 · Switch español, 2 patas · 06:48
    Excel: fila 11 (BBG Switch) y fila 15 (CalculateSalesCredit)
 
-   Pata 1 · SPGB 10/28 ES00000124C5 · Buy 2M
-   1) XML:      Event.Type: "TradeEvent" and "3564:20260929:1:5"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and "3564:20260929:1:5"
+   Pata 1 · SPGB 10/28 ES00000124C5 · Buy 2M · HECHA
+   1) Entrada:  Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
+   2) Payload:  Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
    3) ACK:      "b991632fbc9849f48596180b56435f75"
+   Resultado: 2 payloads, los 2 con ACK OK (duplicado aceptado por STP Hub).
 
    Pata 2 · SPGB 10/44 ES00000124H4 · Sell 3M
-   1) XML:      Event.Type: "TradeEvent" and "3564:20260929:2:5"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and "3564:20260929:2:5"
+   1) Entrada:  Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:2:5"
+   2) Payload:  Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:2:5"
    3) ACK:      "cd179457971445c6a7b2ed499bdcfa41"
 
-   Alternativa para ver las 2 patas juntas:
-      Event.Type: "PublishingStpHubEvent" and "00F800016ABBB3610002"
-
-   Esperado: 2 payloads, mismo ComplexTradeId 00F800016ABBB3610002,
-   NumberOfLegs 2, RfqType MultiLeg, ACK OK en las 2 patas.
-   CalculateSalesCredit = true en ambas es lo esperado.
-   Revisar (inferencia): AccruedDays 0, AccruedInterest 0, InternalTradeType null.
-   Pendiente: Fation pidió amend de una pata y cancel de la otra (filas 21 y 23).
+   Esperado: mismo ComplexTradeId 00F800016ABBB3610002, NumberOfLegs 2,
+   RfqType MultiLeg, ACK OK. CalculateSalesCredit = true en ambas.
 
 6. BloombergBSGB$3564:20260929:3:5 · RFQ 10:18 · tipo no dicho
-   1) XML:      Event.Type: "TradeEvent" and "3564:20260929:3:5"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and "3564:20260929:3:5"
-   3) ACK:      "<MessageId que salga en el payload>"
+   1) Entrada:  Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:3:5"
+   2) Payload:  Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:3:5"
+   3) ACK:      "<MessageId del payload con ContextId Bloomberg$00F8...>"
    Esperado: incierto, se lanzó con el despliegue de Murat fallido.
 
-7. Bloomberg$00F800026ABBF0B70002 / BloombergBSGB$3564:20260929:4:5 · RFQ 11:10
-   tipo no dicho (fila 10 si es outright)
-   1) XML:      Event.Type: "TradeEvent" and "3564:20260929:4:5"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and "3564:20260929:4:5"
+7. BloombergBSGB$3564:20260929:4:5 (RFQ Bloomberg$00F800026ABBF0B70002) · 11:10
+   1) Entrada:  Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:4:5"
+   2) Payload:  Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:4:5"
    3) ACK:      "3564:20260929:4:5:BloombergBSGB$3564:20260929:4:5:New:ce3471023eeb6cbe"
-   Esperado: publicado y ACK OK. MessageId con formato nuevo (pendiente que
-   Fation confirme si es correcto).
-
-
-Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
-Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
-Este segundo comando devuelve 2 payloads. Abre los dos y apunta el MessageId de cada uno.
-
-"b991632fbc9849f48596180b56435f75"
-"<MessageId del segundo payload>"
-
-Pata 2, en orden:
-
-Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:2:5"
-Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:2:5"
-Si salen 2 payloads, abre los dos y apunta el MessageId de cada uno.
-
-"cd179457971445c6a7b2ed499bdcfa41"
-"<MessageId del segundo payload, si lo hay>"
+   Esperado: ACK OK. MessageId con formato nuevo (despliegue de Murat del 29-sep).
+   Si salen 2 payloads, ver si el del ACK es el de ContextId Bloomberg$00F8...
