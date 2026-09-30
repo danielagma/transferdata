@@ -82,6 +82,18 @@ ComplexTradeId (00F8...).
    Fation confirme si es correcto).
 
 
-Por el campo exacto del trade. Es el más fiable:
-Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
-Si sale, te da el payload (y quizá también el XML). Para la pata 2 cambia :1:5 por :2:5, y así con :3:5 y :4:5.
+Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
+Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
+Este segundo comando devuelve 2 payloads. Abre los dos y apunta el MessageId de cada uno.
+
+"b991632fbc9849f48596180b56435f75"
+"<MessageId del segundo payload>"
+
+Pata 2, en orden:
+
+Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:2:5"
+Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:2:5"
+Si salen 2 payloads, abre los dos y apunta el MessageId de cada uno.
+
+"cd179457971445c6a7b2ed499bdcfa41"
+"<MessageId del segundo payload, si lo hay>"
