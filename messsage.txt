@@ -1,15 +1,70 @@
-Hola Sergio, ¿qué tal? Sobre lo que comentas de que en las cancelaciones el campo PreviousTradeId aparece como null: puede ser que miraras el evento New y no el Cancel. En el New, PreviousTradeId sale null y es lo esperado, porque es el alta del trade. En el Cancel sí viene informado.
-
-Lo verificamos con el 21027096, uno de los trades que bookeaste el 22 de septiembre. Te paso el PublishingStpHubEvent del New y el del Cancel:
-- New (07:18:01): EventType New, PreviousTradeId null
-- Cancel (07:18:56): EventType Cancel, PreviousTradeId "21027096", con ACK OK de STP Hub
-
-Si lo viste en otro ticket, pásame el número y lo reviso.
+TRADES A REVISAR EN OPENSEARCH (28 y 29-sep)
+Horas en hora de México. Rango de fecha: el día del trade.
+Por trade, 3 registros: XML (TradeEvent), payload (PublishingStpHubEvent), ACK (por MessageId).
 
 
+==================== LUNES 28-SEP · TOMS (Sergio) ====================
+
+1. 21027613 · New · ~4:00
+   Event.Type: "TradeEvent" and "21027613"
+   Event.Type: "PublishingStpHubEvent" and "21027613"
+   "9c98e3374bc242ef8d6c26d4a19c0a5e"
+   Esperado: publicado y ACK OK (el ACK llegó tarde por la cola MQ).
+   Antes de DWU-613: InternalTradeType = Mirror, TradeSrc = Voice.
+   InternalTradeId = BloombergToms$21027613 (formato viejo, DWU-549 no desplegado).
+
+2. 21027784 · tipo no dicho (probablemente New, inferencia) · antes de 8:17
+   Event.Type: "TradeEvent" and "21027784"
+   Event.Type: "PublishingStpHubEvent" and "21027784"
+   "<MessageId del payload>"
+   Esperado: publicado y ACK OK. InternalTradeId en formato viejo (esperado sin DWU-549).
+
+3. 21027884 · tipo no dicho · entre 11:07 y 11:26 · CIERRA DWU-613
+   Event.Type: "TradeEvent" and "21027884"
+   Event.Type: "PublishingStpHubEvent" and "21027884"
+   "<MessageId del payload>"
+   Esperado: ACK OK y, payload contra XML:
+   - Sales.SalesBook = SalespersonName del XML (vacío si viene vacío)
+   - InternalTradeType = Main
+   - TradeSrc = Voice sólo si ShortNote6 = PNT; si no, vacío
 
 
-What happened this week
-- 24 Sep: someone from the EU team deployed from main to UAT2 and removed most of our services. Murat redeployed. TOMS trades booked that morning never reached STP Hub.
-- 23 Sep: DevOps copied the static data from UAT to UAT2. After that, the Trader Group of every Quote Group was empty, so RFQs did not reach Darwin. I filled the 19 Quote Groups that use "Conventional Gilts", copying UAT. The 13 that use "Eugv" are still empty (that trader group does not exist in UAT2); Murat knows.
-- 25 Sep: the Bond Pricer was still failing. Sergio got two errors on Bloomberg RFQs: "500 Internal Server Error" on derivable-price-change, and "Trader UUID 31473668 is invalid for LEI 5493006QMFDDMYWIAM13". Murat was redeploying the Bond Pricer at 9:55.
+==================== MARTES 29-SEP · BLOOMBERG (Sergio) ====================
+
+4. Bloomberg$00F800086ABB93A80002 · Switch DE0001135085 vs ES00000124C5 · ~4:30
+   "00F800086ABB93A80002"
+   Esperado: sin PublishingStpHubEvent. No llegó a Darwin: Sergio no estaba
+   en el trading group alemán. Problema de datos, no bug.
+
+5. Bloomberg$00F800016ABBB3610002 · Switch español, 2 patas · ~6:48 (12:48 UTC)
+   Excel: fila 11 (BBG Switch) y fila 15 (CalculateSalesCredit)
+
+   Pata 1 · SPGB 10/28 ES00000124C5 · Buy 2M
+   Event.Type: "PublishingStpHubEvent" and "3564:20260929:1:5"
+   "b991632fbc9849f48596180b56435f75"
+
+   Pata 2 · SPGB 10/44 ES00000124H4 · Sell 3M
+   Event.Type: "PublishingStpHubEvent" and "3564:20260929:2:5"
+   "cd179457971445c6a7b2ed499bdcfa41"
+
+   Esperado: 2 payloads, mismo ComplexTradeId 00F800016ABBB3610002,
+   NumberOfLegs 2, RfqType MultiLeg, ACK OK en las 2 patas.
+   CalculateSalesCredit = true en ambas es lo esperado.
+   Revisar (inferencia): AccruedDays 0, AccruedInterest 0, InternalTradeType null.
+   Pendiente: Fation pidió amend de una pata y cancel de la otra (filas 21 y 23).
+
+6. BloombergBSGB$3564:20260929:3:5 · RFQ 10:18 · tipo no dicho
+   Event.Type: "PublishingStpHubEvent" and "3564:20260929:3:5"
+   Esperado: incierto, se lanzó con el despliegue de Murat fallido.
+
+7. Bloomberg$00F800026ABBF0B70002 / BloombergBSGB$3564:20260929:4:5 · RFQ 11:10
+   tipo no dicho (fila 10 si es outright)
+   Event.Type: "PublishingStpHubEvent" and "3564:20260929:4:5"
+   "3564:20260929:4:5:BloombergBSGB$3564:20260929:4:5:New:ce3471023eeb6cbe"
+   Esperado: publicado y ACK OK. MessageId con formato nuevo (pendiente que
+   Fation confirme si es correcto).
+
+
+NOTA BLOOMBERG: buscar por el SourceId (3564:20260929:X:5). No probado en BBG
+(inferencia). Si TradeEvent no devuelve nada, probar con el ComplexTradeId.
+
