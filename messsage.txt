@@ -1,26 +1,7 @@
-Hola Sergio, ¿qué tal? ¿Crees que podamos retomar los trades que te pedí el 24-sep? Ya está desplegado lo del InternalTradeId y el bug de Mifid.Transparency está arreglado. Agregué un par de cosas al trade de las notas y los puntos 4 y 5:
+Usa los del butterfly que ya funcionó el 22-sep (BFLY.2240):
 
-1. Bloomberg (venue)
-- Un Outright
-- Un Switch
+1. GB00BNNGP668, UKT 0.375 10/26, Buy 1MM
+2. GB00BL6C7720, UKT 4.125 01/27, Sell 2MM
+3. GB00BPSNB460, UKT 3.750 03/27, Buy 1.5MM
 
-2. TOMS, tres trades nuevos
-- Trade A: bookearlo, amendarlo y luego cancelar el amend.
-- Trade B: bookearlo y dejarlo. Amendarlo mañana.
-- Trade C: bookearlo y dejarlo. Cancelarlo mañana.
-
-3. TOMS, un bono (no futuro) con estas notas informadas, para DWU-417:
-- Long Note 2 (SourceId)
-- Long Note 3 (CompNonComp)
-- Long Note 4 (Qualifier)
-- Long Note 7 (ForwardIsStandard)
-- Short Note 3 (DealersInCompetition)
-- Los campos MiFID II "Decision maker within firm" y "Execution within firm"
-
-4. TOMS, un bono con Mifid Transparency y Mifid Waiver informados, para DWU-416 y DWU-651
-
-5. TOMS, para DWU-418:
-- Un trade con TransactionType PXM o PXT
-- Un trade sobre un bono con axe
-
-Pásame los números de ticket cuando los tengas. ¡Gracias!
+No sé si hoy siguen activos en el Bond Pricer porque no pude comprobarlo.
