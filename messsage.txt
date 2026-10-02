@@ -1,14 +1,18 @@
-1. Abre el payload
-Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.274"
-Despliega la fila y abre la pestaña JSON. Dentro de Event.Document, busca (Ctrl+F) "Mifid". Ahí está lo que encontró Fation:
-"ExecutionMktId":null, "ExecutionMktIdType":null,
-"InvestmentMktId":null, "InvestmentMktIdType":null
-Al final del mismo Document verás "User":{"TraderUuid":"5544"}.
+[Bug] STP Hub payload: Mifid ExecutionMktId and InvestmentMktId fields published as null on Tradeweb trades
 
-Por qué es bug: Darwin saca los short codes del trader de la pantalla Trader Platform Codes. El TraderUuid sí lo toma de ahí (5544, fila Bloomberg). Los otros cuatro tienen valor en esa misma pantalla y aun así salen null. La fila Tradeweb del trader de Fation tiene External Code 112233 y MiFID2 Code 1245. Si lee uno, debería leer los demás.
+**Overview**
+On Tradeweb trades, Darwin publishes the Mifid short code fields to STP Hub as null, even though the trader has the codes set in Trader Platform Codes. User.TraderUuid is populated from the same screen.
 
-2. Confirma que STP Hub lo aceptó
-"20261002.SAN3.EUGV.274:DWBZncMwXoAeDA:New:85ccc185f5511be7"
-Abre la fila StpHubAcknowledgementReceived. Debe decir Status: OK. Si dice OK, el bug no lo rompe STP Hub, sólo faltan los datos.
+* **Environment:** UAT2
+* **Trade:** Tradeweb$20261002.SAN3.EUGV.274 (trader c0292415)
 
-3. Captura para el bug: el bloque Mifid con los 4 null y, junto a él, la pantalla Trader Platform Codes de Fation (la que pegó en el chat).
+**Steps to reproduce**
+1. Execute an RFQ on Tradeweb with a trader that has Trader Platform Codes set.
+2. In OpenSearch, search: Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.274"
+3. Open Event.Document and check the Mifid block.
+
+**Actual result:** "ExecutionMktId": null, "ExecutionMktIdType": null, "InvestmentMktId": null, "InvestmentMktIdType": null. User.TraderUuid is "5544".
+
+**Expected result:** ExecutionMktId, ExecutionMktIdType, InvestmentMktId and InvestmentMktIdType are populated from the trader's codes in Trader Platform Codes.
+
+**Evidence:**
