@@ -42,6 +42,10 @@ Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.81"
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.82"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.82"
 
+"20261002.SAN3.EUGV.80" and Level: Error
+"20261002.SAN3.EUGV.81" and Level: Error
+"20261002.SAN3.EUGV.82" and Level: Error
+
 Si algún StpHubPayloadSent sale vacío:
 "<ID>" and Level: Error
 
