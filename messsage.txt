@@ -1,79 +1,26 @@
-TRADES A REVISAR EN OPENSEARCH (28 y 29-sep)
-Horas en hora de México. Rango de fecha: el día del trade.
-Por cada trade, en este orden:
-  1) XML / entrada  -> TradeEvent
-  2) Payload        -> PublishingStpHubEvent (de aquí sale el MessageId)
-  3) ACK            -> buscar el MessageId
+Hola Sergio, ¿qué tal? ¿Crees que podamos retomar los trades que te pedí el 24-sep? Ya está desplegado lo del InternalTradeId y el bug de Mifid.Transparency está arreglado. Agregué un par de cosas al trade de las notas y los puntos 4 y 5:
 
+1. Bloomberg (venue)
+- Un Outright
+- Un Switch
 
-==================== LUNES 28-SEP · TOMS (Sergio) ====================
+2. TOMS, tres trades nuevos
+- Trade A: bookearlo, amendarlo y luego cancelar el amend.
+- Trade B: bookearlo y dejarlo. Amendarlo mañana.
+- Trade C: bookearlo y dejarlo. Cancelarlo mañana.
 
-1. 21027613 · New · ~4:00
-   1) XML:      Event.Type: "TradeEvent" and "21027613"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and "21027613"
-   3) ACK:      "9c98e3374bc242ef8d6c26d4a19c0a5e"
-   Esperado: publicado y ACK OK (el ACK llegó tarde por la cola MQ).
-   Antes de DWU-613: InternalTradeType = Mirror, TradeSrc = Voice.
-   InternalTradeId = BloombergToms$21027613 (formato viejo, DWU-549 no desplegado).
+3. TOMS, un bono (no futuro) con estas notas informadas, para DWU-417:
+- Long Note 2 (SourceId)
+- Long Note 3 (CompNonComp)
+- Long Note 4 (Qualifier)
+- Long Note 7 (ForwardIsStandard)
+- Short Note 3 (DealersInCompetition)
+- Los campos MiFID II "Decision maker within firm" y "Execution within firm"
 
-2. 21027784 · tipo no dicho (probablemente New, inferencia) · antes de 8:17
-   1) XML:      Event.Type: "TradeEvent" and "21027784"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and "21027784"
-   3) ACK:      "<MessageId que salga en el payload>"
-   Esperado: publicado y ACK OK. InternalTradeId en formato viejo (esperado sin DWU-549).
+4. TOMS, un bono con Mifid Transparency y Mifid Waiver informados, para DWU-416 y DWU-651
 
-3. 21027884 · tipo no dicho · entre 11:07 y 11:26 · CIERRA DWU-613
-   1) XML:      Event.Type: "TradeEvent" and "21027884"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and "21027884"
-   3) ACK:      "<MessageId que salga en el payload>"
-   Esperado: ACK OK y, payload contra XML:
-   - Sales.SalesBook = SalespersonName del XML (vacío si viene vacío)
-   - InternalTradeType = Main
-   - TradeSrc = Voice sólo si ShortNote6 = PNT; si no, vacío
+5. TOMS, para DWU-418:
+- Un trade con TransactionType PXM o PXT
+- Un trade sobre un bono con axe
 
-
-==================== MARTES 29-SEP · BLOOMBERG (Sergio) ====================
-
-Cómo es Bloomberg (visto el 30-sep con la pata 1 del trade 5):
-- 1) Entrada: PostTradeMessageReceivedEventHandled. Sólo trae IDs, no hay XML.
-     Sirve para confirmar que el trade llegó.
-- 2) Payload: salen 2 resultados (Darwin publica 2 veces, mismo contenido,
-     distinto MessageId). NO abrir los dos: sólo anotar cuántos salen y abrir
-     el de ContextId Bloomberg$00F8... (el que compartió Fation).
-- 3) ACK: sólo del MessageId de ese payload.
-Buscar siempre por Event.TradeId (texto libre no funciona por el $ y los :).
-
-4. Bloomberg$00F800086ABB93A80002 · Switch DE0001135085 vs ES00000124C5 · ~4:30
-   No se conoce su TradeId. Una sola búsqueda:
-   1) ContextId: "Bloomberg$00F800086ABB93A80002"
-   Esperado: sin PublishingStpHubEvent (Sergio no estaba en el trading group alemán).
-
-5. Bloomberg$00F800016ABBB3610002 · Switch español, 2 patas · 06:48
-   Excel: fila 11 (BBG Switch) y fila 15 (CalculateSalesCredit)
-
-   Pata 1 · SPGB 10/28 ES00000124C5 · Buy 2M · HECHA
-   1) Entrada:  Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:1:5"
-   3) ACK:      "b991632fbc9849f48596180b56435f75"
-   Resultado: 2 payloads, los 2 con ACK OK (duplicado aceptado por STP Hub).
-
-   Pata 2 · SPGB 10/44 ES00000124H4 · Sell 3M
-   1) Entrada:  Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:2:5"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:2:5"
-   3) ACK:      "cd179457971445c6a7b2ed499bdcfa41"
-
-   Esperado: mismo ComplexTradeId 00F800016ABBB3610002, NumberOfLegs 2,
-   RfqType MultiLeg, ACK OK. CalculateSalesCredit = true en ambas.
-
-6. BloombergBSGB$3564:20260929:3:5 · RFQ 10:18 · tipo no dicho
-   1) Entrada:  Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:3:5"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:3:5"
-   3) ACK:      "<MessageId del payload con ContextId Bloomberg$00F8...>"
-   Esperado: incierto, se lanzó con el despliegue de Murat fallido.
-
-7. BloombergBSGB$3564:20260929:4:5 (RFQ Bloomberg$00F800026ABBF0B70002) · 11:10
-   1) Entrada:  Event.Type: "PostTradeMessageReceivedEventHandled" and Event.TradeId: "BloombergBSGB$3564:20260929:4:5"
-   2) Payload:  Event.Type: "PublishingStpHubEvent" and Event.TradeId: "BloombergBSGB$3564:20260929:4:5"
-   3) ACK:      "3564:20260929:4:5:BloombergBSGB$3564:20260929:4:5:New:ce3471023eeb6cbe"
-   Esperado: ACK OK. MessageId con formato nuevo (despliegue de Murat del 29-sep).
-   Si salen 2 payloads, ver si el del ACK es el de ContextId Bloomberg$00F8...
+Pásame los números de ticket cuando los tengas. ¡Gracias!
