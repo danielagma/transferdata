@@ -1,17 +1,14 @@
-Tenías razón: PublishingStpHubEvent ya no aparece para este trade. Desde el redespliegue, la publicación pasa por un servicio nuevo, BondsStphubGateway, y los eventos se llaman distinto. Los comandos de abajo salen de tus capturas, en orden:
-
-1. Entrada (TradeEvent de TransFICC):
-Event.Type: "TradeEvent" and "20261002.SAN3.EUGV.274"
-
-2. Payload:
-Event.Type: "PublishingStpHubGatewayCommand" and "20261002.SAN3.EUGV.274"
-Si ese evento no trae el JSON completo, abre este:
+1. Abre el payload
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.274"
+Despliega la fila y abre la pestaña JSON. Dentro de Event.Document, busca (Ctrl+F) "Mifid". Ahí está lo que encontró Fation:
+"ExecutionMktId":null, "ExecutionMktIdType":null,
+"InvestmentMktId":null, "InvestmentMktIdType":null
+Al final del mismo Document verás "User":{"TraderUuid":"5544"}.
 
-3. ACK: el StpHubAcknowledgementReceived sale sin ContextId (-), así que se busca por el MessageId del payload:
-"<MessageId>"
+Por qué es bug: Darwin saca los short codes del trader de la pantalla Trader Platform Codes. El TraderUuid sí lo toma de ahí (5544, fila Bloomberg). Los otros cuatro tienen valor en esa misma pantalla y aun así salen null. La fila Tradeweb del trader de Fation tiene External Code 112233 y MiFID2 Code 1245. Si lee uno, debería leer los demás.
 
-En el hilo del RFQ (TRD_20261002_SAN3_EUGV_273) también aparecen:
-- StpHubEventPublishingSkipped
-- TradeAlreadyExists
-- TradeSaveFailed y RetryingRetriableMessageHandler, los dos en Warning.
+2. Confirma que STP Hub lo aceptó
+"20261002.SAN3.EUGV.274:DWBZncMwXoAeDA:New:85ccc185f5511be7"
+Abre la fila StpHubAcknowledgementReceived. Debe decir Status: OK. Si dice OK, el bug no lo rompe STP Hub, sólo faltan los datos.
+
+3. Captura para el bug: el bloque Mifid con los 4 null y, junto a él, la pantalla Trader Platform Codes de Fation (la que pegó en el chat).
