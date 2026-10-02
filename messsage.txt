@@ -1,12 +1,10 @@
-Es el trade de Tradeweb 20261002.SAN3.EUGV.274. Ponlo en Today.
+Estos son los comandos de Tradeweb que ya funcionaron antes (pendientes-en-orden.md, sección 2).
 
-1. Payload (aquí ves ExecutionMktId y los otros tres campos en null):
-Event.Type: "PublishingStpHubEvent" and Event.TradeId: "TradewebEUGV$20261002.SAN3.EUGV.274"
+1. Payload:
+Event.Type: "PublishingStpHubEvent" and "20261002.SAN3.EUGV.274"
 
-2. ACK: copia el MessageId de ese payload y búscalo:
+2. ACK (pega el MessageId que sale en el payload):
 "<MessageId>"
 
-3. Allocations (Fation dice que están bien y que ya no llevan InternalTradeId):
+3. Allocations:
 "20261002.SAN3.EUGV.274" and Event.Type: *Allocation*
-
-Si la 1 no devuelve nada, búscalo en texto libre: Event.Type: "PublishingStpHubEvent" and "20261002.SAN3.EUGV.274". El prefijo TradewebEUGV$ lo saqué del trade del 30-sep; es inferencia mía.
