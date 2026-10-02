@@ -26,6 +26,7 @@ Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.77"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.77"
 
 "20261002.SAN3.EUGV.77" and Level: Error
+"20261002.SAN3.EUGV.76" and Level: Error
 
 Lista de Fation
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.285"
