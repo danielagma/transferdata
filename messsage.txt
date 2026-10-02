@@ -3,14 +3,24 @@ Butterfly:
 2. GB00BL6C7720, Sell
 3. GB00BPSNB460, Buy
 
-Cuando salga, pásame los 3 IDs del blotter. Para cada pata:
-Event.Type: "StpHubPayloadSent" and "<ID>"
-Si devuelve 1 resultado, se publicó. Copia el MessageId y busca:
-"<MessageId>"
-Ahí abre sólo StpHubAcknowledgementReceived.
+Las patas del butterfly son .295, .296 y .297. Para cada una, en este orden:
 
-Si no devuelve nada:
-Event.Type: "StpHubPayloadValidationFailed" and "<ID>"
+Pata 1 (.295)
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.295"
+"<MessageId de la .295>"
+
+Pata 2 (.296)
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.296"
+"<MessageId de la .296>"
+
+Pata 3 (.297)
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.297"
+"<MessageId de la .297>"
+
+En las búsquedas por MessageId abre sólo StpHubAcknowledgementReceived.
+
+Si StpHubPayloadSent no devuelve nada:
+Event.Type: "StpHubPayloadValidationFailed" and "20261002.SAN3.EUGV.295"
 
 Después del butterfly, enséñame Darwin con capturas, en este orden:
 1. Trader > X531532 > Trader Platform Codes, para ver tu fila Bloomberg con el 5321.
