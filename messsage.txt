@@ -3,6 +3,7 @@ Primero los de Tradeweb, que están verificados. Para cada ID corre las dos bús
 Axe
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.236"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.236"
+Event.Type: "VenueEventsHandlerFailed" and "20261002.SAN3.EUGV.236"
 
 Internal
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.272"
