@@ -1,6 +1,6 @@
 Primero los de Tradeweb, que están verificados. Para cada ID corre las dos búsquedas.
 
-Axe
+Axe (.236). No se publicó: falló con el error de DynamoDB.
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.236"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.236"
 Event.Type: "VenueEventsHandlerFailed" and "20261002.SAN3.EUGV.236"
@@ -8,8 +8,12 @@ Event.Type: "VenueEventsHandlerFailed" and "20261002.SAN3.EUGV.236"
 Internal
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.272"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.272"
-Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.273"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.273"
+Event.Type: "StpHubPayloadSent" and Event.PayloadType: "StpHubPostTradeEvent" and "20261002.SAN3.EUGV.273"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.PayloadType: "StpHubPostTradeEvent" and "20261002.SAN3.EUGV.273"
+
+Allocation de Fation (.273)
+Event.Type: "StpHubPayloadSent" and Event.PayloadType: "StpHubPostTradeAllocationEvent" and "20261002.SAN3.EUGV.273"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.PayloadType: "StpHubPostTradeAllocationEvent" and "20261002.SAN3.EUGV.273"
 
 Switch de Fation (la .273 ya está arriba)
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.274"
@@ -35,8 +39,10 @@ Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.81"
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.82"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.82"
 
-Si alguna StpHubPayloadSent sale vacía:
-Event.Type: "StpHubPayloadValidationFailed" and "<ID>"
+Si algún StpHubPayloadSent sale vacío:
+"<ID>" and Level: Error
+
+Si algún StpHubPayloadSent devuelve 2 filas, es que el trade tiene allocation. Usa los comandos con Event.PayloadType, como en la .273.
 
 TOMS y Bloomberg van después. Primero corre ésta y mándame la captura, para confirmar el formato antes de darte los demás:
 Event.Type: "StpHubPayloadSent" and "21028777"
