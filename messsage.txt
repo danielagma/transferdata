@@ -1,7 +1,12 @@
-Usa los del butterfly que ya funcionó el 22-sep (BFLY.2240):
+Es el trade de Tradeweb 20261002.SAN3.EUGV.274. Ponlo en Today.
 
-1. GB00BNNGP668, UKT 0.375 10/26, Buy 1MM
-2. GB00BL6C7720, UKT 4.125 01/27, Sell 2MM
-3. GB00BPSNB460, UKT 3.750 03/27, Buy 1.5MM
+1. Payload (aquí ves ExecutionMktId y los otros tres campos en null):
+Event.Type: "PublishingStpHubEvent" and Event.TradeId: "TradewebEUGV$20261002.SAN3.EUGV.274"
 
-No sé si hoy siguen activos en el Bond Pricer porque no pude comprobarlo.
+2. ACK: copia el MessageId de ese payload y búscalo:
+"<MessageId>"
+
+3. Allocations (Fation dice que están bien y que ya no llevan InternalTradeId):
+"20261002.SAN3.EUGV.274" and Event.Type: *Allocation*
+
+Si la 1 no devuelve nada, búscalo en texto libre: Event.Type: "PublishingStpHubEvent" and "20261002.SAN3.EUGV.274". El prefijo TradewebEUGV$ lo saqué del trade del 30-sep; es inferencia mía.
