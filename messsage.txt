@@ -1,30 +1,41 @@
-Butterfly:
-1. GB00BNNGP668, Buy
-2. GB00BL6C7720, Sell
-3. GB00BPSNB460, Buy
+Primero los de Tradeweb, que están verificados. Para cada ID corre las dos búsquedas.
 
-Las patas del butterfly son .295, .296 y .297. Para cada una, en este orden:
-Pata 1 (.295)
-1. Busca esto y captura el JSON del StpHubPayloadSent:
-Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.295"
-2. Busca esto y captura el JSON del StpHubPayloadAcknowledgedPublished:
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.295"
+Axe
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.236"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.236"
 
-Pata 2 (.296)
-Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.296"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.296"
+Internal
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.272"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.272"
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.273"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.273"
 
-Pata 3 (.297)
-Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.297"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.297"
+Switch de Fation (la .273 ya está arriba)
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.274"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.274"
 
-Así ya no tienes que copiar el MessageId: StpHubPayloadAcknowledgedPublished lleva el SourceId, y con eso lo encuentras por el ID del trade. Esa búsqueda por ID la deduje de su JSON y no la he probado. Si alguna sale vacía, vuelve a buscar por el "<MessageId>".
+Switch de n317167
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.76"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.76"
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.77"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.77"
 
-Después del butterfly, enséñame Darwin con capturas, en este orden:
-1. Trader > X531532 > Trader Platform Codes, para ver tu fila Bloomberg con el 5321.
-2. Counterparty Relationship > TELE, todas las filas, con las columnas visibles. Ahí deberían estar Darwin Calc'n, Allocation Reporting y Calypso Flow.
-3. Counterparty > TELE y BSTE > View/Edit, con el toggle Is Internal.
-4. Bond Pricer, clic derecho sobre un ISIN, para ver dónde se pone el Axe.
-5. Tradeweb: el ticket outright con la barra de abajo (#Accts, Pre-Alloc) y el selector TO.
+Lista de Fation
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.285"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.285"
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.286"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.286"
 
-Con eso te armo los pasos de Sales Credit OFF, Internal, Axe, CompNonComp y Amundi/Calypso.
+Lista de n317167
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.80"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.80"
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.81"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.81"
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.82"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.82"
+
+Si alguna StpHubPayloadSent sale vacía:
+Event.Type: "StpHubPayloadValidationFailed" and "<ID>"
+
+TOMS y Bloomberg van después. Primero corre ésta y mándame la captura, para confirmar el formato antes de darte los demás:
+Event.Type: "StpHubPayloadSent" and "21028777"
