@@ -1,5 +1,248 @@
-TOMS:
+TOMS Y BLOOMBERG · 2-OCT · indice fidw-eu-bonds-uat2* · Last 2 days
+Por ID: linea 1 = payload, linea 2 = ACK.
+Si salen varias filas: es la cadena New/Amend/Cancel. Abre la del Event.EventType que buscas.
+Si el payload sale vacio:  "<ID>" and Level: Error
+
+============================================================
+TOMS · FUTURO BOBL (New, Amend, Cancel)
+============================================================
+
+# 21028773
+Event.Type: "StpHubPayloadSent" and "21028773"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028773"
+
+# 21028774
+Event.Type: "StpHubPayloadSent" and "21028774"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028774"
+
+# 21028775
+Event.Type: "StpHubPayloadSent" and "21028775"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028775"
+
+============================================================
+TOMS · CICLO New / Amend / Cancel (TELE)
+============================================================
+
+# 21028743
 Event.Type: "StpHubPayloadSent" and "21028743"
-Bloomberg (el texto libre falla con $ y :, por eso busco por campo):
-Event.Type: "StpHubPayloadSent" and ContextId: "BloombergBSGB$3564:20261002:1:5"
-Si cualquiera de los dos sale vacío, busca el ID solo, sin Event.Type, y mándame la lista de eventos.
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028743"
+
+# 21028749
+Event.Type: "StpHubPayloadSent" and "21028749"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028749"
+
+# 21028746
+Event.Type: "StpHubPayloadSent" and "21028746"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028746"
+
+# 21028751
+Event.Type: "StpHubPayloadSent" and "21028751"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028751"
+
+# 21028752
+Event.Type: "StpHubPayloadSent" and "21028752"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028752"
+
+============================================================
+TOMS · CICLO con Clearing Broker 6ATE
+============================================================
+
+# 21028770
+Event.Type: "StpHubPayloadSent" and "21028770"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028770"
+
+# 21028771
+Event.Type: "StpHubPayloadSent" and "21028771"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028771"
+
+============================================================
+TOMS · LIBRO INTERNO (Is Internal Yes)
+============================================================
+
+# 21028698
+Event.Type: "StpHubPayloadSent" and "21028698"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028698"
+
+# 21028777
+Event.Type: "StpHubPayloadSent" and "21028777"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028777"
+
+# 21028779
+Event.Type: "StpHubPayloadSent" and "21028779"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028779"
+
+# 21028781
+Event.Type: "StpHubPayloadSent" and "21028781"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028781"
+
+============================================================
+TOMS · MIFID DEFERRAL SIZE (los que no salen arriba)
+============================================================
+
+# 21028734
+Event.Type: "StpHubPayloadSent" and "21028734"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028734"
+
+# 21028758
+Event.Type: "StpHubPayloadSent" and "21028758"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028758"
+
+# 21028767
+Event.Type: "StpHubPayloadSent" and "21028767"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028767"
+
+============================================================
+TOMS · SENTINEL SENTINELID_TEST98 (los que no salen arriba)
+============================================================
+
+# 21028755
+Event.Type: "StpHubPayloadSent" and "21028755"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028755"
+
+# 21028761
+Event.Type: "StpHubPayloadSent" and "21028761"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028761"
+
+============================================================
+TOMS · SENTINEL Sentineltest98
+============================================================
+
+# 21028854
+Event.Type: "StpHubPayloadSent" and "21028854"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028854"
+
+# 21028857
+Event.Type: "StpHubPayloadSent" and "21028857"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028857"
+
+# 21028860
+Event.Type: "StpHubPayloadSent" and "21028860"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028860"
+
+# 21028863
+Event.Type: "StpHubPayloadSent" and "21028863"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028863"
+
+# 21028866
+Event.Type: "StpHubPayloadSent" and "21028866"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21028866"
+
+============================================================
+BLOOMBERG · SIN VERIFICAR: corre el primero y mandame captura antes de seguir
+============================================================
+
+--- BSGB (3564) ---
+
+# BSGB 1:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:1:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:1:5"
+
+# BSGB 2:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:2:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:2:5"
+
+# BSGB 3:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:3:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:3:5"
+
+# BSGB 4:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:4:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:4:5"
+
+# BSGB 5:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:5:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:5:5"
+
+# BSGB 6:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:6:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:6:5"
+
+# BSGB 7:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:7:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:7:5"
+
+# BSGB 8:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:8:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:8:5"
+
+# BSGB 9:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:9:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:9:5"
+
+# BSGB 10:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:10:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:10:5"
+
+# BSGB 11:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:11:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:11:5"
+
+# BSGB 12:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:12:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:12:5"
+
+# BSGB 13:5   (Transficc Post Trade / ION)
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:13:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:13:5"
+
+# BSGB 14:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$3564:20261002:14:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$3564:20261002:14:5"
+
+--- BSGI (6212) ---
+
+# BSGI 1:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:1:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:1:5"
+
+# BSGI 2:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:2:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:2:5"
+
+# BSGI 3:5   (Transficc Post Trade / ION)
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:3:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:3:5"
+
+# BSGI 4:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:4:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:4:5"
+
+# BSGI 5:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:5:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:5:5"
+
+# BSGI 6:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:6:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:6:5"
+
+# BSGI 7:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:7:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:7:5"
+
+# BSGI 8:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:8:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:8:5"
+
+# BSGI 9:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:9:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:9:5"
+
+# BSGI 10:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:10:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:10:5"
+
+# BSGI 11:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:11:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:11:5"
+
+# BSGI 12:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:12:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:12:5"
+
+# BSGI 13:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:13:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:13:5"
+
+# BSGI 14:5
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261002:14:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Bloomberg$6212:20261002:14:5"
