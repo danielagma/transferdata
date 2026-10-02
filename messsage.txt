@@ -1,13 +1,22 @@
-Pata 1 (.276)
-Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.276"
-"<MessageId de la .276>"
+Butterfly:
+1. GB00BNNGP668, Buy
+2. GB00BL6C7720, Sell
+3. GB00BPSNB460, Buy
 
-Pata 2 (.277)
-Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.277"
-"<MessageId de la .277>"
+Cuando salga, pásame los 3 IDs del blotter. Para cada pata:
+Event.Type: "StpHubPayloadSent" and "<ID>"
+Si devuelve 1 resultado, se publicó. Copia el MessageId y busca:
+"<MessageId>"
+Ahí abre sólo StpHubAcknowledgementReceived.
 
-Pata 3 (.278)
-Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.278"
-"<MessageId de la .278>"
+Si no devuelve nada:
+Event.Type: "StpHubPayloadValidationFailed" and "<ID>"
 
-En cada búsqueda por MessageId, abre sólo la fila StpHubAcknowledgementReceived.
+Después del butterfly, enséñame Darwin con capturas, en este orden:
+1. Trader > X531532 > Trader Platform Codes, para ver tu fila Bloomberg con el 5321.
+2. Counterparty Relationship > TELE, todas las filas, con las columnas visibles. Ahí deberían estar Darwin Calc'n, Allocation Reporting y Calypso Flow.
+3. Counterparty > TELE y BSTE > View/Edit, con el toggle Is Internal.
+4. Bond Pricer, clic derecho sobre un ISIN, para ver dónde se pone el Axe.
+5. Tradeweb: el ticket outright con la barra de abajo (#Accts, Pre-Alloc) y el selector TO.
+
+Con eso te armo los pasos de Sales Credit OFF, Internal, Axe, CompNonComp y Amundi/Calypso.
