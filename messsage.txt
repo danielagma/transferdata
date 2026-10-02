@@ -4,23 +4,21 @@ Butterfly:
 3. GB00BPSNB460, Buy
 
 Las patas del butterfly son .295, .296 y .297. Para cada una, en este orden:
-
 Pata 1 (.295)
+1. Busca esto y captura el JSON del StpHubPayloadSent:
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.295"
-"<MessageId de la .295>"
+2. Busca esto y captura el JSON del StpHubPayloadAcknowledgedPublished:
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.295"
 
 Pata 2 (.296)
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.296"
-"<MessageId de la .296>"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.296"
 
 Pata 3 (.297)
 Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.297"
-"<MessageId de la .297>"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261002.SAN3.EUGV.297"
 
-En las búsquedas por MessageId abre sólo StpHubAcknowledgementReceived.
-
-Si StpHubPayloadSent no devuelve nada:
-Event.Type: "StpHubPayloadValidationFailed" and "20261002.SAN3.EUGV.295"
+Así ya no tienes que copiar el MessageId: StpHubPayloadAcknowledgedPublished lleva el SourceId, y con eso lo encuentras por el ID del trade. Esa búsqueda por ID la deduje de su JSON y no la he probado. Si alguna sale vacía, vuelve a buscar por el "<MessageId>".
 
 Después del butterfly, enséñame Darwin con capturas, en este orden:
 1. Trader > X531532 > Trader Platform Codes, para ver tu fila Bloomberg con el 5321.
