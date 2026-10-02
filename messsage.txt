@@ -1,10 +1,17 @@
-Estos son los comandos de Tradeweb que ya funcionaron antes (pendientes-en-orden.md, sección 2).
+Tenías razón: PublishingStpHubEvent ya no aparece para este trade. Desde el redespliegue, la publicación pasa por un servicio nuevo, BondsStphubGateway, y los eventos se llaman distinto. Los comandos de abajo salen de tus capturas, en orden:
 
-1. Payload:
-Event.Type: "PublishingStpHubEvent" and "20261002.SAN3.EUGV.274"
+1. Entrada (TradeEvent de TransFICC):
+Event.Type: "TradeEvent" and "20261002.SAN3.EUGV.274"
 
-2. ACK (pega el MessageId que sale en el payload):
+2. Payload:
+Event.Type: "PublishingStpHubGatewayCommand" and "20261002.SAN3.EUGV.274"
+Si ese evento no trae el JSON completo, abre este:
+Event.Type: "StpHubPayloadSent" and "20261002.SAN3.EUGV.274"
+
+3. ACK: el StpHubAcknowledgementReceived sale sin ContextId (-), así que se busca por el MessageId del payload:
 "<MessageId>"
 
-3. Allocations:
-"20261002.SAN3.EUGV.274" and Event.Type: *Allocation*
+En el hilo del RFQ (TRD_20261002_SAN3_EUGV_273) también aparecen:
+- StpHubEventPublishingSkipped
+- TradeAlreadyExists
+- TradeSaveFailed y RetryingRetriableMessageHandler, los dos en Warning.
