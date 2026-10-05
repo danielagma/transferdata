@@ -90,23 +90,22 @@ Pásame las capturas de un trade cada vez, empezando por el 1.
 
 
 
-[Bug] STP Hub payload: TOMS amend is published with the SourceId of the original ticket
+[Bug] STP Hub payload: wrong SalesBook in TOMS cancel message
 
 **Overview**
-A TOMS trade was booked (ticket 21028699) and later amended (ticket 21028705). The amendment reached STP Hub with the SourceId of the original ticket instead of the amendment ticket, and STP Hub returned an error.
+A deal was closed in Bloomberg BSGI and flowed downstream properly. It was then cancelled from TOMS. In the cancel message sent to STP Hub, SalesBook carries the Sales Login from TOMS ("IGUERRAOROZ4") instead of the sales book.
 
 * **Environment:** UAT2
-* **TOMS tickets:** 21028699 (original), 21028705 (amendment)
+* **InternalTradeId:** DWBZnwmLmz4hUW
+* **Works correctly:** a trade booked in TOMS and then cancelled has SalesBook informed properly (InternalTradeId DWBZnwPQEYBw8W, TOMS ticket 21029016).
 
 **Steps to reproduce**
-1. Book a trade in TOMS.
-2. Amend the trade in TOMS.
+1. Close a deal in Bloomberg BSGI.
+2. Cancel the trade from TOMS.
 
-**Actual result:** The amendment is sent to STP Hub with SourceId 21028699, the original ticket. STP Hub returns an error.
+**Actual result:** The cancel message has SalesBook "IGUERRAOROZ4", the Sales Login from TOMS.
 
-**Expected result:** The amendment is sent to STP Hub with SourceId 21028705, the amendment ticket.
-
-
+**Expected result:** The cancel message has the sales book in SalesBook.
 
 
 Hi Joanna, I'm testing BondVision in UAT2 and my RFQs are not reaching Darwin. Murat sees two BondVision trades of yours that did arrive, Mts$41000004 and Mts$41000005, around 5pm UK. Could you tell me how you raised them: which instrument, dealer and settings you used? Thanks!
