@@ -1,58 +1,22 @@
-1. Trade A · 21028974, amend y cancel 21028977 (Excel filas 30, 31 y 34)
-Event.Type: "TradeEvent" and "21028974"
-Event.Type: "TradeEvent" and "21028977"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028974"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028974"
-Deben salir 3 payloads: New, Amend y Cancel. En cada uno, mira EventType, SourceId, TradeNo y PreviousTradeId.
+Trade B · ACK
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028841"
 
-2. Trade D · 21028982, insert y cancel (Excel fila 33)
-Event.Type: "TradeEvent" and "21028982"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028982"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028982"
-Deben salir 2 payloads: New y Cancel.
+21028999 · algo
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028999"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028999"
 
-3. Trade B · amend 21028979 de 21028841 (Excel fila 32, evidencia para DWU-708)
-Event.Type: "TradeEvent" and "21028979"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028841"
-Event.Type: "StpHubAcknowledgementReceived" and Level: Warning
-Mira el SourceId del Amend y si STP Hub lo rechaza.
-
-4. 21028991 · bono con axe (DWU-418)
-Event.Type: "TradeEvent" and "21028991"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028991"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028991"
-En el XML mira AxeSide. En el payload, Instrument.Axe.IsAxed true y Axe.Side.
-
-5. 21028999 · algo (DWU-418)
-Event.Type: "TradeEvent" and "21028999"
-Event.Type: "StpHubPayloadSent" and Event.
-Event.Type: "StpHubPayloadSent" and "41000004"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "41000004"
-
-7. Mts$41000005 · BondVision de Joanna
-"Mts$41000005"
-Event.Type: "StpHubPayloadSent" and "41000005"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "41000005"
-
-8. El rechazo de BondVision que vio Murat (DWBZnvvyqEU1XE)
-Event.Type: "StpHubPayloadValidationFailed" and "MTS_BONDVISION"
-Mira el ContextId para saber si es el 41000004 o el 41000005.
-
-9. 21028998 · espejo del interno (opcional)
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028998"
-
-Si una búsqueda de payload sale vacía:
-"<ticket>" and Level: Error
-(Cambia <ticket> por el número de ese trade.) En BondVision, si "41000004" no da nada, prueba "41000004_20261005".
-
-
-Busca esto ya (rango Today), antes que los demás, porque es la evidencia de DWU-708:
+21029045 / 21029048 · amend nuevo
 Event.Type: "TradeEvent" and "21029048"
 Event.Type: "StpHubPayloadSent" and Event.SourceId: "21029045"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21029045"
-Event.Type: "StpHubAcknowledgementReceived" and Level: Warning
 
-Mándame las capturas según salgan y las ordeno.
+21028998 · espejo (opcional)
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028998"
+
+Después: BondVision de Joanna
+"41000004_20261005"
+"41000005_20261005"
+Event.Type: "StpHubPayloadValidationFailed" and "MTS_BONDVISION"
 
 
 [Bug] STP Hub payload: wrong SalesBook in TOMS cancel message
