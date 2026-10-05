@@ -90,12 +90,10 @@ Pásame las capturas de un trade cada vez, empezando por el 1.
 
 
 
-
-
-[Bug] STP Hub payload: TOMS amend is published with the SourceId of the original ticket and STP Hub rejects it
+[Bug] STP Hub payload: TOMS amend is published with the SourceId of the original ticket
 
 **Overview**
-When a TOMS trade is amended, Darwin publishes the Amend with PostTradeEvent.Trade.SourceId equal to the original ticket number instead of the amendment ticket number. STP Hub returns an error for the Amend. Reported by Sergio on TOMS ticket 21028699, amended with ticket 21028705.
+A TOMS trade was booked (ticket 21028699) and later amended (ticket 21028705). The amendment reached STP Hub with the SourceId of the original ticket instead of the amendment ticket, and STP Hub returned an error.
 
 * **Environment:** UAT2
 * **TOMS tickets:** 21028699 (original), 21028705 (amendment)
@@ -103,8 +101,12 @@ When a TOMS trade is amended, Darwin publishes the Amend with PostTradeEvent.Tra
 **Steps to reproduce**
 1. Book a trade in TOMS.
 2. Amend the trade in TOMS.
-3. In OpenSearch, open the StpHubPayloadSent with EventType Amend for the trade and check SourceId and TradeNo.
 
-**Actual result:** The Amend is published with SourceId equal to the original ticket number, and STP Hub returns an error. The same behaviour is seen on amendment 21028749 of ticket 21028743 (2 October): SourceId 21028743, TradeNo 21028749, PreviousTradeId 21028743.
+**Actual result:** The amendment is sent to STP Hub with SourceId 21028699, the original ticket. STP Hub returns an error.
 
-**Expected result:** The Amend is published with SourceId equal to the amendment ticket number, and STP Hub accepts it. DWU-417: "If TOMS field LongNotes Index 2 is populated, map Text, otherwise map TransactionNumber".
+**Expected result:** The amendment is sent to STP Hub with SourceId 21028705, the amendment ticket.
+
+
+
+
+Hi Joanna, I'm testing BondVision in UAT2 and my RFQs are not reaching Darwin. Murat sees two BondVision trades of yours that did arrive, Mts$41000004 and Mts$41000005, around 5pm UK. Could you tell me how you raised them: which instrument, dealer and settings you used? Thanks!
