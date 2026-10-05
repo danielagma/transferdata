@@ -1,23 +1,16 @@
-Trade B · ACK
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028841"
+Mts$41000004
+ContextId: "Mts$41000004"
+Event.Type: "TradeEvent" and ContextId: "Mts$41000004"
+Event.Type: "StpHubPayloadSent" and ContextId: "Mts$41000004"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Mts$41000004"
+ContextId: "Mts$41000004" and Level: Warning
 
-21028999 · algo
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028999"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028999"
-
-21029045 / 21029048 · amend nuevo
-Event.Type: "TradeEvent" and "21029048"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21029045"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21029045"
-
-21028998 · espejo (opcional)
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028998"
-
-Después: BondVision de Joanna
-"41000004_20261005"
-"41000005_20261005"
-Event.Type: "StpHubPayloadValidationFailed" and "MTS_BONDVISION"
-
+Mts$41000005
+ContextId: "Mts$41000005"
+Event.Type: "TradeEvent" and ContextId: "Mts$41000005"
+Event.Type: "StpHubPayloadSent" and ContextId: "Mts$41000005"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and ContextId: "Mts$41000005"
+ContextId: "Mts$41000005" and Level: Warning
 
 [Bug] STP Hub payload: wrong SalesBook in TOMS cancel message
 
