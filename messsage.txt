@@ -1,1 +1,25 @@
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028743"
+Pendientes de hoy, en orden. Rango Today en todos menos el último.
+
+1. 21028716 · el evento descartado del cancel
+"21028716"
+Event.Type: "TradeEvent" and "21028716"
+Event.Type: "TradeEventSkipped" and "21028716"
+En el TradeEventSkipped, mira el motivo del descarte.
+
+2. 21028699 y su amend 21028705 · rechazado por SourceId
+"21028705"
+Event.Type: "TradeEvent" and "21028705"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028699"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028699"
+Event.Type: "StpHubAcknowledgementReceived" and Level: Warning
+- XML del amend: TransactionNumber.
+- Payload del Amend: SourceId y TradeNo.
+- Última búsqueda: el rechazo de STP Hub.
+- Si "21028705" sale vacío: el amend no fue hoy. Dímelo y busco con otro rango.
+
+3. 21028962 · descartado como "previously processed"
+"21028962"
+Event.Type: "TradeEvent" and "21028962"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028962"
+- Esperado: el TradeEvent existe y el payload sale vacío.
+- En el XML: ShortNote 8 y TransactionType TT.
