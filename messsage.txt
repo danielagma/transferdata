@@ -1,5 +1,47 @@
-Hi Joanna, I'm testing BondVision in UAT2 for STP Hub and I have two questions:
+QA Execution: PASSED ✅
+- Environment: UAT2
+- Trade under test: TOMS ticket 21028988, booked on 5 October with Mifid Transparency outside the standard list
 
-1. My BondVision RFQs are not reaching Darwin. Did you have to set up anything to make them work?
+Execution Summary:
+TOMS sent Mifid Transparency "RPRI,TNCP". Darwin did not reject it, published it as sent, and STP Hub acknowledged it.
 
-2. Murat saw two BondVision trades around 5pm UK, Mts$41000004 and Mts$41000005. Were they yours? In Darwin they fail the STP Hub validation because Instrument.SecurityType and User.TraderUuid are null. Did you have to configure anything in Darwin static data for BondVision, for example the trader or the instrument?
+1. TOMS value outside the list - PASSED ✅
+TradeEvent, TX669 MIFID_II_RPT_PST_TRADE_INDICATOR: RPRI,TNCP.
+Evidence: 1-TradeEvent.png
+
+2. Published as sent - PASSED ✅
+StpHubPayloadSent at 13:46:16 UTC, Mifid.Transparency: ["RPRI","TNCP"].
+Evidence: 2-payload.png
+
+3. Accepted by STP Hub - PASSED ✅
+StpHubPayloadAcknowledgedPublished at 13:46:16.663 UTC.
+Evidence: 3-ack.png
+
+Sign-off: Approved to close.
+
+---
+
+DWU-649
+
+QA Execution: PASSED ✅
+- Environment: UAT2
+- Trade under test: TOMS internal trade booked on 5 October, two halves: 21028997 (FO_BONOS buys from FO_DCORT) and 21028998 (FO_DCORT sells to FO_BONOS)
+
+Execution Summary:
+Both halves of the internal trade are published to STP Hub.
+
+1. Both halves received - PASSED ✅
+TradeEvent for 21028997 and for 21028998.
+Evidence: 1-TradeEvent-both-halves.png
+
+2. 21028997 published - PASSED ✅
+StpHubPayloadSent at 14:07:01 UTC, IsInternalTrade: true, Counterparty.Glcs: FO_DCORT, Counterparty.Type: Bank.
+Evidence: 2-payload-21028997.png
+
+3. 21028998 published - PASSED ✅
+StpHubPayloadSent at 14:07:02 UTC, IsInternalTrade: true, Counterparty.Glcs: FO_BONOS, Counterparty.Type: Bank.
+Evidence: 3-payload-21028998.png
+
+Sign-off: Approved to close.
+
+---
