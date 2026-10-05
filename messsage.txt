@@ -92,22 +92,19 @@ Pásame las capturas de un trade cada vez, empezando por el 1.
 
 
 
-[Bug] STP Hub publication: TOMS cancel published to STP Hub 30 minutes after it is received
+[Bug] STP Hub payload: TOMS amend is published with the SourceId of the original ticket and STP Hub rejects it
 
 **Overview**
-A TOMS trade booked on 2 October (ticket 21028714) was cancelled in TOMS on 5 October. Darwin built the Cancel payload when the cancel arrived, at 12:27:28 UTC, but published it to STP Hub at 12:57:29 UTC, 30 minutes later. STP Hub acknowledged it at 12:57:29 UTC.
+When a TOMS trade is amended, Darwin publishes the Amend with PostTradeEvent.Trade.SourceId equal to the original ticket number instead of the amendment ticket number. STP Hub returns an error for the Amend. Reported by Sergio on TOMS ticket 21028699, amended with ticket 21028705.
 
 * **Environment:** UAT2
-* **TOMS ticket:** 21028714
-* **MessageId:** 21028714:DWBZnvkOK5K436:Cancel:4e42bec075e0a345
+* **TOMS tickets:** 21028699 (original), 21028705 (amendment)
 
 **Steps to reproduce**
 1. Book a trade in TOMS.
-2. On a later day, cancel the trade in TOMS.
-3. In OpenSearch, compare the time of the cancel TradeEvent with the time of the StpHubPayloadSent with EventType Cancel.
+2. Amend the trade in TOMS.
+3. In OpenSearch, open the StpHubPayloadSent with EventType Amend for the trade and check SourceId and TradeNo.
 
-**Actual result:** The cancel TradeEvent is received at 12:27:28 UTC. The StpHubPayloadSent with EventType Cancel is logged at 12:57:29.426 UTC, and its payload carries OperationDateTime.UTCInternalCreation 12:27:28.981. The StpHubPayloadAcknowledgedPublished is logged at 12:57:29.640 UTC.
+**Actual result:** The Amend is published with SourceId equal to the original ticket number, and STP Hub returns an error. The same behaviour is seen on amendment 21028749 of ticket 21028743 (2 October): SourceId 21028743, TradeNo 21028749, PreviousTradeId 21028743.
 
-**Expected result:** The Cancel is published to STP Hub as soon as the cancel event is received.
-
-**Evidence:**
+**Expected result:** The Amend is published with SourceId equal to the amendment ticket number, and STP Hub accepts it. DWU-417: "If TOMS field LongNotes Index 2 is populated, map Text, otherwise map TransactionNumber".
