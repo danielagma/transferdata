@@ -1,25 +1,89 @@
-Pendientes de hoy, en orden. Rango Today en todos menos el último.
+1. 21028985 · bono con notas (DWU-417 y 418)
+"21028985"
+Event.Type: "TradeEvent" and "21028985"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028985"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028985"
+En el XML mira las Long Notes 2, 3, 4 y 7, la Short Note 3 y los campos TX671 y TX672. En el payload, cada una debe aparecer en su campo:
 
-1. 21028716 · el evento descartado del cancel
-"21028716"
-Event.Type: "TradeEvent" and "21028716"
-Event.Type: "TradeEventSkipped" and "21028716"
-En el TradeEventSkipped, mira el motivo del descarte.
+┌──────────────┬────────────────────────────┐
+│ Nota del XML │     Campo del payload      │
+├──────────────┼────────────────────────────┤
+│ Long Note 2  │ SourceId e InternalTradeId │
+├──────────────┼────────────────────────────┤
+│ Long Note 3  │ CompNonComp                │
+├──────────────┼────────────────────────────┤
+│ Long Note 4  │ Qualifier                  │
+├──────────────┼────────────────────────────┤
+│ Long Note 7  │ ForwardIsStandard true     │
+├──────────────┼────────────────────────────┤
+│ Short Note 3 │ DealersInCompetition       │
+├──────────────┼────────────────────────────┤
+│ TX672        │ Mifid.ExecutionMktId       │
+├──────────────┼────────────────────────────┤
+│ TX671        │ Mifid.InvestmentMktId      │
+└──────────────┴────────────────────────────┘
 
-2. 21028699 y su amend 21028705 · rechazado por SourceId
-"21028705"
-Event.Type: "TradeEvent" and "21028705"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028699"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028699"
+2. 21028988 · Transparency y Waiver (DWU-416, retest DWU-651)
+"21028988"
+Event.Type: "TradeEvent" and "21028988"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028988"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028988"
+Si no hay payload:
+Event.Type: "StpHubPayloadValidationFailed" and "21028988"
+Mira Mifid.Transparency y Mifid.Waiver contra el XML (TX669, TX673). Si sale StpHubPayloadValidationFailed sobre Transparency, DWU-651 sigue roto.
+
+3. 21028997 · trade interno (retest DWU-649)
+"21028997"
+Event.Type: "TradeEvent" and "21028997"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028997"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028997"
+Si no hay payload:
+Event.Type: "StpHubPayloadValidationFailed" and "21028997"
+Event.Type: "TradeEventSkipped" and "21028997"
+Mira IsInternalTrade true y Counterparty.Type.
+
+4. 21028991 · bono con axe (DWU-418)
+"21028991"
+Event.Type: "TradeEvent" and "21028991"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028991"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028991"
+Mira AxeSide en el XML, e Instrument.Axe.IsAxed true y Axe.Side en el payload.
+
+5. 21028999 · algo (DWU-418)
+"21028999"
+Event.Type: "TradeEvent" and "21028999"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028999"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028999"
+Mira el flag de algo en el XML (TX692 EXECUTION_WITH_FIRM_ALGO_IND, TX693 DECISION_MAKER_ALGO_IND), y en el payload Mifid.ExecutionMktIdType y InvestmentMktIdType = ALGO.
+
+6. Trade A · 21028974 → amend y cancel 21028977 (Excel filas 30, 31, 34)
+"21028974"
+Event.Type: "TradeEvent" and "21028974"
+Event.Type: "TradeEvent" and "21028977"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028974"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028974"
+Deberían salir 3 payloads: New, Amend y Cancel. Mira en cada uno EventType, PreviousTradeId, TradeNo y SourceId. Si falta el Cancel, espera 30 minutos (el bug de hoy) y repite la búsqueda del payload.
+
+7. Trade D · 21028982 insert y cancel (Excel fila 33)
+"21028982"
+Event.Type: "TradeEvent" and "21028982"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028982"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028982"
+Deberían salir 2 payloads: New y Cancel. Si falta el Cancel, espera 30 minutos y repite.
+
+8. Trade B · amend 21028979 de 21028841 (bookeado el 2-oct) (Excel fila 32)
+"21028979"
+Event.Type: "TradeEvent" and "21028979"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028841"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028841"
 Event.Type: "StpHubAcknowledgementReceived" and Level: Warning
-- XML del amend: TransactionNumber.
-- Payload del Amend: SourceId y TradeNo.
-- Última búsqueda: el rechazo de STP Hub.
-- Si "21028705" sale vacío: el amend no fue hoy. Dímelo y busco con otro rango.
+El New es del 2-oct y no saldrá. El Amend sí. Mira SourceId (21028841 o 21028979) y si STP Hub lo rechaza (la última búsqueda). Es el problema del SourceId que reportó Sergio.
 
-3. 21028962 · descartado como "previously processed"
-"21028962"
-Event.Type: "TradeEvent" and "21028962"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028962"
-- Esperado: el TradeEvent existe y el payload sale vacío.
-- En el XML: ShortNote 8 y TransactionType TT.
+---
+
+Para cualquiera de los 8, si el payload sale vacío:
+"<ticket>" and Level: Error
+"<ticket>" and Level: Warning
+(Cambia <ticket> por el número de ese trade.)
+
+Pásame las capturas de un trade cada vez, empezando por el 1.
