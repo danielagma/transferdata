@@ -1,25 +1,26 @@
-1. Bloomberg
-- One Outright
-- One Switch
-- One trade allocated into two accounts
 
-2. TOMS, four new trades
-- Trade A: book it, amend it, then cancel the amended trade.
-- Trade B: book it and leave it. Amend it tomorrow.
-- Trade C: book it and leave it. Cancel it tomorrow.
-- Trade D: book it and cancel it the same day.
+1. 21028714 · cancel de TOMS (es lo que pide Murat)
+"21028714"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028714"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028714"
+Mira la hora del TradeEvent, la del StpHubPayloadSent con EventType Cancel y la del ACK. La diferencia entre las dos primeras debería ser unos 30 min.
 
-3. TOMS, one bond (not a future) with these fields populated:
-- Long Note 2, Long Note 3, Long Note 4, Long Note 7
-- Short Note 3
-- MiFID II "Decision maker within firm" and "Execution within firm"
-Please leave Long Note 1 (Sentinel ID) empty.
+2. 21028716 · el evento descartado
+"21028716"
+Event.Type: "TradeEventSkipped" and "21028716"
+Mira el motivo del descarte.
 
-4. TOMS, one bond with Mifid Transparency and Mifid Waiver populated. For Transparency, use a value outside the standard list, for example RPRI. Long Note 1 empty.
+3. 21028705 · amend de 21028699, rechazado por SourceId
+"21028705"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028699"
+Event.Type: "StpHubAcknowledgementReceived" and Level: Warning
+Sergio no dijo qué día lo hizo. Si sale vacío, no fue hoy.
 
-5. TOMS
-- One trade with TransactionType PXM or PXT
-- One trade on a bond with an axe
-- One internal trade (against another desk of the bank)
-- One trade with the MiFID execution decision and investment decision flagged as algo
-- One ticket each with these values: AE, CAE, PCA, XAE and PXA
+4. 21028962 · descartado como "previously processed" (Murat, 2:00)
+"21028962"
+Esperado: hay TradeEvent y no hay StpHubPayloadSent.
+
+Si una búsqueda con Event.Type sale vacía, prueba el id solo entre comillas y luego "<id>" and Level: Error.
+
+Si nada sale, ni siquiera "21028714", el fallo es de OpenSearch (Murat dijo que su Kibana dejó de funcionar). Avísale con:
+My OpenSearch is not returning results either, not even today's logs.
