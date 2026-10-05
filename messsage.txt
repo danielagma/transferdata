@@ -1,1 +1,25 @@
-Update 2026-10-03: this run covers only the Bloomberg allocation in UAT-EU. It does not close the story. The MarketCode published here ("Bloomberg") is not the inbound venue value and was raised as DWU-629. Closure is tracked in the UAT2 cycle: Tradeweb passed (see comment of 3 October), Bloomberg is pending the DWU-629 retest, and BondVision is pending.
+1. Bloomberg
+- One Outright
+- One Switch
+- One trade allocated into two accounts
+
+2. TOMS, four new trades
+- Trade A: book it, amend it, then cancel the amended trade.
+- Trade B: book it and leave it. Amend it tomorrow.
+- Trade C: book it and leave it. Cancel it tomorrow.
+- Trade D: book it and cancel it the same day.
+
+3. TOMS, one bond (not a future) with these fields populated:
+- Long Note 2, Long Note 3, Long Note 4, Long Note 7
+- Short Note 3
+- MiFID II "Decision maker within firm" and "Execution within firm"
+Please leave Long Note 1 (Sentinel ID) empty.
+
+4. TOMS, one bond with Mifid Transparency and Mifid Waiver populated. For Transparency, use a value outside the standard list, for example RPRI. Long Note 1 empty.
+
+5. TOMS
+- One trade with TransactionType PXM or PXT
+- One trade on a bond with an axe
+- One internal trade (against another desk of the bank)
+- One trade with the MiFID execution decision and investment decision flagged as algo
+- One ticket each with these values: AE, CAE, PCA, XAE and PXA
