@@ -45,6 +45,13 @@ Si una búsqueda de payload sale vacía:
 "<ticket>" and Level: Error
 (Cambia <ticket> por el número de ese trade.) En BondVision, si "41000004" no da nada, prueba "41000004_20261005".
 
+
+Busca esto ya (rango Today), antes que los demás, porque es la evidencia de DWU-708:
+Event.Type: "TradeEvent" and "21029048"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21029045"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21029045"
+Event.Type: "StpHubAcknowledgementReceived" and Level: Warning
+
 Mándame las capturas según salgan y las ordeno.
 
 
