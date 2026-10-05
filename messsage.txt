@@ -87,3 +87,27 @@ Para cualquiera de los 8, si el payload sale vacío:
 (Cambia <ticket> por el número de ese trade.)
 
 Pásame las capturas de un trade cada vez, empezando por el 1.
+
+
+
+
+
+[Bug] STP Hub publication: TOMS cancel published to STP Hub 30 minutes after it is received
+
+**Overview**
+A TOMS trade booked on 2 October (ticket 21028714) was cancelled in TOMS on 5 October. Darwin built the Cancel payload when the cancel arrived, at 12:27:28 UTC, but published it to STP Hub at 12:57:29 UTC, 30 minutes later. STP Hub acknowledged it at 12:57:29 UTC.
+
+* **Environment:** UAT2
+* **TOMS ticket:** 21028714
+* **MessageId:** 21028714:DWBZnvkOK5K436:Cancel:4e42bec075e0a345
+
+**Steps to reproduce**
+1. Book a trade in TOMS.
+2. On a later day, cancel the trade in TOMS.
+3. In OpenSearch, compare the time of the cancel TradeEvent with the time of the StpHubPayloadSent with EventType Cancel.
+
+**Actual result:** The cancel TradeEvent is received at 12:27:28 UTC. The StpHubPayloadSent with EventType Cancel is logged at 12:57:29.426 UTC, and its payload carries OperationDateTime.UTCInternalCreation 12:27:28.981. The StpHubPayloadAcknowledgedPublished is logged at 12:57:29.640 UTC.
+
+**Expected result:** The Cancel is published to STP Hub as soon as the cancel event is received.
+
+**Evidence:**
