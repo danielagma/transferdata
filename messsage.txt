@@ -5,6 +5,8 @@ Event.Type: "StpHubPayloadSent" and Event.SourceId: "21028714"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "21028714"
 Mira la hora del TradeEvent, la del StpHubPayloadSent con EventType Cancel y la del ACK. La diferencia entre las dos primeras debería ser unos 30 min.
 
+Event.Type: "TradeEvent" and "21028714"
+
 2. 21028716 · el evento descartado
 "21028716"
 Event.Type: "TradeEventSkipped" and "21028716"
