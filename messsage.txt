@@ -1,20 +1,21 @@
-1. One outright.
-2. One switch.
-3. One trade allocated into two accounts.
+1. Trade electrónico de Sergio:
+"DWBZo0xGiR1olk"
+2. Cancelación de TOMS de Sergio:
+"DWBZo0yeCHH1CC"
 
-What each one is for:
-1. DWU-415, DWU-419, DWU-420 (Bloomberg venue) and STP test cases row 10
-2. Same stories, multi-leg, and STP test cases row 11
-3. DWU-629 (allocation MarketCode = BLOOMBERG_MAP_POST_TRADE), DWU-424, DWU-425 and STP test cases row 26
+BondVision:
 
+3. Outright (4:39):
+"21000108_20261006"
+4. Trade con 2 allocations (4:39):
+"11000111_20261006"
+5. Deal del problema de GLCS (5:05):
+"21000110_20261006"
+6. Deal después del arreglo de Fation (7:06):
+"11000116_20261006"
+7. Último deal de Sergio (7:41):
+"21000166_20261006"
 
-MENSAJES A MURAT
-
-DWU-695:
-Hi Murat, for DWU-695, what did you change, and what should I see in the logs now?
-
-DWU-677:
-Hi Murat, for DWU-677, can you switch UAT2 to a non-Live mode for a short test, so I can check one trade is logged but not sent to STP Hub?
-
-DWU-557:
-Hi Murat, for DWU-557 your evidence covers the normal flow. The acceptance criteria are about STP Hub or IBM MQ being down. Can we simulate an outage in UAT2 to test them, or did the gateway design replace some of these criteria?
+En el blotter de Fation (captura de las 7:44) salen otros 2 trades de Sergio que nadie menciona en el chat. Son de la misma cuenta X966097 y la misma contraparte 30815BSCHM. Revísalos sólo si quieres:
+"21000109_20261006"
+"11000112_20261006"
