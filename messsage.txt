@@ -1,21 +1,67 @@
-1. Trade electrónico de Sergio:
-"DWBZo0xGiR1olk"
-2. Cancelación de TOMS de Sergio:
-"DWBZo0yeCHH1CC"
+1 · Bloomberg DWBZo0xGiR1olk
 
-BondVision:
+Por qué falló primero la validación:
+"DWBZo0xGiR1olk" and Event.Type: "StpHubPayloadValidationFailed"
+Los dos payloads. Abre los dos y lee Event.PayloadType y EventType:
+"DWBZo0xGiR1olk" and Event.Type: "StpHubPayloadSent"
+ACK:
+"DWBZo0xGiR1olk" and Event.Type: "StpHubPayloadAcknowledgedPublished"
 
-3. Outright (4:39):
-"21000108_20261006"
-4. Trade con 2 allocations (4:39):
-"11000111_20261006"
-5. Deal del problema de GLCS (5:05):
-"21000110_20261006"
-6. Deal después del arreglo de Fation (7:06):
-"11000116_20261006"
-7. Último deal de Sergio (7:41):
-"21000166_20261006"
+2 · Cancel de TOMS DWBZo0yeCHH1CC (DWU-709)
 
-En el blotter de Fation (captura de las 7:44) salen otros 2 trades de Sergio que nadie menciona en el chat. Son de la misma cuenta X966097 y la misma contraparte 30815BSCHM. Revísalos sólo si quieres:
-"21000109_20261006"
-"11000112_20261006"
+Payload del cancel. Lee SourceId, EventType, SalesBook, InternalTradeType y TradeSrc:
+"DWBZo0yeCHH1CC" and Event.Type: "StpHubPayloadSent"
+ACK:
+"DWBZo0yeCHH1CC" and Event.Type: "StpHubPayloadAcknowledgedPublished"
+Log nuevo del arreglo de DWU-709. Debe traer SalesBook, InternalTradeType y TradeSrc:
+"DWBZo0yeCHH1CC" and Event.Type: "PublishingStpHubGatewayCommand"
+Todo el flujo del cancel en Trade Service. Busca ahí StpHubTomsOverridesApplied:
+ContextId: "C39Y1319X00021029164"
+XML de TOMS. Lee SalespersonName, SalespersonLogin y la fecha del booking original (para DWU-706). Si sale vacío, el ticket no es 21029164: usa el SourceId del primer comando y me lo pasas.
+Event.Type: "TradeEvent" and "21029164"
+
+3 · BondVision 21000108, outright
+
+"21000108_20261006" and Event.Type: "StpHubPayloadSent"
+"21000108_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
+Los 2 errores nuevos. Abre los dos:
+"21000108_20261006" and Level: Error
+El evento de DWU-624. Lee TraderUuid:
+ContextId: "Mts$21000108" and Event.Type: "TraderBloombergUuidEnriched"
+
+4 · BondVision 11000111, con 2 allocations
+
+TRADE:
+"11000111_20261006" and Event.Type: "StpHubPayloadSent" and Event.PayloadType: "StpHubPostTradeEvent"
+ALLOC. Lee MarketCode (DWU-629):
+"11000111_20261006" and Event.Type: "StpHubPayloadSent" and Event.PayloadType: "StpHubPostTradeAllocationEvent"
+ACK. Deben salir 2:
+"11000111_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
+El "already sent" (DWU-679):
+"11000111_20261006" and Event.Type: "StpHubEventPublishingSkipped"
+Errores:
+"11000111_20261006" and Level: Error
+
+5 · BondVision 21000110 (GLCS)
+
+Lee Counterparty.Glcs:
+"21000110_20261006" and Event.Type: "StpHubPayloadSent"
+"21000110_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
+
+6 · BondVision 11000116
+
+Inferencia mía: empieza por 1100 como 11000111, así que puede llevar allocations. El primer comando lo dice: si salen 2 filas, mira Event.PayloadType en cada una.
+"11000116_20261006" and Event.Type: "StpHubPayloadSent"
+"11000116_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
+
+7 · BondVision 21000166
+
+"21000166_20261006" and Event.Type: "StpHubPayloadSent"
+"21000166_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
+
+Orden
+
+1. Trade 2. Es DWU-709 y es el que más prisa tiene.
+2. Trade 1.
+3. Trades 3 y 4. Son el outright y la allocation de BondVision.
+4. Trades 5, 6 y 7. Sólo sirven para el tema de GLCS de Fation.
