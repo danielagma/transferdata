@@ -1,0 +1,26 @@
+MENSAJE 1 (la solicitud)
+
+Hi Sergio! A few more TOMS tickets, please. Please send me the ticket id of each one.
+
+1. A bond with a clearing broker and a transaction cost of type 2, with the MiFID short selling indicator populated.
+2. A future with a two-digit year in the ticker, for example G U26.
+3. A ticket with ExecutedPlatformName VOICE.
+4. An internal trade (against another desk of the bank), then amend it and cancel it the same day.
+5. A ticket with Short Note 6 = PNT.
+6. A ticket with no salesperson.
+7. A ticket with Short Note 1 populated with a value other than ST.
+
+Thanks!
+
+
+MENSAJE 2 (el porqué)
+
+What each one is for:
+
+1. DWU-416 AC 4 (BrokerCode, Mifid.ShortSelling) and DWU-417 AC 4 and AC 5 (BrokerCode, BrokerCommission.Amount)
+2. DWU-417 AC 4 and AC 6 (MaturityCode and the future guards), DWU-418 AC 4 (Instrument.IdType) and DWU-416 AC 4 (Instrument.SecurityType)
+3. DWU-418 AC 4 (SourceOriginalName STW)
+4. DWU-584 AC 5 and AC 6 (internal trade validation on amend and cancel)
+5. DWU-613 (TradeSrc)
+6. DWU-613 (SalesBook)
+7. DWU-650 (SettlementLocation)
