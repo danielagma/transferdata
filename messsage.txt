@@ -41,3 +41,6 @@ Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.380"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.380"
 4. El skipped. Si sale, lee la hora y el Reason:
 Event.Type: "StpHubEventPublishingSkipped" and "20261006.SAN3.EUGV.380"
+
+
+Event.Type: "TransFiccTradeEventStrategyFound" and "20261006.SAN3.EUGV.378"
