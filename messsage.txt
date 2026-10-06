@@ -56,3 +56,9 @@ Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030209"
 "21030209" and Level: Error
 "21030209" and Level: Warning
 Event.Type: "TradeEventSkipped" and "21030209"
+
+
+ContextId: "C39Y1319100021030209"
+Esta saca todo lo que hizo Trade Service con el amend.
+Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.60"
+Esta revisa si el amend salió con el id de Tradeweb en lugar del ticket.
