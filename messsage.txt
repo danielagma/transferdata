@@ -1,47 +1,20 @@
-QA Execution: PASSED ✅
-- Environment: UAT2
-- Trade under test: TOMS ticket 21028988, booked on 5 October with Mifid Transparency outside the standard list
+1. One outright.
+2. One switch.
+3. One trade allocated into two accounts.
 
-Execution Summary:
-TOMS sent Mifid Transparency "RPRI,TNCP". Darwin did not reject it, published it as sent, and STP Hub acknowledged it.
+What each one is for:
+1. DWU-415, DWU-419, DWU-420 (Bloomberg venue) and STP test cases row 10
+2. Same stories, multi-leg, and STP test cases row 11
+3. DWU-629 (allocation MarketCode = BLOOMBERG_MAP_POST_TRADE), DWU-424, DWU-425 and STP test cases row 26
 
-1. TOMS value outside the list - PASSED ✅
-TradeEvent, TX669 MIFID_II_RPT_PST_TRADE_INDICATOR: RPRI,TNCP.
-Evidence: 1-TradeEvent.png
 
-2. Published as sent - PASSED ✅
-StpHubPayloadSent at 13:46:16 UTC, Mifid.Transparency: ["RPRI","TNCP"].
-Evidence: 2-payload.png
+MENSAJES A MURAT
 
-3. Accepted by STP Hub - PASSED ✅
-StpHubPayloadAcknowledgedPublished at 13:46:16.663 UTC.
-Evidence: 3-ack.png
+DWU-695:
+Hi Murat, for DWU-695, what did you change, and what should I see in the logs now?
 
-Sign-off: Approved to close.
+DWU-677:
+Hi Murat, for DWU-677, can you switch UAT2 to a non-Live mode for a short test, so I can check one trade is logged but not sent to STP Hub?
 
----
-
-DWU-649
-
-QA Execution: PASSED ✅
-- Environment: UAT2
-- Trade under test: TOMS internal trade booked on 5 October, two halves: 21028997 (FO_BONOS buys from FO_DCORT) and 21028998 (FO_DCORT sells to FO_BONOS)
-
-Execution Summary:
-Both halves of the internal trade are published to STP Hub.
-
-1. Both halves received - PASSED ✅
-TradeEvent for 21028997 and for 21028998.
-Evidence: 1-TradeEvent-both-halves.png
-
-2. 21028997 published - PASSED ✅
-StpHubPayloadSent at 14:07:01 UTC, IsInternalTrade: true, Counterparty.Glcs: FO_DCORT, Counterparty.Type: Bank.
-Evidence: 2-payload-21028997.png
-
-3. 21028998 published - PASSED ✅
-StpHubPayloadSent at 14:07:02 UTC, IsInternalTrade: true, Counterparty.Glcs: FO_BONOS, Counterparty.Type: Bank.
-Evidence: 3-payload-21028998.png
-
-Sign-off: Approved to close.
-
----
+DWU-557:
+Hi Murat, for DWU-557 your evidence covers the normal flow. The acceptance criteria are about STP Hub or IBM MQ being down. Can we simulate an outage in UAT2 to test them, or did the gateway design replace some of these criteria?
