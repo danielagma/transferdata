@@ -1,67 +1,27 @@
-1 · Bloomberg DWBZo0xGiR1olk
+En los comandos de la pata .381 del switch quito el filtro de PayloadType. Así salen el TRADE y el ALLOC juntos, sin importar en qué pata pusiste la allocation.
 
-Por qué falló primero la validación:
-"DWBZo0xGiR1olk" and Event.Type: "StpHubPayloadValidationFailed"
-Los dos payloads. Abre los dos y lee Event.PayloadType y EventType:
-"DWBZo0xGiR1olk" and Event.Type: "StpHubPayloadSent"
-ACK:
-"DWBZo0xGiR1olk" and Event.Type: "StpHubPayloadAcknowledgedPublished"
+.378 · outright con axe
 
-2 · Cancel de TOMS DWBZo0yeCHH1CC (DWU-709)
+Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.378"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.378"
+Event.Type: "TraderBloombergUuidEnriched" and "20261006.SAN3.EUGV.378"
 
-Payload del cancel. Lee SourceId, EventType, SalesBook, InternalTradeType y TradeSrc:
-"DWBZo0yeCHH1CC" and Event.Type: "StpHubPayloadSent"
-ACK:
-"DWBZo0yeCHH1CC" and Event.Type: "StpHubPayloadAcknowledgedPublished"
-Log nuevo del arreglo de DWU-709. Debe traer SalesBook, InternalTradeType y TradeSrc:
-"DWBZo0yeCHH1CC" and Event.Type: "PublishingStpHubGatewayCommand"
-Todo el flujo del cancel en Trade Service. Busca ahí StpHubTomsOverridesApplied:
-ContextId: "C39Y1319X00021029164"
-XML de TOMS. Lee SalespersonName, SalespersonLogin y la fecha del booking original (para DWU-706). Si sale vacío, el ticket no es 21029164: usa el SourceId del primer comando y me lo pasas.
-Event.Type: "TradeEvent" and "21029164"
+.379 · sin fila Bloomberg
 
-3 · BondVision 21000108, outright
+"20261006.SAN3.EUGV.379" and Level: Error
+Event.Type: "StpHubPayloadValidationFailed" and "20261006.SAN3.EUGV.379"
+Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.379"
 
-"21000108_20261006" and Event.Type: "StpHubPayloadSent"
-"21000108_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
-Los 2 errores nuevos. Abre los dos:
-"21000108_20261006" and Level: Error
-El evento de DWU-624. Lee TraderUuid:
-ContextId: "Mts$21000108" and Event.Type: "TraderBloombergUuidEnriched"
+.381 · switch, pata Sell
 
-4 · BondVision 11000111, con 2 allocations
+Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.381"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.381"
+Event.Type: "StpHubEventPublishingSkipped" and "20261006.SAN3.EUGV.381"
 
-TRADE:
-"11000111_20261006" and Event.Type: "StpHubPayloadSent" and Event.PayloadType: "StpHubPostTradeEvent"
-ALLOC. Lee MarketCode (DWU-629):
-"11000111_20261006" and Event.Type: "StpHubPayloadSent" and Event.PayloadType: "StpHubPostTradeAllocationEvent"
-ACK. Deben salir 2:
-"11000111_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
-El "already sent" (DWU-679):
-"11000111_20261006" and Event.Type: "StpHubEventPublishingSkipped"
-Errores:
-"11000111_20261006" and Level: Error
+.380 · switch, pata Buy
 
-5 · BondVision 21000110 (GLCS)
+Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.380"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.380"
+Event.Type: "StpHubEventPublishingSkipped" and "20261006.SAN3.EUGV.380"
 
-Lee Counterparty.Glcs:
-"21000110_20261006" and Event.Type: "StpHubPayloadSent"
-"21000110_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
-
-6 · BondVision 11000116
-
-Inferencia mía: empieza por 1100 como 11000111, así que puede llevar allocations. El primer comando lo dice: si salen 2 filas, mira Event.PayloadType en cada una.
-"11000116_20261006" and Event.Type: "StpHubPayloadSent"
-"11000116_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
-
-7 · BondVision 21000166
-
-"21000166_20261006" and Event.Type: "StpHubPayloadSent"
-"21000166_20261006" and Event.Type: "StpHubPayloadAcknowledgedPublished"
-
-Orden
-
-1. Trade 2. Es DWU-709 y es el que más prisa tiene.
-2. Trade 1.
-3. Trades 3 y 4. Son el outright y la allocation de BondVision.
-4. Trades 5, 6 y 7. Sólo sirven para el tema de GLCS de Fation.
+Toma una captura por comando. Si en un resultado salen 2 filas, abre las dos.
