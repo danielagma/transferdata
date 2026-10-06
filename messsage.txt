@@ -44,3 +44,15 @@ Event.Type: "StpHubEventPublishingSkipped" and "20261006.SAN3.EUGV.380"
 
 
 Event.Type: "TransFiccTradeEventStrategyFound" and "20261006.SAN3.EUGV.378"
+
+
+1. Lo que entra. En Event.TradeFeedXml lee LifecycleAction, el ticket original y la fecha del trade original:
+Event.Type: "TradeEvent" and "21030209"
+2. El payload. Lee SourceId, EventType y PreviousTradeId:
+Event.Type: "StpHubPayloadSent" and "21030209"
+3. El ACK:
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030209"
+4. Si el paso 2 sale vacío, busca por qué no se publicó:
+"21030209" and Level: Error
+"21030209" and Level: Warning
+Event.Type: "TradeEventSkipped" and "21030209"
