@@ -1,22 +1,6 @@
-COMANDOS OPENSEARCH 7-OCT
-Indice: fidw-eu-bonds-uat2*. Rango: Today.
+Sergio, revisé el 21030344 contra el XML de TOMS y las historias:
 
-==================================================
-TOMS 21030344 (Sergio, DWBZo8B2x77Arg) - Waiver, Transparency, NumberOfLegs, CompNonComp
-==================================================
-
-1. Lo que manda TOMS (el XML)
-   Captura el TradeEvent y abre Event.TradeFeedXml. Busca en el XML:
-   - <ShortNote> con <Index>4</Index>  -> Sergio dice "5"
-   - <LongNote> con <Index>3</Index> y con <Index>4</Index>  -> Sergio dice COMP en el 4
-   - TX668 MIFID_II_RPT_WAIVER_IND_TRA  -> Sergio dice OILQ, PRIC
-   - TX669 MIFID_II_RPT_PST_TRADE_INDICATOR  -> Sergio dice BENC, RPRI, TNCP
-   Si salen 2 TradeEvent (uno D39Y... y otro), captura los dos.
-
-Event.Type: "TradeEvent" and "21030344"
-
-2. Lo que sale a STP Hub (envio + campos)
-
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030344"
-Event.Type: "StpHubPayloadDocument" and "21030344"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030344"
+- CompNonComp: bug. LongNote 3 = "Comp", llega null (DWU-417, fila CompNonComp). Lo reporto.
+- NumberOfLegs: no es bug, siempre 1 (DWU-417 AC 7). Tu "5" está en la ShortNote 3, que va a DealersInCompetition, y llega null (DWU-417, fila DealersInCompetition). Eso sí es bug. Lo reporto.
+- Waiver: no es bug, solo va el primer valor (DWU-415 AC 8).
+- Transparency: no es bug, se manda igual que llega de TOMS (DWU-416 AC 4). UACTX y USIZE ya vienen en el XML de TOMS.
