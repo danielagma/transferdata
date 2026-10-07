@@ -1,73 +1,62 @@
 COMANDOS OPENSEARCH 7-OCT
-Indice: fidw-eu-bonds-uat2*. Rango: Last 2 days.
+Indice: fidw-eu-bonds-uat2*. Rango: Last 7 days.
 Una captura por comando, con el documento abierto.
-[V] = verificado. [NV] = sin verificar.
 
 REGLAS
 - TradeEvent: salen 3 por trade. Captura SOLO el de abajo (hora mas antigua).
 - Si salen TradeEvent de BloombergTomsInbound (ContextId E39Y... o D39Y...), no los captures.
-- El payload (los campos) se lee en StpHubPayloadDocument. StpHubPayloadSent ya no lo trae.
+- Trades de HOY: los campos se leen en StpHubPayloadDocument.
+- Trades de AYER o antes: los campos siguen dentro de StpHubPayloadSent.
 
 ==================================================
 HECHO (no repetir)
 ==================================================
-.1   TradeEvent, StpHubPayloadSent, ACK              -> DWU-701 escenario 1 PASA
-.86  TradeEvent, StpHubPayloadSent, ACK, Document    -> axe NO PASA (IsAxed false), DWU-611 AC 4 PASA
-.87  TradeEvent, StpHubPayloadSent, ACK
+.1        TradeEvent, Sent, ACK                       -> DWU-701 escenario 1 PASA
+.86       TradeEvent, Sent, ACK, Document, Mifid, RFQ -> DWU-701 escenario 5 PASA, DWU-611 AC 4 PASA, axe NO PASA
+.87       TradeEvent, Sent, ACK, Document             -> axe NO PASA
+.88/.89   TradeEvent, Sent, ACK, Document             -> Excel 6 y 15 PASA
+5:5 BBG   TradeEvent                                  -> antes del despliegue, NO SIRVE
 
 ==================================================
 SIGUIENTE, EN ORDEN
 ==================================================
 
-1. Error de MiFID del .86 (DWU-701 escenario 5: x531532 sin fila Tradeweb, los 4 campos salieron null)
-   Esperado: StpHubMifidDataIncomplete con MissingFields.
+1. DWU-706: cancel de Sergio (DWBZo9M9217ugS). Ticket del dia 2, cancelado despues.
+   Para que: ver que el cancel sale a STP Hub en segundos, no 30 minutos tarde.
+   Paso A: busca el cancel. Apunta la hora, el SourceId (numero de ticket) y EventType Cancel.
 
-Event.Type: "StpHubMifidDataIncomplete" and "20261007.SAN3.EUGV.86"   [NV]
+Event.Type: "StpHubPayloadSent" and "DWBZo9M9217ugS"
 
+   Paso B: con el SourceId del paso A, busca cuando llego el cancel desde TOMS.
+   Cambia <ticket> por ese numero.
 
-2. Axe del .86: por que salio IsAxed false
-   Esperado: algo con axed true o false del RFQ.
+Event.Type: "TradeEvent" and "<ticket>"
 
-"TRD_20261007_SAN3_EUGV_86" and "axed"   [NV]
+   Paso C: ACK y payload del cancel.
 
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "DWBZo9M9217ugS"
+Event.Type: "StpHubPayloadDocument" and "DWBZo9M9217ugS"
 
-3. Payload del .87
-   Esperado: Axe IsAxed true, Side Buy. IsInternalTrade false.
-
-Event.Type: "StpHubPayloadDocument" and "20261007.SAN3.EUGV.87"   [V]
-
-
-4. Switch, pata .88 (Darwin Calc'n No)
-   TradeEvent: captura solo el de 10:53:21.483.
-   Esperado en Document: CalculateSalesCredit false, ComplexTradeId, NumberOfLegs 2, RfqType MultiLeg.
-
-Event.Type: "TradeEvent" and "20261007.SAN3.EUGV.88"   [V]
-Event.Type: "StpHubPayloadSent" and "20261007.SAN3.EUGV.88"   [V]
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261007.SAN3.EUGV.88"   [V]
-Event.Type: "StpHubPayloadDocument" and "20261007.SAN3.EUGV.88"   [V]
+   Esperado: hora del TradeEvent del cancel y hora del StpHubPayloadSent con pocos segundos de diferencia.
+   Si salen 30 minutos de diferencia, avisame en ese momento.
 
 
-5. Switch, pata .89
-   Esperado: lo mismo que .88, mismo ComplexTradeId.
+2. Original de Sergio (DWBZnwlznU5XVY), del dia 2. Solo para ver si aun hay logs.
 
-Event.Type: "TradeEvent" and "20261007.SAN3.EUGV.89"   [V]
-Event.Type: "StpHubPayloadSent" and "20261007.SAN3.EUGV.89"   [V]
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261007.SAN3.EUGV.89"   [V]
-Event.Type: "StpHubPayloadDocument" and "20261007.SAN3.EUGV.89"   [V]
+Event.Type: "StpHubPayloadSent" and "DWBZnwlznU5XVY"
 
 
-6. Bloomberg 3564:20261006:5:5 del 6-oct (DWU-701 escenario 2)
-   Primero el TradeEvent: si la hora es antes de las 8:01 del 6-oct, no sirve, salta al paso 7.
-   Del 6-oct el payload sigue en StpHubPayloadSent (antes de las 2:08 de hoy).
-   Esperado en el New: ExecutionMktId / InvestmentMktId 30705145, PERSON.
+3. .61 del 6-oct, TW + cancel desde TOMS (DWU-611 AC 3)
+   Esperado: un StpHubPayloadSent New y uno Cancel, con ACK. Leer IsInternalTrade en los dos.
 
-Event.Type: "TradeEvent" and "3564:20261006:5:5"   [V]
-Event.Type: "StpHubPayloadSent" and "3564:20261006:5:5"   [V]
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "3564:20261006:5:5"   [V]
+Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.61"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.61"
 
 
-7. .61 del 6-oct, TW + cancel desde TOMS (DWU-611 AC 3)
-   Esperado: un payload New y uno Cancel, con ACK.
-
-Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.61"   [V]
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.61"   [V]
+==================================================
+PENDIENTE (no es de logs)
+==================================================
+- DWU-708: Sergio lo hace manana 8-oct (11:40 "manana te intento hacer la otra").
+- Bloomberg (DWU-701 escenario 2, DWU-629, DWU-425): pedir a Sergio un trade de hoy.
+- DWU-611 caso true: outright TW con TELE Is Internal ON (ahora esta ON). Manana antes de las 11.
+- Axe: 3 trades con IsAxed false. Decidir que hacer.
