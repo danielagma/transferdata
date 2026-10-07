@@ -1,64 +1,68 @@
-.378 · outright con axe (DWU-701, DWU-624 caso A, Excel 16)
+COMANDOS OPENSEARCH 7-OCT
+Indice: fidw-eu-bonds-uat2*
+Una captura por comando, con el documento abierto.
 
-1. Lo que entra:
-Event.Type: "TradeEvent" and "20261006.SAN3.EUGV.378"
-2. El payload. Lee TraderUuid, Instrument.Axe, ExecutionMktId e InvestmentMktId:
-Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.378"
-3. ACK:
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.378"
+==================================================
+RANGO: Today
+==================================================
 
-.379 · sin fila Bloomberg (DWU-624 caso B)
+1. 20261007.SAN3.EUGV.1 (Sergio, 0:52) - DWU-701 escenario 1
+   Esperado: ExecutionMktId n317167, ExecutionMktIdType PERSON, InvestmentMktId n317167, InvestmentMktIdType PERSON. ACK.
 
-1. Lo que entra:
-Event.Type: "TradeEvent" and "20261006.SAN3.EUGV.379"
-2. El payload. Debe salir vacío; si sale, lee TraderUuid:
-Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.379"
-3. ACK. Debe salir vacío:
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.379"
-4. El error. Lee TraderBloombergUuidMissing:
-"20261006.SAN3.EUGV.379" and Level: Error
-5. La validación. Lee el campo que falla:
-Event.Type: "StpHubPayloadValidationFailed" and "20261006.SAN3.EUGV.379"
-
-.381 · switch, pata Sell (DWU-679)
-
-1. Lo que entra:
-Event.Type: "TradeEvent" and "20261006.SAN3.EUGV.381"
-2. Los payloads. Si salen 2 filas (TRADE y ALLOC), abre las dos y anota sus horas:
-Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.381"
-3. ACK. Si salen 2 filas, abre las dos:
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.381"
-4. El skipped. Si sale, lee la hora y el Reason:
-Event.Type: "StpHubEventPublishingSkipped" and "20261006.SAN3.EUGV.381"
-
-.380 · switch, pata Buy (DWU-679)
-
-1. Lo que entra:
-Event.Type: "TradeEvent" and "20261006.SAN3.EUGV.380"
-2. Los payloads. Si salen 2 filas, abre las dos y anota sus horas:
-Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.380"
-3. ACK. Si salen 2 filas, abre las dos:
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.380"
-4. El skipped. Si sale, lee la hora y el Reason:
-Event.Type: "StpHubEventPublishingSkipped" and "20261006.SAN3.EUGV.380"
+Event.Type: "TradeEvent" and "20261007.SAN3.EUGV.1"
+Event.Type: "StpHubPayloadSent" and "20261007.SAN3.EUGV.1"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261007.SAN3.EUGV.1"
 
 
-Event.Type: "TransFiccTradeEventStrategyFound" and "20261006.SAN3.EUGV.378"
+2. 20261007.SAN3.EUGV.86 (outright Buy GB00BNNGP668, 10:49) - axe (Excel 16 / DWU-420 AC 6) + DWU-611 AC 4 y 5
+   Esperado: Instrument.Axe IsAxed true, Side Buy. IsInternalTrade false. ACK.
+
+Event.Type: "TradeEvent" and "20261007.SAN3.EUGV.86"
+Event.Type: "StpHubPayloadSent" and "20261007.SAN3.EUGV.86"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261007.SAN3.EUGV.86"
 
 
-1. Lo que entra. En Event.TradeFeedXml lee LifecycleAction, el ticket original y la fecha del trade original:
-Event.Type: "TradeEvent" and "21030209"
-2. El payload. Lee SourceId, EventType y PreviousTradeId:
-Event.Type: "StpHubPayloadSent" and "21030209"
-3. El ACK:
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030209"
-4. Si el paso 2 sale vacío, busca por qué no se publicó:
-"21030209" and Level: Error
-"21030209" and Level: Warning
-Event.Type: "TradeEventSkipped" and "21030209"
+3. 20261007.SAN3.EUGV.87 (outright Sell GB00BNNGP668, 10:50) - axe + DWU-611
+   Esperado: Instrument.Axe IsAxed true, Side Buy (el axe del pricer es Buy). IsInternalTrade false. ACK.
+
+Event.Type: "TradeEvent" and "20261007.SAN3.EUGV.87"
+Event.Type: "StpHubPayloadSent" and "20261007.SAN3.EUGV.87"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261007.SAN3.EUGV.87"
 
 
-ContextId: "C39Y1319100021030209"
-Esta saca todo lo que hizo Trade Service con el amend.
-Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.60"
-Esta revisa si el amend salió con el id de Tradeweb en lugar del ticket.
+4. Switch 20261007.SAN3.EUGV.88 / .89 (10:53, Darwin Calc'n No) - Excel 6 y 15 + DWU-611
+   Esperado en las dos patas: CalculateSalesCredit false, mismo ComplexTradeId, NumberOfLegs 2, RfqType MultiLeg, IsInternalTrade false. ACK.
+
+Event.Type: "TradeEvent" and "20261007.SAN3.EUGV.88"
+Event.Type: "StpHubPayloadSent" and "20261007.SAN3.EUGV.88"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261007.SAN3.EUGV.88"
+Event.Type: "TradeEvent" and "20261007.SAN3.EUGV.89"
+Event.Type: "StpHubPayloadSent" and "20261007.SAN3.EUGV.89"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261007.SAN3.EUGV.89"
+
+
+==================================================
+RANGO: Last 2 days (trades del 6-oct)
+==================================================
+
+5. 20261006.SAN3.EUGV.378 (nuestro, x531532 sin fila Tradeweb) - DWU-701 escenario 5 y axe
+   Esperado: error StpHubMifidDataIncomplete con MissingFields. Para el axe: ver por que salio IsAxed false.
+
+Event.Type: "StpHubMifidDataIncomplete" and "20261006.SAN3.EUGV.378"
+"TRD_20261006_SAN3_EUGV_378" and "axed"
+
+
+6. BloombergBSGB$3564:20261006:5:5 (Sergio, intragroup + cancel) - DWU-701 escenario 2
+   Primero mira la hora del TradeEvent. Si es antes de las 8:01 del 6-oct, no sirve y paras.
+   Esperado en el New: ExecutionMktId / InvestmentMktId = 30705145, PERSON. ACK.
+
+Event.Type: "TradeEvent" and "3564:20261006:5:5"
+Event.Type: "StpHubPayloadSent" and "3564:20261006:5:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "3564:20261006:5:5"
+
+
+7. 20261006.SAN3.EUGV.61 (Sergio, TW + cancel desde TOMS) - DWU-611 AC 3
+   Esperado: un payload New y un payload Cancel, los dos con IsInternalTrade y con ACK.
+
+Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.61"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.61"
