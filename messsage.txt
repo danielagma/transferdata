@@ -1,62 +1,22 @@
 COMANDOS OPENSEARCH 7-OCT
-Indice: fidw-eu-bonds-uat2*. Rango: Last 7 days.
-Una captura por comando, con el documento abierto.
-
-REGLAS
-- TradeEvent: salen 3 por trade. Captura SOLO el de abajo (hora mas antigua).
-- Si salen TradeEvent de BloombergTomsInbound (ContextId E39Y... o D39Y...), no los captures.
-- Trades de HOY: los campos se leen en StpHubPayloadDocument.
-- Trades de AYER o antes: los campos siguen dentro de StpHubPayloadSent.
+Indice: fidw-eu-bonds-uat2*. Rango: Today.
 
 ==================================================
-HECHO (no repetir)
-==================================================
-.1        TradeEvent, Sent, ACK                       -> DWU-701 escenario 1 PASA
-.86       TradeEvent, Sent, ACK, Document, Mifid, RFQ -> DWU-701 escenario 5 PASA, DWU-611 AC 4 PASA, axe NO PASA
-.87       TradeEvent, Sent, ACK, Document             -> axe NO PASA
-.88/.89   TradeEvent, Sent, ACK, Document             -> Excel 6 y 15 PASA
-5:5 BBG   TradeEvent                                  -> antes del despliegue, NO SIRVE
-
-==================================================
-SIGUIENTE, EN ORDEN
+TOMS 21030344 (Sergio, DWBZo8B2x77Arg) - Waiver, Transparency, NumberOfLegs, CompNonComp
 ==================================================
 
-1. DWU-706: cancel de Sergio (DWBZo9M9217ugS). Ticket del dia 2, cancelado despues.
-   Para que: ver que el cancel sale a STP Hub en segundos, no 30 minutos tarde.
-   Paso A: busca el cancel. Apunta la hora, el SourceId (numero de ticket) y EventType Cancel.
+1. Lo que manda TOMS (el XML)
+   Captura el TradeEvent y abre Event.TradeFeedXml. Busca en el XML:
+   - <ShortNote> con <Index>4</Index>  -> Sergio dice "5"
+   - <LongNote> con <Index>3</Index> y con <Index>4</Index>  -> Sergio dice COMP en el 4
+   - TX668 MIFID_II_RPT_WAIVER_IND_TRA  -> Sergio dice OILQ, PRIC
+   - TX669 MIFID_II_RPT_PST_TRADE_INDICATOR  -> Sergio dice BENC, RPRI, TNCP
+   Si salen 2 TradeEvent (uno D39Y... y otro), captura los dos.
 
-Event.Type: "StpHubPayloadSent" and "DWBZo9M9217ugS"
+Event.Type: "TradeEvent" and "21030344"
 
-   Paso B: con el SourceId del paso A, busca cuando llego el cancel desde TOMS.
-   Cambia <ticket> por ese numero.
+2. Lo que sale a STP Hub (envio + campos)
 
-Event.Type: "TradeEvent" and "<ticket>"
-
-   Paso C: ACK y payload del cancel.
-
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "DWBZo9M9217ugS"
-Event.Type: "StpHubPayloadDocument" and "DWBZo9M9217ugS"
-
-   Esperado: hora del TradeEvent del cancel y hora del StpHubPayloadSent con pocos segundos de diferencia.
-   Si salen 30 minutos de diferencia, avisame en ese momento.
-
-
-2. Original de Sergio (DWBZnwlznU5XVY), del dia 2. Solo para ver si aun hay logs.
-
-Event.Type: "StpHubPayloadSent" and "DWBZnwlznU5XVY"
-
-
-3. .61 del 6-oct, TW + cancel desde TOMS (DWU-611 AC 3)
-   Esperado: un StpHubPayloadSent New y uno Cancel, con ACK. Leer IsInternalTrade en los dos.
-
-Event.Type: "StpHubPayloadSent" and "20261006.SAN3.EUGV.61"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261006.SAN3.EUGV.61"
-
-
-==================================================
-PENDIENTE (no es de logs)
-==================================================
-- DWU-708: Sergio lo hace manana 8-oct (11:40 "manana te intento hacer la otra").
-- Bloomberg (DWU-701 escenario 2, DWU-629, DWU-425): pedir a Sergio un trade de hoy.
-- DWU-611 caso true: outright TW con TELE Is Internal ON (ahora esta ON). Manana antes de las 11.
-- Axe: 3 trades con IsAxed false. Decidir que hacer.
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030344"
+Event.Type: "StpHubPayloadDocument" and "21030344"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030344"
