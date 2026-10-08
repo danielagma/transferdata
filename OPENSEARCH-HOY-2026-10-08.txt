@@ -3,24 +3,19 @@ Indice: fidw-eu-bonds-uat2*. Rango: Last 9 days.
 Capturas: Screenshots\Trades\2026-10-08\<carpeta del punto>\
 
 ##################################################
-FALTA (en este orden)
+FALTA
 ##################################################
-
 ==================================================
-1. MIRROR 21030771 · DWU-727 (repetir: la busqueda anterior llevaba una S de mas)
-==================================================
-Carpeta: 06-toms-21030770-771-internal
-1) Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030771"       (esperado: No Results)
-
-==================================================
-2. TRADEWEB 20261008.SAN3.EUGV.155 (Sergio, contraparte BSTE) · DWU-611
+1. TOMS 21030525: el original y la correccion del TW .155 (contexto del amend 21030712, hilo TVTIC)
 ==================================================
 Carpeta: 07-toms-21030712-amend-tw-155
 1) Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.155"
-   Abre SOLO la fila 02:15:29.139 (la primera de Tradeweb$...155). Las otras 5 no hacen falta.
-2) Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.155"
-   Mira IsInternalTrade, Counterparty.Glcs, SourceOriginalName (Tradeweb_EUGV).
-3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.155"
+   Abre la fila 06:13:57.553 (ContextId B39Y1319X20021030525). Mira LifecycleAction, CancelDueToCorrection, TransactionType.
+   Abre la fila 02:15:31.702 (ContextId F39Y1319120021030525). Mira LifecycleAction, Tvtic y ShortNote 8 (DARWINBOND) en TradeFeedXml.
+2) ContextId: "F39Y1319120021030525"
+   Esperado: el original se descarta (ya procesado por Darwin).
+3) ContextId: "B39Y1319X20021030525"
+   Esperado: el error de la correccion.
 
 ##################################################
 YA HECHO (no repetir)
@@ -39,7 +34,9 @@ YA HECHO (no repetir)
 - 21030736 (amend del 1:5): NO publicado. Carpeta 09.
 - 21030748 (amend del 2:5, adjunto de Fation): TradeEvent No Results en 9 dias. No esta en UAT2. Carpeta 10.
 - .27 y .33: No Results. Sin uso.
-- 21030770 (main): New publicado con ACK. PASA. Carpeta 06.
+- 21030770 (main): New publicado con ACK. Mirror 21030771: NO publicado. PASA. Carpeta 06.
+- TW .155 (Sergio, BSTE): publicado con ACK. Glcs BSTE, Counterparty.Type Broker, IsInternalTrade false,
+  SourceOriginalName Tradeweb_EUGV, ExecutionMktId n317167 PERSON. Carpeta 07.
 - 21030774 (main) / 21030775 (mirror, TraderToTraderTradeFlag Y): 775 NO publicado. PASA. Carpeta 06.
 
 ##################################################
