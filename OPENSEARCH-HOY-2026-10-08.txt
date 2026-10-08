@@ -7,39 +7,20 @@ FALTA (en este orden)
 ##################################################
 
 ==================================================
-1. INTERNAL TOMS 21030770 (main) / 21030771 (mirror) · DWU-727, segundo par
+1. MIRROR 21030771 · DWU-727 (repetir: la busqueda anterior llevaba una S de mas)
 ==================================================
-Ya visto: 770 New, Buy, SecondHalfTdr2TdrTrade N. 771 New, Sell, SecondHalfTdr2TdrTrade Y.
-Esperado: 770 publicado con ACK. 771 NO publicado.
 Carpeta: 06-toms-21030770-771-internal
-
-1) Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030770"
-2) Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030770"
-3) Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030771"       (esperado: No Results)
+1) Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030771"       (esperado: No Results)
 
 ==================================================
-2. TOMS 21030775 (blotter, 08:44)
+2. TRADEWEB 20261008.SAN3.EUGV.155 (Sergio, contraparte BSTE) · DWU-611
 ==================================================
-Esto es inferencia mia: es otro par internal (774/775), como 770/771.
-Carpeta: 06-toms-21030770-771-internal
-
-1) Event.Type: "TradeEvent" and "21030775"
-   Abre cada fila. Mira LifecycleAction y SecondHalfTdr2TdrTrade (Y = mirror).
-2) Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030775"
-   Si 775 es mirror (Y): esperado No Results.
-
-==================================================
-3. TRADEWEB 20261008.SAN3.EUGV.155 (de Sergio, contraparte BSTE)
-==================================================
-Sale del amend 21030712: su original es este trade de Tradeweb, contraparte BSTE.
-Para: DWU-611 (IsInternalTrade con BSTE).
 Carpeta: 07-toms-21030712-amend-tw-155
-
 1) Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.155"
-2) Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.155"
-3) Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.155"
+   Abre SOLO la fila 02:15:29.139 (la primera de Tradeweb$...155). Las otras 5 no hacen falta.
+2) Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.155"
    Mira IsInternalTrade, Counterparty.Glcs, SourceOriginalName (Tradeweb_EUGV).
-4) Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.155"
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.155"
 
 ##################################################
 YA HECHO (no repetir)
@@ -58,6 +39,8 @@ YA HECHO (no repetir)
 - 21030736 (amend del 1:5): NO publicado. Carpeta 09.
 - 21030748 (amend del 2:5, adjunto de Fation): TradeEvent No Results en 9 dias. No esta en UAT2. Carpeta 10.
 - .27 y .33: No Results. Sin uso.
+- 21030770 (main): New publicado con ACK. PASA. Carpeta 06.
+- 21030774 (main) / 21030775 (mirror, TraderToTraderTradeFlag Y): 775 NO publicado. PASA. Carpeta 06.
 
 ##################################################
 DESPUES, EN STATIC
