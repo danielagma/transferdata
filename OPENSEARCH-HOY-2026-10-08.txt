@@ -46,6 +46,9 @@ Carpeta nueva: 07-toms-21030712-amend-tw
 
 Event.Type: "TradeEvent" and "21030712"
 Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030712"        (esperado: No Results)
+ContextId: "PEGA_AQUI"
+   <- De la lista del TradeEvent, copia el ContextId de la fila que TERMINA en 21030712
+      (columna ContextId, a la derecha). Ahi sale el error de por que no se publico.
 
 ==================================================
 4. TOMS 21030399 (DWU-706): SE CANCELO?
@@ -74,6 +77,9 @@ Carpeta: 09-bbg-6212-1-5
 
 Event.Type: "TradeEvent" and "21030736"
 Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030736"        (esperado: No Results)
+ContextId: "PEGA_AQUI"
+   <- De la lista del TradeEvent, copia el ContextId de la fila que TERMINA en 21030736
+      (columna ContextId, a la derecha). Ahi sale el error de por que no se publico.
 
 ==================================================
 7. BLOOMBERG 6212:20261008:2:5 (adjunto de Fation)
@@ -92,6 +98,9 @@ Carpeta: 10-bbg-6212-2-5
 
 Event.Type: "TradeEvent" and "21030748"
 Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030748"        (esperado: No Results)
+ContextId: "PEGA_AQUI"
+   <- De la lista del TradeEvent, copia el ContextId de la fila que TERMINA en 21030748
+      (columna ContextId, a la derecha). Ahi sale el error de por que no se publico.
 
 ==================================================
 9. BLOOMBERG 6212:20261008:5:5 (blotter, no esta en el chat)
