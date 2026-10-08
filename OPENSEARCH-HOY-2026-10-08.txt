@@ -1,194 +1,118 @@
-OPENSEARCH 8-OCT. TODO LO QUE HAY QUE REVISAR, EN ORDEN.
-Indice: fidw-eu-bonds-uat2*. Rango: Today, salvo donde diga otra cosa.
-Sale de: chat STP Hub de hoy (cada id barrido), adjuntos de Fation, blotter de las 10:51 y pendientes de ayer.
-En cada punto: que es, para que, comandos, que capturar.
+OPENSEARCH 8-OCT. LO QUE FALTA, EN ORDEN.
+Indice: fidw-eu-bonds-uat2*. Rango: Today.
 Capturas: Screenshots\Trades\2026-10-08\<carpeta del punto>\
 
 ##################################################
-A. NUESTROS TRADES DE TRADEWEB (blotter 10:51)
+YA HECHO (no repetir)
+##################################################
+- .50 (DWU-611 AC 1): IsInternalTrade true, ACK. PASA. Carpeta 01.
+- .51 (axe): RfqCreatedEventReceived Axed false. Descartado. Carpeta 02.
+- Switch de Fation .6: No Results en 9 dias. Se cierra con el payload que mando al grupo. Carpeta 05.
+- Butterfly .54/.55/.56 (DWU-508): CalculateSalesCredit false en las 3, mismo ComplexTradeId BFLY.53,
+  NumberOfLegs 3, ACK en las 3. PASA. Carpeta 03.
+- Internal main 21030768 (DWU-727): New publicado con ACK, IsInternalTrade true, InternalTradeType Main.
+  Su amend 21030788 tambien publicado con ACK, SourceId 21030788. Carpeta 04.
+- Internal mirror 21030769 (DWU-727): TradeEvent con SecondHalfTdr2TdrTrade Y.
+  StpHubPayloadSent por SourceId: No Results. NO se publico. PASA. Carpeta 04.
+
+##################################################
+FALTA
 ##################################################
 
 ==================================================
-1. .50 · DWU-611 AC 1 · internal true
+1. AMEND DEL MIRROR: 21030791 · DWU-727
 ==================================================
-Que es: outright Sell 100,000 ES00000124C5 (SPGB 5.150 10/28), 10:41:15. TELE con Is Internal On (captura 10:23).
-Esperado: IsInternalTrade true. ACK. SourceOriginalName "Tradeweb_EUGV" (DWU-705).
-Carpeta: 01-tw-50-internal-dwu-611
+Que es: amend de 21030769 (el mirror), 08:48:04, SecondHalfTdr2TdrTrade Y.
+Esperado: NO se publica.
+Carpeta: 04-toms-21030768-69-internal-dwu-727
 
-Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.50"
-Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.50"
-Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.50"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.50"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030791"        (esperado: No Results)
 
 ==================================================
-2. SWITCH DE FATION 20261005.SAN3.EUGV.6 · DWU-420 AC 6 · axe · RANGO: Last 7 days
+2. TOMS 21030771 y 21030775 (blotter, no estan en el chat)
 ==================================================
-Que es: pata Buy 1,000,000 GB00BFX0ZL78 (UKT 1.625 10/28) de un switch de Fation del 5-oct. TELE, trader c0292415.
-Esperado: Axe IsAxed true, Side SELL. ACK.
-Es anterior al 7-oct 2:08: el payload viene dentro de StpHubPayloadSent.
-Si da No Results, el log ya se borro.
-Nuestros .51 y .52 de hoy salieron con Axed false en el RFQ: descartados. Este es la evidencia.
-
-Event.Type: "TradeEvent" and "20261005.SAN3.EUGV.6"
-Event.Type: "StpHubPayloadSent" and "20261005.SAN3.EUGV.6"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261005.SAN3.EUGV.6"
-Event.Type: "RfqCreatedEventReceived" and ContextId: "Tradeweb$TRD_20261005_SAN3_EUGV_6"
-"20261005.SAN3.EUGV.SWAP.6"                                            (la otra pata del switch)
-
-Captura: payload con Axe, ACK, RfqCreatedEventReceived con RfqLegAxes, y la otra pata.
-
-==================================================
-3. BUTTERFLY .54 / .55 / .56 · DWU-508 · Calc'n No, multi-leg
-==================================================
-Que es: butterfly 10:49:36. .54 Buy GB00BNNGP668, .55 Sell GB00BL6C7720, .56 Buy GB00BPSNB460. TELE / GILTS Calc'n No (captura 10:48).
-Esperado: las 3 patas con CalculateSalesCredit false, mismo ComplexTradeId, NumberOfLegs 3. ACK en las 3.
-Carpeta: 03-tw-bfly-54-55-56-calcn-no
-
-Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.54"
-Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.54"
-Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.54"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.54"
-
-Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.55"
-Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.55"
-Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.55"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.55"
-
-Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.56"
-Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.56"
-Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.56"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.56"
-
-##################################################
-B. TOMS DE SERGIO
-##################################################
-
-==================================================
-4. INTERNAL TOMS: main 21030768 y mirror 21030769 (Sergio 8:41) · DWU-727
-==================================================
-Fix DWU-730 desplegado hoy 1:17.
-Esperado: el main se publica con ACK. El mirror NO se publica.
-OJO blotter: 21030769 sale como Amend, 10,000,000, 08:38:35. El 21030768 no se ve en la captura del blotter.
-
-Event.Type: "TradeEvent" and "21030768"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030768"
-Event.Type: "StpHubPayloadDocument" and "21030768"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030768"
-
-Event.Type: "TradeEvent" and "21030769"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030769"        (esperado: No Results)
-ContextId: "PEGA_AQUI"     <- copia el ContextId de la fila del TradeEvent de 21030769 y pegalo en lugar de PEGA_AQUI (por que no se publico)
-
-Captura: TradeEvent de los dos, Sent + Document + ACK del main, Sent vacio del mirror, el flujo del mirror.
-En el XML mira SecondHalfTdr2TdrTrade (main N, mirror Y). En el payload del main: IsInternalTrade, InternalTradeType.
-
-==================================================
-5. TOMS 21030771 y 21030775 (blotter, NO estan en el chat)
-==================================================
-Que es: dos New de SERGIOGUTIGO, GB0002404191 Sell 2,000,000, 08:40:46 y 08:44:26.
-No consta para que son. Puede ser otro intento de internal o algo de DWU-706 / DWU-708.
-Primero solo el TradeEvent: en el XML mira SecondHalfTdr2TdrTrade, TransactionType, OriginalTktId y las notas.
-Con eso decidimos si siguen.
+Dos New de Sergio, GB0002404191 Sell 2,000,000, 08:40 y 08:44. No consta para que son.
+Solo el TradeEvent. En el JSON mira: LifecycleAction, SecondHalfTdr2TdrTrade, TransactionNumberOfOriginTrans.
+Carpeta nueva: 06-toms-21030771-775
 
 Event.Type: "TradeEvent" and "21030771"
 Event.Type: "TradeEvent" and "21030775"
 
 ==================================================
-6. AMEND TOMS 21030712 de un Tradeweb (Sergio 6:15)
+3. AMEND TOMS 21030712 de un Tradeweb (Sergio 6:15)
 ==================================================
-Sergio dijo que no tenia TVTIC y que lo repite. Esperado: NO se publica.
+Sergio dijo que no tenia TVTIC. Esperado: NO se publica.
+Carpeta nueva: 07-toms-21030712-amend-tw
 
 Event.Type: "TradeEvent" and "21030712"
-ContextId: "PEGA_AQUI"     <- copia el ContextId de la fila del TradeEvent de 21030712 y pegalo en lugar de PEGA_AQUI 
 Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030712"        (esperado: No Results)
 
-Captura: TradeEvent, error por ContextId, Sent vacio. Anota de que trade de Tradeweb es (LongNote 2 del XML).
-
 ==================================================
-7. TOMS 21030399 (DWU-706): SE CANCELO HOY?
+4. TOMS 21030399 (DWU-706): SE CANCELO?
 ==================================================
-Ayer salio como New. No esta en el blotter de hoy.
-Esperado para DWU-706: Cancel publicado segundos despues del TradeEvent, no 30 minutos.
+Si solo sale el New de ayer, no hay cancel.
+Carpeta nueva: 08-toms-21030399-dwu-706
 
 Event.Type: "TradeEvent" and "21030399"
 Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030399"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030399"
-
-Si solo sale el New de ayer: no hay cancel. Nada que capturar.
-
-##################################################
-C. BLOOMBERG
-##################################################
-Para todos: Excel "Bloomberg Outright" y DWU-705 (SourceOriginalName "Bloomberg_BSGI").
-En el payload mira: SecurityType, TraderUuid, Counterparty.Type (null el 6-oct), ExecutionMktId / InvestmentMktId, ShortSelling, CalculateSalesCredit.
 
 ==================================================
-8. BLOOMBERG 6212:20261008:1:5 (Sergio 7:13)
+5. BLOOMBERG 6212:20261008:1:5 (Sergio 7:13)
 ==================================================
+Para: Excel Bloomberg Outright y DWU-705. Esperado: ACK, SourceOriginalName "Bloomberg_BSGI".
+Carpeta nueva: 09-bbg-6212-1-5
+
 Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261008:1:5"
 Event.Type: "StpHubPayloadDocument" and "6212:20261008:1:5"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:1:5"
 
 ==================================================
-9. AMEND TOMS 21030736 del Bloomberg 1:5 (Sergio 7:13)
+6. AMEND TOMS 21030736 del Bloomberg 1:5
 ==================================================
-Para: Excel RFQ "Amend trade inserted today". Esperado: NO se publica (TVTIC vacio).
+Esperado: NO se publica (TVTIC vacio).
+Carpeta: 09-bbg-6212-1-5
+
 Event.Type: "TradeEvent" and "21030736"
-ContextId: "PEGA_AQUI"     <- copia el ContextId de la fila del TradeEvent de 21030736 y pegalo en lugar de PEGA_AQUI 
 Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030736"        (esperado: No Results)
-Captura: TradeEvent (TX666 vacio en Event.TradeFeedXml), error por ContextId, Sent vacio.
 
 ==================================================
-10. BLOOMBERG 6212:20261008:2:5 (adjunto de Fation, off venue BTBS)
+7. BLOOMBERG 6212:20261008:2:5 (adjunto de Fation)
 ==================================================
+Carpeta nueva: 10-bbg-6212-2-5
+
 Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261008:2:5"
 Event.Type: "StpHubPayloadDocument" and "6212:20261008:2:5"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:2:5"
 
 ==================================================
-11. AMEND TOMS 21030748 del Bloomberg 2:5 (adjunto de Fation)
+8. AMEND TOMS 21030748 del Bloomberg 2:5
 ==================================================
-Original 21030744. Esperado: NO se publica.
+Esperado: NO se publica.
+Carpeta: 10-bbg-6212-2-5
+
 Event.Type: "TradeEvent" and "21030748"
-ContextId: "PEGA_AQUI"     <- copia el ContextId de la fila del TradeEvent de 21030748 y pegalo en lugar de PEGA_AQUI 
 Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030748"        (esperado: No Results)
-Event.Type: "TradeEvent" and "21030744"
 
 ==================================================
-12. BLOOMBERG 6212:20261008:5:5 (blotter, NO esta en el chat)
+9. BLOOMBERG 6212:20261008:5:5 (blotter, no esta en el chat)
 ==================================================
-Que es: BloombergBSGI, MIAL, GB00BNNGP668 Sell 2,000,000, trader 30760223, 07:38:28.
+Carpeta nueva: 11-bbg-6212-5-5
+
 Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261008:5:5"
 Event.Type: "StpHubPayloadDocument" and "6212:20261008:5:5"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:5:5"
 
-##################################################
-E. SI SOBRA TIEMPO
-##################################################
-
 ==================================================
-13. .27 y .33 (blotter, de otra persona)
+10. SI SOBRA TIEMPO: .27 y .33 (otro trader, madrugada)
 ==================================================
-Tradeweb 03:12 y 03:41, trader N123456-Auto, GB00B39R3707 Sell. No son nuestros, no estan en el chat.
-Esto es inferencia mia: pueden ser pruebas de DWU-705 de Fation. Solo para ver SourceOriginalName.
 Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.27"
 Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.33"
 
 ##################################################
-NO HACE FALTA OPENSEARCH
+DESPUES, EN STATIC
 ##################################################
-- .86 / .87 y TOMS 21030344: capturados ayer.
-- .60, TOMS 21030023 y 21030026: sesion vieja de Murat. El amend del .60 (21030209) ya esta capturado.
-  Si STP Hub ligo el cancel 21030026 al original es del lado de STP Hub, no sale en nuestros logs.
-- 21030743, 21030747: numeros relacionados dentro del XML del 21030748, no son trades.
-- CalculateSalesCredit de Sergio (7-oct 12:04): sin id en el chat. Sergio lo repite hoy.
-- DWU-419 AC 8 y AC 10: el .379 del 6-oct los cubre. Falta "data source" en el log.
-
-##################################################
-DESPUES DE OPENSEARCH, EN STATIC
-##################################################
-- TELE / GILTS: Darwin Calc'n de vuelta a Yes (la captura de las 10:48 esta en No).
-- TELE: Is Internal sigue On (captura 10:23). Pregunta si se deja asi.
+- TELE / GILTS: Darwin Calc'n de vuelta a Yes.
+- TELE: Is Internal sigue On. Decidir si se deja asi.
 - BSTE: captura Is Internal (DWU-611 AC 3).
 
 ##################################################
