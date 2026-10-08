@@ -1,121 +1,101 @@
 OPENSEARCH 8-OCT. LO QUE FALTA, EN ORDEN.
-Indice: fidw-eu-bonds-uat2*. Rango: Today.
+Indice: fidw-eu-bonds-uat2*. Rango: Last 9 days (como lo traes).
 Capturas: Screenshots\Trades\2026-10-08\<carpeta del punto>\
+
+COMO SE LEE CADA PUNTO
+Paso 1 siempre es el TradeEvent. De ahi sacas el ContextId ANTES de seguir.
+El ContextId esta en la ultima columna de la lista. Usa la fila cuyo ContextId TERMINA en el ticket del punto.
+Ejemplo: para 21030736 la fila decia D39Y1319120021030736.
 
 ##################################################
 YA HECHO (no repetir)
 ##################################################
 - .50 (DWU-611 AC 1): IsInternalTrade true, ACK. PASA. Carpeta 01.
-- .51 (axe): RfqCreatedEventReceived Axed false. Descartado. Carpeta 02.
-- Switch de Fation .6: No Results en 9 dias. Se cierra con el payload que mando al grupo. Carpeta 05.
-- Butterfly .54/.55/.56 (DWU-508): CalculateSalesCredit false en las 3, mismo ComplexTradeId BFLY.53,
-  NumberOfLegs 3, ACK en las 3. PASA. Carpeta 03.
-- Internal main 21030768 (DWU-727): New publicado con ACK, IsInternalTrade true, InternalTradeType Main.
-  Su amend 21030788 tambien publicado con ACK, SourceId 21030788. Carpeta 04.
-- Internal mirror 21030769 (DWU-727): TradeEvent con SecondHalfTdr2TdrTrade Y.
-  StpHubPayloadSent por SourceId: No Results. NO se publico. PASA. Carpeta 04.
+- .51 (axe): Axed false en el RFQ. Descartado. Carpeta 02.
+- Butterfly .54/.55/.56 (DWU-508): CalculateSalesCredit false en las 3, ACK. PASA. Carpeta 03.
+- Internal 21030768 / 21030769 (DWU-727): main publicado con ACK, mirror NO publicado. PASA. Carpeta 04.
+  Amend del main 21030788: publicado con ACK. Amend del mirror 21030791: NO publicado. PASA.
+- Switch de Fation .6: No Results. Se cierra con el payload que mando al grupo. Carpeta 05.
+- 21030399 (DWU-706): Sergio NO lo cancelo. Hizo un AMEND hoy 06:17, ticket 21030717
+  (LifecycleAction Amend, TransactionType PCT, IsPostTradeDate true). Carpeta 08.
+- Bloomberg 6212:20261008:1:5: publicado con ACK. SourceName "Bloomberg", SourceOriginalName "Bloomberg_BSGI",
+  SecurityType Bond, TraderUuid 30760223, Counterparty.Type Bank, ExecutionMktId 30705145 PERSON. Carpeta 09.
+  OJO: buscar Bloomberg por ContextId da No Results. Hay que buscar por SourceId (asi van abajo).
+- Amend 21030736 del Bloomberg 1:5: Tvtic "", flujo con InsertVenueTradeEventsFailed y
+  RetriableMessageNotSuccessfullyHandled, StpHubPayloadSent No Results. NO publicado. Carpeta 09.
 
 ##################################################
 FALTA
 ##################################################
 
 ==================================================
-1. AMEND DEL MIRROR: 21030791 · DWU-727
+1. AMEND 21030717 de 21030399 (hecho al dia siguiente) · DWU-706 / DWU-708
 ==================================================
-Que es: amend de 21030769 (el mirror), 08:48:04, SecondHalfTdr2TdrTrade Y.
-Esperado: NO se publica.
-Carpeta: 04-toms-21030768-69-internal-dwu-727
+Esperado: publicado segundos despues del TradeEvent (06:17:21), no 30 min. SourceId 21030717.
+Carpeta: 08-toms-21030399-dwu-706
 
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030791"        (esperado: No Results)
-
-==================================================
-2. TOMS 21030771 y 21030775 (blotter, no estan en el chat)
-==================================================
-Dos New de Sergio, GB0002404191 Sell 2,000,000, 08:40 y 08:44. No consta para que son.
-Solo el TradeEvent. En el JSON mira: LifecycleAction, SecondHalfTdr2TdrTrade, TransactionNumberOfOriginTrans.
-Carpeta nueva: 06-toms-21030771-775
-
-Event.Type: "TradeEvent" and "21030771"
-Event.Type: "TradeEvent" and "21030775"
+1) Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030717"
+   Mira la hora y EventType.
+2) Event.Type: "StpHubPayloadDocument" and "21030717"
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030717"
+Si 1) da No Results:
+4) ContextId: "I39Y1319120021030717"
 
 ==================================================
-3. AMEND TOMS 21030712 de un Tradeweb (Sergio 6:15)
+2. AMEND TOMS 21030712 de un Tradeweb (Sergio 6:15)
 ==================================================
-Sergio dijo que no tenia TVTIC. Esperado: NO se publica.
+Esperado: NO se publica (sin TVTIC).
 Carpeta nueva: 07-toms-21030712-amend-tw
 
-Event.Type: "TradeEvent" and "21030712"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030712"        (esperado: No Results)
-ContextId: "PEGA_AQUI"
-   <- De la lista del TradeEvent, copia el ContextId de la fila que TERMINA en 21030712
-      (columna ContextId, a la derecha). Ahi sale el error de por que no se publico.
+1) Event.Type: "TradeEvent" and "21030712"
+   Copia el ContextId de la fila que termina en 21030712. Abre la fila: mira Tvtic y LongNote 2.
+2) ContextId: "<el que copiaste>"
+   Busca InsertVenueTradeEventsFailed o un Error.
+3) Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030712"       (esperado: No Results)
 
 ==================================================
-4. TOMS 21030399 (DWU-706): SE CANCELO?
-==================================================
-Si solo sale el New de ayer, no hay cancel.
-Carpeta nueva: 08-toms-21030399-dwu-706
-
-Event.Type: "TradeEvent" and "21030399"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030399"
-
-==================================================
-5. BLOOMBERG 6212:20261008:1:5 (Sergio 7:13)
-==================================================
-Para: Excel Bloomberg Outright y DWU-705. Esperado: ACK, SourceOriginalName "Bloomberg_BSGI".
-Carpeta nueva: 09-bbg-6212-1-5
-
-Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261008:1:5"
-Event.Type: "StpHubPayloadDocument" and "6212:20261008:1:5"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:1:5"
-
-==================================================
-6. AMEND TOMS 21030736 del Bloomberg 1:5
-==================================================
-Esperado: NO se publica (TVTIC vacio).
-Carpeta: 09-bbg-6212-1-5
-
-Event.Type: "TradeEvent" and "21030736"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030736"        (esperado: No Results)
-ContextId: "PEGA_AQUI"
-   <- De la lista del TradeEvent, copia el ContextId de la fila que TERMINA en 21030736
-      (columna ContextId, a la derecha). Ahi sale el error de por que no se publico.
-
-==================================================
-7. BLOOMBERG 6212:20261008:2:5 (adjunto de Fation)
+3. BLOOMBERG 6212:20261008:2:5 (adjunto de Fation, off venue)
 ==================================================
 Carpeta nueva: 10-bbg-6212-2-5
 
-Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261008:2:5"
-Event.Type: "StpHubPayloadDocument" and "6212:20261008:2:5"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:2:5"
+1) Event.Type: "StpHubPayloadDocument" and "6212:20261008:2:5"
+   Mira SourceName, SourceOriginalName (Bloomberg_BSGI), TVTransactionIdCode "".
+2) Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:2:5"
 
 ==================================================
-8. AMEND TOMS 21030748 del Bloomberg 2:5
+4. AMEND TOMS 21030748 del Bloomberg 2:5
 ==================================================
 Esperado: NO se publica.
 Carpeta: 10-bbg-6212-2-5
 
-Event.Type: "TradeEvent" and "21030748"
-Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030748"        (esperado: No Results)
-ContextId: "PEGA_AQUI"
-   <- De la lista del TradeEvent, copia el ContextId de la fila que TERMINA en 21030748
-      (columna ContextId, a la derecha). Ahi sale el error de por que no se publico.
+1) Event.Type: "TradeEvent" and "21030748"
+   Copia el ContextId de la fila que termina en 21030748.
+2) ContextId: "<el que copiaste>"
+3) Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030748"       (esperado: No Results)
 
 ==================================================
-9. BLOOMBERG 6212:20261008:5:5 (blotter, no esta en el chat)
+5. BLOOMBERG 6212:20261008:5:5 (blotter, no esta en el chat)
 ==================================================
 Carpeta nueva: 11-bbg-6212-5-5
 
-Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261008:5:5"
-Event.Type: "StpHubPayloadDocument" and "6212:20261008:5:5"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:5:5"
+1) Event.Type: "StpHubPayloadDocument" and "6212:20261008:5:5"
+2) Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:5:5"
 
 ==================================================
-10. SI SOBRA TIEMPO: .27 y .33 (otro trader, madrugada)
+6. TOMS 21030771 y 21030775 (blotter, no estan en el chat)
 ==================================================
-Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.27"
-Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.33"
+Dos New de Sergio, 08:40 y 08:44. No consta para que son. Solo para saber que son.
+Carpeta nueva: 06-toms-21030771-775
+
+1) Event.Type: "TradeEvent" and "21030771"
+2) Event.Type: "TradeEvent" and "21030775"
+   En cada uno mira: LifecycleAction, TransactionType, SecondHalfTdr2TdrTrade, TransactionNumberOfOriginTrans.
+
+==================================================
+7. SI SOBRA TIEMPO: .27 y .33 (otro trader, madrugada)
+==================================================
+1) Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.27"
+2) Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.33"
 
 ##################################################
 DESPUES, EN STATIC
