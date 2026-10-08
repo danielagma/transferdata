@@ -1,0 +1,105 @@
+PLAN DE HOY 8-OCT. HAZLO EN ESTE ORDEN.
+Ahora son las 10:16. Tradeweb funciona hasta las 11:00. OpenSearch abre de 11:00 a 12:00.
+Entonces: de 10:16 a 11:00 lanzas trades y mandas mensajes. De 11:00 a 12:00 revisas logs.
+
+##################################################
+PARTE 1. AHORA, ANTES DE LAS 11:00
+##################################################
+
+---------- 1. MENSAJE A MURAT (chat STP Hub, responde a su mensaje de las 9:54) ----------
+Yes, please deploy DWU-731 and DWU-732 now. We are not testing TOMS notes at the moment.
+
+---------- 2. MENSAJE A FATION (chat STP Hub) ----------
+Fation, for the axe retest (DWU-420 AC 6): on 20261005.SAN3.EUGV.6 (GB00BFX0ZL78), how did you set the axe? Bond Pricer Axe Status, Verb and Size, or another screen?
+Also, for DWU-419 AC 5 I need a callable bond that gets RFQs in UAT2. Do you have an ISIN?
+
+---------- 3. MENSAJE A SERGIO (chat STP Hub) ----------
+Sergio, now that Bloomberg works, could you do these, please?
+1. A Bloomberg trade allocated into two accounts.
+2. A Bloomberg switch.
+3. A new TOMS ticket with Short Note 3 and Long Note 3 populated, after Murat deploys DWU-731 and DWU-732.
+4. Cancel TOMS ticket 21030399.
+5. A new manual TOMS ticket, then amend it, then cancel it.
+Please send me the ids. Thanks!
+
+---------- 4. STATIC: CAPTURAS (sin trade) ----------
+a) STATIC > TRADE REFERENCE DATA > Counterparty > TELE > mira Is Internal.
+   Si esta Off: lapiz > Is Internal On > Save. Captura la pantalla con On.
+b) STATIC > TRADE REFERENCE DATA > Counterparty > BSTE > captura Is Internal. Solo mirar.
+
+---------- 5. TRADE A: DWU-611 (internal true) ----------
+TELE con Is Internal On (paso 4a).
+TW EUGV Outright Ticket > GB00BNNGP668 > BUY > cantidad > Request Offer > Send.
+Anota el id (20261008.SAN3.EUGV.<n>).
+
+---------- 6. TRADE B: DWU-420 (axe) ----------
+a) Bond Pricer > grupo GILTS > fila GB00BFX0ZL78 (el ISIN de Fation).
+   Si no esta, usa GB00BNNGP668.
+b) Axe Status ON (naranja). Axe Verb Sell. Axe Size MM 15.
+   Si Fation contesta antes, haz lo que diga el.
+c) TW EUGV Outright Ticket > ese ISIN > BUY > cantidad > Request Offer > Send.
+d) Anota el id. Al terminar deja el axe como estaba.
+
+##################################################
+PARTE 2. DE 11:00 A 12:00, OPENSEARCH (fidw-eu-bonds-uat2*)
+##################################################
+Rango Today, salvo el punto 1.
+
+---------- 1. SWITCH DE FATION 20261005.SAN3.EUGV.6 (DWU-420 AC 6) · RANGO Last 7 days ----------
+Esperado: Axe IsAxed true, Side SELL. Si da No Results, ya se borro.
+Event.Type: "TradeEvent" and "20261005.SAN3.EUGV.6"
+Event.Type: "StpHubPayloadSent" and "20261005.SAN3.EUGV.6"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261005.SAN3.EUGV.6"
+ContextId: "Tradeweb$TRD_20261005_SAN3_EUGV_6"
+
+---------- 2. TRADE B, AXE (DWU-420 AC 6) ----------
+Primero el RFQ. Si Axed sale false, captura y para.
+ContextId: "Tradeweb$TRD_20261008_SAN3_EUGV_<n>"
+Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.<n>"
+Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.<n>"
+Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.<n>"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.<n>"
+Esperado: Axe IsAxed true, Side = Verb del pricer. ACK.
+
+---------- 3. TRADE A, INTERNAL (DWU-611 AC 1) ----------
+Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.<n>"
+Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.<n>"
+Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.<n>"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.<n>"
+Esperado: IsInternalTrade true. ACK. SourceOriginalName "Tradeweb_EUGV" (DWU-705).
+
+---------- 4. INTERNAL TOMS 21030768 / 21030769 (DWU-727) ----------
+Esperado: el main se publica con ACK. El mirror NO se publica.
+Event.Type: "TradeEvent" and "21030768"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030768"
+Event.Type: "StpHubPayloadDocument" and "21030768"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "21030768"
+Event.Type: "TradeEvent" and "21030769"
+Event.Type: "StpHubPayloadSent" and Event.SourceId: "21030769"     (esperado: No Results)
+
+---------- 5. BLOOMBERG 6212:20261008:1:5 (Excel Bloomberg Outright) ----------
+Event.Type: "StpHubPayloadSent" and ContextId: "Bloomberg$6212:20261008:1:5"
+Event.Type: "StpHubPayloadDocument" and "6212:20261008:1:5"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:1:5"
+Esperado: ACK. SourceOriginalName "Bloomberg_BSGI".
+
+---------- 6. AMEND TOMS 21030736 de ese Bloomberg (Excel RFQ amend) ----------
+Esperado: no se publica (TVTIC vacio).
+Event.Type: "TradeEvent" and "21030736"
+ContextId: "<el ContextId que sale en el TradeEvent>"
+
+---------- 7. LO QUE MANDE SERGIO ----------
+Me pasas los ids y te escribo los comandos.
+
+##################################################
+YA NO HACE FALTA TRADE
+##################################################
+DWU-419 AC 8 y AC 10: el .379 del 6-oct cumple. Solo falta "data source" en el log.
+Tu decides: aceptar asi o preguntar a Fation.
+
+##################################################
+NO SE PUEDE HOY
+##################################################
+DWU-551: no existe el flag Calypso Flow.
+DWU-508 AC 6: D2D, depende de ORCA.
+DWU-611 AC 2: amend sin TVTIC no se publica.
