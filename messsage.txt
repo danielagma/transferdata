@@ -1,6 +1,3 @@
-Sergio, revisé el 21030344 contra el XML de TOMS y las historias:
-
-- CompNonComp: bug. LongNote 3 = "Comp", llega null (DWU-417, fila CompNonComp). Lo reporto.
-- NumberOfLegs: no es bug, siempre 1 (DWU-417 AC 7). Tu "5" está en la ShortNote 3, que va a DealersInCompetition, y llega null (DWU-417, fila DealersInCompetition). Eso sí es bug. Lo reporto.
-- Waiver: no es bug, solo va el primer valor (DWU-415 AC 8).
-- Transparency: no es bug, se manda igual que llega de TOMS (DWU-416 AC 4). UACTX y USIZE ya vienen en el XML de TOMS.
+Sergio, lo que me mandaste no me sirve. DWBZo9M9217ugS es un New de hoy (21030399) y el otro no aparece. Necesito dos cosas:
+1. DWU-706: cancelar el 21030399.
+2. DWU-708: un ticket nuevo de TOMS, luego un amend y luego un cancel.
