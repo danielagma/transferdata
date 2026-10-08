@@ -21,25 +21,21 @@ Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.50"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.50"
 
 ==================================================
-2. .51 y .52 · DWU-420 AC 6 · axe
+2. SWITCH DE FATION 20261005.SAN3.EUGV.6 · DWU-420 AC 6 · axe · RANGO: Last 7 days
 ==================================================
-Que es: dos outrights sobre GB00BFX0ZL78 (UKT 1.625 10/28, el ISIN de Fation), Axe Status ON en el pricer.
-  .51 Sell 100,000, 10:44:04.  .52 Buy 100,000, 10:46:57.
-Primero el RFQ de cada uno. Si Axed sale false, captura y para con ese trade.
-Esperado: Axe IsAxed true, Side = el Verb del pricer. ACK.
-Carpeta: 02-tw-51-52-axe-dwu-420
+Que es: pata Buy 1,000,000 GB00BFX0ZL78 (UKT 1.625 10/28) de un switch de Fation del 5-oct. TELE, trader c0292415.
+Esperado: Axe IsAxed true, Side SELL. ACK.
+Es anterior al 7-oct 2:08: el payload viene dentro de StpHubPayloadSent.
+Si da No Results, el log ya se borro.
+Nuestros .51 y .52 de hoy salieron con Axed false en el RFQ: descartados. Este es la evidencia.
 
-ContextId: "Tradeweb$TRD_20261008_SAN3_EUGV_51"                        (RfqCreatedEvent: RfqLegAxes)
-Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.51"
-Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.51"
-Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.51"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.51"
+Event.Type: "TradeEvent" and "20261005.SAN3.EUGV.6"
+Event.Type: "StpHubPayloadSent" and "20261005.SAN3.EUGV.6"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261005.SAN3.EUGV.6"
+Event.Type: "RfqCreatedEventReceived" and ContextId: "Tradeweb$TRD_20261005_SAN3_EUGV_6"
+"20261005.SAN3.EUGV.SWAP.6"                                            (la otra pata del switch)
 
-ContextId: "Tradeweb$TRD_20261008_SAN3_EUGV_52"                        (RfqCreatedEvent: RfqLegAxes)
-Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.52"
-Event.Type: "StpHubPayloadSent" and "20261008.SAN3.EUGV.52"
-Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.52"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.52"
+Captura: payload con Axe, ACK, RfqCreatedEventReceived con RfqLegAxes, y la otra pata.
 
 ==================================================
 3. BUTTERFLY .54 / .55 / .56 · DWU-508 · Calc'n No, multi-leg
@@ -167,27 +163,11 @@ Event.Type: "StpHubPayloadDocument" and "6212:20261008:5:5"
 Event.Type: "StpHubPayloadAcknowledgedPublished" and Event.SourceId: "6212:20261008:5:5"
 
 ##################################################
-D. TRADE VIEJO · RANGO: Last 7 days
-##################################################
-
-==================================================
-13. SWITCH DE FATION 20261005.SAN3.EUGV.6 · DWU-420 AC 6
-==================================================
-Esperado: Axe IsAxed true, Side SELL. GB00BFX0ZL78. Payload dentro de StpHubPayloadSent (anterior al 7-oct 2:08).
-Si da No Results, el log ya se borro. Si el .51 o el .52 salen con axe, este ya no hace falta.
-
-Event.Type: "TradeEvent" and "20261005.SAN3.EUGV.6"
-Event.Type: "StpHubPayloadSent" and "20261005.SAN3.EUGV.6"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261005.SAN3.EUGV.6"
-ContextId: "Tradeweb$TRD_20261005_SAN3_EUGV_6"
-"20261005.SAN3.EUGV.SWAP.6"
-
-##################################################
 E. SI SOBRA TIEMPO
 ##################################################
 
 ==================================================
-14. .27 y .33 (blotter, de otra persona)
+13. .27 y .33 (blotter, de otra persona)
 ==================================================
 Tradeweb 03:12 y 03:41, trader N123456-Auto, GB00B39R3707 Sell. No son nuestros, no estan en el chat.
 Esto es inferencia mia: pueden ser pruebas de DWU-705 de Fation. Solo para ver SourceOriginalName.
