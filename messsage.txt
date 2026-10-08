@@ -1,12 +1,23 @@
-Today:
-- I reviewed a TOMS ticket Sergio sent. I found some inconsistencies, shared them in the STP Hub chat and opened 2 bugs.
-- I retested bug DWU-701 with Tradeweb and TOMS and closed it.
-- I updated story DWU-508 with a comment. I tested a Tradeweb switch with Calc'n turned off, and both legs go out with CalculateSalesCredit set to false.
-- For story DWU-420, I tested a Tradeweb trade with an axe, but the axe doesn't reach STP Hub.
-- I wanted to test story DWU-551, but I couldn't find the Calypso Flow flag on the counterparty screen.
+JIRAS QUE FALTAN EN EL REPO (8-oct). En orden.
 
-Tomorrow:
-I'll keep testing STP Hub. I'll launch some trades as soon as the gateway is available and review the logs.
-- I'll test story DWU-611.
-- I'll review the trades Sergio sends to see if I can close bugs DWU-706 and DWU-708.
-- I'll update the test case Excel.
+IN QA
+https://darwinjira.atlassian.net/browse/DWU-705
+https://darwinjira.atlassian.net/browse/DWU-730
+https://darwinjira.atlassian.net/browse/DWU-725
+https://darwinjira.atlassian.net/browse/DWU-711
+https://darwinjira.atlassian.net/browse/DWU-712
+https://darwinjira.atlassian.net/browse/DWU-703
+https://darwinjira.atlassian.net/browse/DWU-631
+https://darwinjira.atlassian.net/browse/DWU-650
+https://darwinjira.atlassian.net/browse/DWU-655
+https://darwinjira.atlassian.net/browse/DWU-676
+https://darwinjira.atlassian.net/browse/DWU-612
+https://darwinjira.atlassian.net/browse/DWU-559
+https://darwinjira.atlassian.net/browse/DWU-426
+https://darwinjira.atlassian.net/browse/DWU-614
+https://darwinjira.atlassian.net/browse/DWU-664
+https://darwinjira.atlassian.net/browse/DWU-704
+https://darwinjira.atlassian.net/browse/DWU-714
+
+READY FOR QA
+https://darwinjira.atlassian.net/browse/DWU-626
