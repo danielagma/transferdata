@@ -1,23 +1,4 @@
-JIRAS QUE FALTAN EN EL REPO (8-oct). En orden.
-
-IN QA
-https://darwinjira.atlassian.net/browse/DWU-705
-https://darwinjira.atlassian.net/browse/DWU-730
-https://darwinjira.atlassian.net/browse/DWU-725
-https://darwinjira.atlassian.net/browse/DWU-711
-https://darwinjira.atlassian.net/browse/DWU-712
-https://darwinjira.atlassian.net/browse/DWU-703
-https://darwinjira.atlassian.net/browse/DWU-631
-https://darwinjira.atlassian.net/browse/DWU-650
-https://darwinjira.atlassian.net/browse/DWU-655
-https://darwinjira.atlassian.net/browse/DWU-676
-https://darwinjira.atlassian.net/browse/DWU-612
-https://darwinjira.atlassian.net/browse/DWU-559
-https://darwinjira.atlassian.net/browse/DWU-426
-https://darwinjira.atlassian.net/browse/DWU-614
-https://darwinjira.atlassian.net/browse/DWU-664
-https://darwinjira.atlassian.net/browse/DWU-704
-https://darwinjira.atlassian.net/browse/DWU-714
-
-READY FOR QA
-https://darwinjira.atlassian.net/browse/DWU-626
+Hola Sergio, revisé el 21030344:
+- Transparency: los dos valores de más (UACTX y USIZE) ya vienen en el XML que TOMS le manda a Darwin (TX669). Darwin no los agrega. No sé por qué TOMS los mete si tú no los pusiste.
+- Waiver: TOMS manda OILQ,PRIC y Darwin manda solo el primero, OILQ. Así lo define la historia DWU-415.
+  Si el Waiver debería llevar todos los valores, o si UACTX y USIZE no deberían venir, lo vemos con Fation. Te paso la captura del XML.
