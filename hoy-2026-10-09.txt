@@ -1,0 +1,290 @@
+TODO LO DE HOY · VIERNES 9-OCT-2026
+
+Orden del dia:
+  1. Ahora hasta las 11:00 · Tradeweb (nosotros). Del mas sencillo al mas dificil.
+  2. Si da tiempo · BondVision (cuenta de Piotr). Pendiente de tus capturas de Piotr.
+  3. En cualquier momento · revisiones en Darwin, sin trade.
+  4. 11:00 a 12:00 · OpenSearch: primero los trades del 8-oct de Murat, luego los tickets de Sergio, luego los nuestros de hoy.
+
+Apunta cada id del blotter en cuanto salga. Sin id no hay revision.
+
+Lo que NO se lanza hoy y por que:
+  - Amundi / UBS (DWU-550, DWU-564) y Calypso (DWU-551): necesitan los flags Allocation Reporting o Calypso Flow en la contraparte. Desde el 2-oct no salen en la pantalla de UAT2. Primero hay que preguntarle a Fation si Murat los pone en base de datos.
+  - Callable (DWU-419), SSA (DWU-559), sufijo dummy (DWU-420): falta que Fation de el ISIN o la contraparte.
+  - Replay (DWU-432, DWU-626): primero hay que ver si el boton existe (revision D4 abajo).
+  - D2D: fuera hasta que Fation diga.
+
+
+##################################################
+1. TRADEWEB · ANTES DE LAS 11:00
+##################################################
+
+Antes de lanzar (receta playbooks/recetas-trades-tradeweb.md, seccion 0):
+  - Tradeweb apuntando a UAT2, sesion EUGV.
+  - STATIC > TRADE REFERENCE DATA > Trader > X531532 > Trader Platform Codes: fila Bloomberg / 5321 / 5321 / Bidirectional. Sin esa fila el trade no se publica.
+  - ISIN con Status ON en el Bond Pricer.
+
+--------------------------------------------------
+T1 · OUTRIGHT NORMAL (el mas sencillo, el mas importante)
+--------------------------------------------------
+Que es: un bono, un lado, contra TELE. TELE tiene Is Internal On desde el 8-oct.
+Como: TW EUGV Outright Ticket > ISIN GB0002404191 (UKT 6.000 12/28) > SELL > 1000000 > Request Offer > Send. En Darwin, ventana BONDS, cotiza y cierra.
+Apunta el id: 20261009.SAN3.EUGV.____
+
+Para que sirve:
+  - DWU-725: el trade se publica una sola vez.
+  - DWU-711 AC 3 y DWU-712: logs nuevos y sin agotamiento de reintentos.
+  - DWU-538 AC 1: el eco de TOMS (ticket RF) se filtra.
+  - DWU-611 AC 1 / AC 5 (refuerzo): IsInternalTrade true con TELE Is Internal On.
+
+En cuanto lo tengas, manda a Sergio (texto plano):
+  Hola Sergio, te paso un trade de Tradeweb de hoy: 20261009.SAN3.EUGV.____. ¿Puedes modificarlo en TOMS y despues cancelarlo, hoy mismo? Por favor con el venue transaction id (EXECUTION_VENUE_TRANSACTION_ID) informado en TOMS. Pasame los tickets del amend y del cancel. Gracias!
+
+Con el amend y el cancel de Sergio cerramos (si los trades de Murat del 8-oct ya no estan en OpenSearch):
+  - DWU-611 AC 2 y AC 3 (IsInternalTrade en amend y cancel)
+  - DWU-705 req 3 y 4 (SourceName BBG_TOMS, SourceOriginalName Tradeweb_EUGV)
+  - DWU-730 escenario 6 y DWU-613 cambio 2b (InternalTradeType Main)
+  - DWU-538 AC 9 (cancel de TOMS de un trade de Tradeweb)
+
+--------------------------------------------------
+T2 · OUTRIGHT CON TRADING BOOK EN EL TRADER (DWU-655)
+--------------------------------------------------
+Que es: el mismo outright, pero antes le pones un trading book a tu trader. DWU-655 dice que si el trader tiene un book, el trade usa ese book y no el del RFQ.
+Antes de lanzar:
+  1. STATIC > TRADE REFERENCE DATA > Trader > X531532. Apunta el valor actual de Trading Book (el analisis de Murat del 8-oct dice que no tiene; domain/static-data.md del 21-sep dice FO_BONOS). Captura.
+  2. Pon Trading Book = FO_DCORT. Save. Captura.
+Lanza: igual que T1, ISIN GB0002404191, SELL, 1000000.
+Apunta el id: 20261009.SAN3.EUGV.____
+Despues: vuelve a poner el Trading Book como estaba en el paso 1. Save. Captura.
+Esperado (a revisar a las 11:00): Portfolio.PortfolioName = FO_DCORT.
+
+
+##################################################
+2. BONDVISION · CUENTA DE PIOTR
+##################################################
+
+Pendiente: tus capturas de la ficha de Piotr en Darwin. Sin eso no se lanza.
+Ojo: BSAN suele desaparecer despues de las 15:00 UK (08:00 Mexico). Si no aparece BSAN como dealer, no se puede.
+Receta completa: playbooks/receta-bondvision.md.
+
+Antes de lanzar:
+  1. TeamCity, job "[Bonds] Switch MTS BondVision Service between Environments": la ultima ejecucion apunta a UAT2. Si apunta a QA, pidelo en el chat de STP Hub.
+  2. Darwin, ventana BONDS dice UAT/DEMO2.
+  3. Static > Trader > el trader con el que entres a Darwin > Trader Platform Codes: fila MTS.
+
+BV1 · OUTRIGHT
+  MTS BondVision > TRADING > Gov / Country > UK > clic derecho en GB0002404191 > RFQ > SIDE y SIZE (MM) = 1 > copia BV BID/ASK > DEALER SELECTION: BSAN > SEND RFQ.
+  En Darwin escribe a mano en PRICE el BV BID/ASK. Send.
+  Apunta el id del blotter: MtsEUGVBondVision$________ y el RFQ ID: Mts$________
+  Para que sirve: DWU-508 AC 2 (CalculateSalesCredit en BondVision), DWU-705 req 5 (SourceOriginalName de BondVision), DWB-7847 AC 1, 3 y 4 (contraparte TELE y no 30815BSCHM).
+
+
+##################################################
+3. REVISIONES EN DARWIN, SIN TRADE (cuando quieras)
+##################################################
+
+D1 · TELE Is Internal
+  STATIC > TRADE REFERENCE DATA > Counterparty > TELE. Apunta Is Internal (On desde el 8-oct). Captura.
+  Para: comparar con IsInternalTrade de todos los trades de hoy (DWU-611).
+
+D2 · MIAL / GILTS (DWU-508 AC 2 en Bloomberg y TOMS)
+  STATIC > TRADE REFERENCE DATA > Counterparty Relationship > Counterparty Code/Name = MIAL > Search. Fila GILTS: apunta Darwin Calc'n. Captura.
+  Para: el 21030344 salio con Glcs MIAL y CalculateSalesCredit true. Tiene que coincidir con Darwin Calc'n.
+
+D3 · Flags de Amundi y Calypso (DWU-550, DWU-551)
+  STATIC > TRADE REFERENCE DATA > Counterparty Relationship > TELE > Search. Mira si ya salen las columnas Allocation Reporting y Calypso Flow. Abre la fila GILTS (lapiz) y mira si salen los toggles. Captura.
+  Para: si salen, se puede empezar con Amundi y Calypso. Si no, va la pregunta a Fation.
+
+D4 · Boton de replay (DWU-432, DWU-626)
+  Trade Blotter > cualquier trade de hoy > Actions. Mira si sale "Replay Outbound Enrichment". No le des clic. Captura.
+  Para: si sale, el FE del replay esta en UAT2 y se puede probar.
+
+D5 · TELE y la cuenta MTS (BondVision)
+  STATIC > TRADE REFERENCE DATA > Counterparty > TELE > Counterparty Platform Codes: MTS / 30815BSCHM / Bidirectional. Captura.
+
+
+##################################################
+4. OPENSEARCH · 11:00 A 12:00
+##################################################
+
+Indice: fidw-eu-bonds-uat2*
+Cada trade son 3 pasos: 1) TradeEvent, 2) StpHubPayloadDocument, 3) ACK. Al final de cada trade va que hacer si el paso 2 no sale.
+Orden: A (del 8-oct, se pueden borrar), B (tickets de Sergio), C (nuestros de hoy).
+
+
+##################################################
+A. TRADES DEL 8-OCT DEL ANALISIS DE MURAT
+##################################################
+
+Rango de fechas: Absolute, 2026-10-08 00:00 a 2026-10-09 23:59. Con "Today" no salen.
+
+De donde salen: analisis de Murat del 8-oct, source/reports/2026-10-08-murat-stphub-analysis/02-BloombergToms-21030516.md (hallazgo 3 y tabla del final). Quien los lanzo: no consta en el repo.
+Que son: amends y cancels hechos en TOMS sobre trades de Tradeweb. Murat dice que TOMS los enlazo con su trade de Darwin, pero salieron a STP Hub con InternalTradeId nuevo, SourceId "Tradeweb:..." y SourceName BBG_TOMS. Todos con ACK.
+Para que: DWU-611 AC 2 y 3 (IsInternalTrade), DWU-705 req 3 y 4 (SourceName y SourceOriginalName), DWU-730 escenario 6 y DWU-613 cambio 2b (InternalTradeType Main).
+Si el paso 1 da No Results: los logs ya se borraron. Para y avisa.
+
+--------------------------------------------------
+A1. AMEND DE 20261008.SAN3.EUGV.171 (12:28 UTC, 06:28 Mexico)
+--------------------------------------------------
+1) Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.171"
+   Abre la fila de TOMS mas reciente (la del amend). Mira Tvtic = 20261008SAN3EUGV171 y el numero de ticket. Captura.
+2) Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.171"
+   Fila del Amend. Captura y apunta:
+   - SourceName: esperado BBG_TOMS
+   - SourceOriginalName: esperado Tradeweb_EUGV
+   - InternalTradeType: esperado Main
+   - IsInternalTrade: apunta el valor
+   - Counterparty.Glcs: apunta el valor
+   Fila del New: SourceOriginalName (esperado Tradeweb_EUGV) e IsInternalTrade. Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.171"
+   ACK del New y del Amend. Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error (por ejemplo StpHubPayloadValidationFailed dice que campo fallo). Captura.
+Static: Counterparty > el Glcs del paso 2 > Is Internal. Tiene que coincidir con IsInternalTrade. Captura.
+
+--------------------------------------------------
+A2. AMEND DE 20261008.SAN3.EUGV.170 (12:52 UTC, 06:52 Mexico)
+--------------------------------------------------
+1) Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.170"
+   Fila de TOMS mas reciente. Tvtic = 20261008SAN3EUGV170. Captura.
+2) Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.170"
+   Fila del Amend: SourceName, SourceOriginalName, InternalTradeType, IsInternalTrade, Counterparty.Glcs. Fila del New: SourceOriginalName. Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.170"
+   ACK del New y del Amend. Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error (por ejemplo StpHubPayloadValidationFailed dice que campo fallo). Captura.
+
+--------------------------------------------------
+A3. CANCEL DE 20261008.SAN3.EUGV.177 (09:06 UTC, 03:06 Mexico)
+--------------------------------------------------
+1) Event.Type: "TradeEvent" and "20261008.SAN3.EUGV.177"
+   Fila de TOMS del cancel. Tvtic = 20261008SAN3EUGV177. Captura.
+2) Event.Type: "StpHubPayloadDocument" and "20261008.SAN3.EUGV.177"
+   Fila del Cancel: SourceName (BBG_TOMS), SourceOriginalName (Tradeweb_EUGV), InternalTradeType (Main), IsInternalTrade, Counterparty.Glcs. Fila del New: SourceOriginalName. Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261008.SAN3.EUGV.177"
+   ACK del New y del Cancel. Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error (por ejemplo StpHubPayloadValidationFailed dice que campo fallo). Captura.
+Static: Counterparty > el Glcs del paso 2 > Is Internal. Captura.
+
+Si sobra tiempo, repite A3 con 20261008.SAN3.EUGV.178 y 20261008.SAN3.EUGV.179.
+
+
+##################################################
+B. TICKETS DE TOMS DE SERGIO DE HOY (9-OCT, 9:27)
+##################################################
+
+Rango de fechas: Today.
+
+--------------------------------------------------
+B1. 21031186 · bono con clearing broker, coste Type 2 y short selling (DWU-416, DWU-417)
+--------------------------------------------------
+1) Event.Type: "TradeEvent" and "21031186"
+   Fila que termina en 21031186. En el XML (Event.TradeFeedXml) apunta: ClearingBroker, el TransactionCost con Type 2 y su Cost, y el campo TX670 (short selling). Captura.
+2) Event.Type: "StpHubPayloadDocument" and "21031186"
+   Esperado:
+   - Broker.BrokerCode = ClearingBroker del XML
+   - Broker.BrokerCommission.Amount = Cost del Type 2
+   - Mifid.ShortSelling = valor de TX670
+   Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "21031186"
+   Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error (por ejemplo StpHubPayloadValidationFailed dice que campo fallo). Captura.
+
+--------------------------------------------------
+B2. 21031187 (main) y 21031188 (mirror) · interno con amend y cancel el mismo dia (DWU-730 esc. 2 y 3, DWU-584 AC 5 y 6)
+--------------------------------------------------
+Sergio solo mando los dos tickets del New. El amend y el cancel tienen tickets nuevos: salen en el paso 1.
+1) Event.Type: "TradeEvent" and "21031187"
+   Salen el New y, si los hizo, el amend y el cancel del main. Apunta el ticket y el TransactionType de cada fila. Captura.
+2) Event.Type: "StpHubPayloadDocument" and "21031187"
+   Esperado: New, Amend y Cancel publicados. En cada uno: InternalTradeType Main, IsInternalTrade true. Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "21031187"
+   ACK de cada uno. Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error (por ejemplo StpHubPayloadValidationFailed dice que campo fallo). Captura.
+Mirror:
+1) Event.Type: "TradeEvent" and "21031188"
+   En el XML: SecondHalfTdr2TdrTrade = Y. Apunta los tickets del amend y cancel del mirror. Captura.
+2) Event.Type: "StpHubPayloadDocument" and "21031188"
+   Esperado: No Results. Captura.
+3) Event.Type: "StpHubEventPublishingSkipped" and "21031188"
+   Esperado: Reason "The trade is an internal mirror". Captura.
+
+--------------------------------------------------
+B3. 21031189 · Short Note 6 = PNT (DWU-613 3b, DWU-417 TradeSrc)
+--------------------------------------------------
+1) Event.Type: "TradeEvent" and "21031189"
+   En el XML: <ShortNote><Index>6</Index><Text>PNT</Text>. Captura.
+2) Event.Type: "StpHubPayloadDocument" and "21031189"
+   Esperado: TradeSrc "Voice". Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "21031189"
+   Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error (por ejemplo StpHubPayloadValidationFailed dice que campo fallo). Captura.
+
+--------------------------------------------------
+B4. 21031192 · sin comercial (DWU-613 1b)
+--------------------------------------------------
+1) Event.Type: "TradeEvent" and "21031192"
+   En el XML: SalespersonName vacio. Mira tambien si trae ShortNote Index 1. Captura.
+2) Event.Type: "StpHubPayloadDocument" and "21031192"
+   Esperado: Sales.SalesBook vacio. Si el XML no trae Short Note 1: Settlement.SettlementLocation null (DWU-650 AC 2). Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "21031192"
+   Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error (por ejemplo StpHubPayloadValidationFailed dice que campo fallo). Captura.
+
+--------------------------------------------------
+B5. 21031193 · Short Note 1 y Settlement Location EU (DWU-650)
+--------------------------------------------------
+Sergio dice: "Creo que no esta cogiendo la informacion del short note 1 sino del settlement location field". Esto lo confirma o no.
+1) Event.Type: "TradeEvent" and "21031193"
+   En el XML apunta: <ShortNote><Index>1</Index><Text>...</Text> y SettlementLocationAbbreviation (Sergio puso EU). Captura.
+2) Event.Type: "StpHubPayloadDocument" and "21031193"
+   Esperado por DWU-650: Settlement.SettlementLocation = texto de Short Note 1, igual letra por letra.
+   Si sale EU: DWU-650 no funciona en UAT2 (en el repo solo consta desplegado en DEV2 el 5-oct). Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "21031193"
+   Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error (por ejemplo StpHubPayloadValidationFailed dice que campo fallo). Captura.
+
+
+##################################################
+C. NUESTROS DE HOY (9-OCT)
+##################################################
+
+Rango de fechas: Today.
+
+--------------------------------------------------
+C1. T1 · 20261009.SAN3.EUGV.____ (escribe el numero)
+--------------------------------------------------
+1) Event.Type: "TradeEvent" and "20261009.SAN3.EUGV.____"
+   Fila de Tradeweb (la del EventId mas bajo). Captura.
+   Mira tambien si sale la fila de TOMS del eco (TransactionType RF). Captura.
+2) Event.Type: "StpHubPayloadDocument" and "20261009.SAN3.EUGV.____"
+   Esperado: una sola fila New (DWU-725). Lee y captura: IsInternalTrade (true, TELE esta en On), Counterparty.Glcs TELE, SourceOriginalName Tradeweb_EUGV, Portfolio.PortfolioName, CalculateSalesCredit.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261009.SAN3.EUGV.____"
+   Captura.
+Extra para DWU-538 AC 1: Event.Type: "TomsTradeReceivedEventFilteredPreviouslyProcessedByDarwin" and "20261009.SAN3.EUGV.____"
+   Esperado: una fila (el eco de TOMS se filtra). Captura.
+Extra para DWU-712: Event.Type: "TradeMergeExhausted" and "20261009.SAN3.EUGV.____"
+   Esperado: No Results. Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error. Captura.
+
+Si Sergio ya hizo el amend y el cancel de T1: repite los pasos 1, 2 y 3 con el mismo id. En el paso 2 abre la fila Amend y la fila Cancel y lee: SourceName (BBG_TOMS), SourceOriginalName (Tradeweb_EUGV), InternalTradeType (Main), IsInternalTrade (true). Captura.
+
+--------------------------------------------------
+C2. T2 · 20261009.SAN3.EUGV.____ (escribe el numero)
+--------------------------------------------------
+1) Event.Type: "TradeEvent" and "20261009.SAN3.EUGV.____"
+   Captura.
+2) Event.Type: "StpHubPayloadDocument" and "20261009.SAN3.EUGV.____"
+   Esperado: Portfolio.PortfolioName = FO_DCORT (el book que le pusiste al trader). Captura.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261009.SAN3.EUGV.____"
+   Captura.
+   SI EL PASO 2 DA NO RESULTS: en la fila del paso 1 copia el ContextId y busca ContextId: "<ese ContextId>" and Level: Error. Lee el Event.Type y Event.Exception.Message del error. Captura.
+
+--------------------------------------------------
+C3. BV1 · BondVision (solo si se lanzo)
+--------------------------------------------------
+1) ContextId: "Mts$________" (el RFQ ID del blotter)
+   Mira que llegue la RFQ y el trade. Captura.
+2) Event.Type: "StpHubPayloadDocument" and "________" (el numero_fecha, por ejemplo 21000108_20261006)
+   Lee y captura: Counterparty.Glcs (esperado TELE, no 30815BSCHM), SourceName Mts, SourceOriginalName, MarketCode MTS_BONDVISION, CalculateSalesCredit, Instrument.Class.
+3) Event.Type: "StpHubPayloadAcknowledgedPublished" and "________"
+   Captura.
+   SI EL PASO 2 DA NO RESULTS: busca "________" and Level: Warning y "________" and Level: Error. Lee el Event.Type y Event.Exception.Message. Captura.
