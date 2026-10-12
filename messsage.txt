@@ -67,3 +67,101 @@ Question for STP Hub: must the TRADE reach STP Hub before its ALLOC?
 Environment: UAT2
 Severity: High (Murat)
 Related: DWU-550, DWU-551
+
+
+
+
+
+Hi all, a quick update on how QA will cover STP Hub before go-live on Thursday.
+
+QA runs its own strategy, independent of and complementary to the BA validation Excel. With three days left, the goal is maximum coverage with the fewest trades.
+
+What we did:
+- Read all 62 STP Hub stories: 647 acceptance criteria, 517 testable by QA, 385 in scope for Release 1.
+- Linked every criterion to the exact trade that proves it.
+- Covering everything would take 47 trades; covering all of Release 1, 28.
+- Ranked by how many criteria each trade closes (Pareto): 12 scenarios cover about 85% of Release 1.
+
+Those 12 are our plan for this week, and all our results depend on getting them executed, mostly in UAT2. I'll post the list below. Sergio and I split the trades, and your help unblocking anything along the way (environment, gateways, access) makes the difference.
+
+Thanks!
+
+
+The 12 scenarios, in order of coverage:
+
+1. S1 (Sergio) TOMS bond with every note field: New, amend, cancel
+2. D1 (Daniel) Tradeweb outright vs TELE, trader with trading book
+3. S3 (Sergio) TOMS bond: New today, amend and cancel next day
+4. S2 (Sergio) TOMS internal bond pair: New and amend today, cancel next day
+5. S5 (Sergio) TOMS bond with free-text notes: New and same-day cancel
+6. Q1 (Daniel) Log check in QA: Release 1 runs non-Live, nothing sent
+7. D2 (Daniel) Tradeweb outright, trader without book
+8. S4 (Sergio) TOMS internal future: New, amend, cancel same day
+9. S11 (Sergio) Bloomberg on-venue outright with allocation to 2 accounts
+10. D11 (Daniel) BondVision outright with allocation
+11. D3 (Daniel) Tradeweb switch with allocation to 2 accounts
+12. S6 (Sergio) TOMS amend, amend, cancel on Daniel's Tradeweb trade (D1)
+
+
+
+
+
+
+Hola Sergio, buenos días. Esta semana volvemos a probar STP Hub desde cero y te pido 7 trades. Con estos 7, más 5 que hago yo en Tradeweb y BondVision, cubrimos casi toda la Release 1, así que no te pido más de lo necesario.
+
+Tres cosas rápidas:
+- Los amends y cancels, antes de mediodía de México.
+- De cada trade mándame los números de ticket en cuanto los tengas (New, amend y cancel; en los internos, main y mirror). Yo los reviso el mismo día.
+- Si algo no se puede, dímelo y lo anoto, no hace falta buscarle la vuelta.
+
+HOY (lunes)
+
+1. Ticket A: bono con todas las notas (New, amend y cancel, hoy)
+- TransactionType TT (no MT), bono GB0002404191, contraparte MIAL, salesperson ETABOADE.
+- Long Note 1 y 2 vacías. Long Note 3 = Comp, Long Note 4 = Primary Auction, Long Note 7 = Bond Fwd Delivery.
+- Short Note 1 = EUROCLEAR BANK (en el campo Short Note 1, no en Settlement Location), Short Note 3 = 5, Short Note 6 = PNT.
+- MiFID: Waiver = OILQ, ILQD y SIZE (los tres), Transparency = LRGS. Decision maker y execution within firm = n317167, con los dos flags de algo en Y.
+- Amend el mismo día: cambia el nominal, Long Note 3 = NonComp, Short Note 3 = 3, Short Note 1 = CLEARSTREAM BANKING S.A.
+- Después cancela el ticket enmendado. Son 3 tickets.
+
+2. Ticket B: cancel de un trade nuevo (New y cancel, hoy)
+- TT, MIAL, Long Note 2 = QA-LN2-20261012, Short Note 6 = Axed, salesperson vacío. Nada más.
+- Cancélalo el mismo día sin enmendarlo.
+
+3. Bono para el día siguiente (New hoy; amend y cancel mañana)
+- Igual que el 21031186: Sell, ES0000012R56 (EUR), contra TELE, ClearingBroker GATE, TransactionCost tipo 2 de 98.5 EUR, TX670 SELL, TX671/TX672 = n317167 con los flags de algo en N.
+- Hoy sólo el New.
+
+4. Par interno de bono (New y amend hoy; cancel mañana)
+- Como el 21031187: main con trading book FO_BONOS y contraparte GBPASECM.
+- Mándame main y mirror. Si puedes, el XML del amend y del cancel del mirror.
+
+5. Futuro interno G Z6 (FT, CFT y XFT, hoy)
+- Contra el book de otro desk; amend (CFT) y cancel (XFT) el mismo día. Main y mirror.
+- Si interno no se puede: G Z6 normal contra MIAL, sólo el New.
+
+6. Amends y cancel sobre mi Tradeweb (hoy, después de las 10:00)
+- Antes de las 10:00 te mando el ID de un outright de Tradeweb contra TELE.
+- En TOMS: dos amends y luego un cancel, el mismo día, con EXECUTION_VENUE_TRANSACTION_ID lleno.
+- En el primer amend pon Short Note 3 = 5.
+
+7. Bloomberg con allocation (hoy, si el gateway está en UAT2)
+- Outright on-venue por BSGB (no BSGI ni BTBS) en un bono EUROGOVIES.
+- Mándalo a por lo menos 2 dealers.
+- Allocation a 2 cuentas.
+
+MAÑANA (martes)
+- Amend y cancel del bono del punto 3.
+- Cancel del par interno del punto 4.
+
+Lo que ya sé que no puedes hacer no está en la lista: el futuro G U26, los tipos AE/CAE/PCA/XAE/PXA y el VOICE.
+
+Te debo la revisión de tus tickets del 9 de octubre y lo de por qué TOMS agrega UACTX/USIZE a Transparency; te lo mando hoy.
+
+¡Gracias!
+
+
+
+
+
+
