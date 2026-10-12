@@ -68,20 +68,30 @@ MAÑANA (martes)
 - Cancel del par interno del punto 4.
 
 
-1. Título. Reemplaza la primera línea por:
+QA Update: AC 2 and AC 4 PASSED ✅, AC 3 pending, AC 1, 5 and 6 development scope
 
-QA Execution: PASSED ✅
+- Environment: UAT2
+- Trade under test: Tradeweb switch 20261006.SAN3.EUGV.SWAP.380, legs .380 and .381, each allocated to Test 1 (80,000) and Test 2 (20,000)
 
-2. Final. Borra el bloque "Pending:" completo y en su lugar pon:
+---
+AC 2. Different EventIds give different allocation MessageIds - PASSED ✅
 
-Sign-off: Approved to close.
+Leg .380: MessageId TradewebEUGV$20261006.SAN3.EUGV.380:allocation:1045. Leg .381: MessageId ...381:allocation:1046. Both acknowledged by STP Hub.
 
-Todo lo demás (Environment, Trades under test, los 3 escenarios y sus evidencias) se queda igual.
+Evidence: 1-380-alloc-sent-1045.png, 2-380-alloc-ack.png, 3-381-alloc-sent-1046.png, 4-381-alloc-ack.png
 
-Así el bug cierra con lo que pide su resultado esperado: el amend sale con el SourceId del ticket de amend. Los escenarios 2 lo refuerzan.
+AC 4. The allocation MessageId reaches the gateway unchanged - PASSED ✅
 
-Cuando lo guardes, en QA Pilot pon DWU-708 en Status Closed y en Notes "Closed 12-oct: amend 21030717 + sc2 amend/cancel".
+The gateway's StpHubPayloadSent carries MessageId TradewebEUGV$20261006.SAN3.EUGV.380:allocation:1045 and TradewebEUGV$20261006.SAN3.EUGV.381:allocation:1046: the allocation:{EventId} format set in Trade Service, not a GUID.
 
+Evidence: same as AC 2.
+
+---
+Development scope: AC 1 (retry) and AC 5 (gateway collision) cannot be triggered from a trade in UAT2. AC 6 states they are covered by the unit tests and by the Trade Service component test.
+
+Pending: AC 3 (released-trade replacement). It runs once the Calypso Flow flag is switched on for a counterparty in UAT2.
+
+@Murat Guney, as agreed in the 8 Oct daily, could you switch on the Calypso Flow flag for TELE / GILTS in UAT2 so we can run AC 3?
 
 
 
