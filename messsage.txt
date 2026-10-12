@@ -1,13 +1,69 @@
-Hi team, a process point before the QA round, so we all work from the same version of each ticket.
+[Bug] TOMS amends and cancels of Darwin RFQ trades with an empty TVTIC are not linked to the Darwin trade
 
-Over the last weeks several tickets changed after testing on them had started:
-- DWU-550 had AC 6, AC 15 and the description edited in Jira.
-- DWU-613's title and scope were extended twice, and its RFQ rule now lives only in DWU-730.
-- DWU-418's InternalTradeType row was superseded by a comment, and DWU-417's TradeSrc row was replaced by DWU-613; both tables still show the old rules.
-- DWU-549's "one id per event" rule exists only in a comment.
-- A comment on DWU-432 was rewritten under its original date.
+Darwin links a TOMS lifecycle event to the original Darwin trade only by TVTIC (EXECUTION_VENUE_TRANSACTION_ID). When that field is empty, the event is not linked:
+- Amend (CRF): reaches Trade Service and fails; nothing is published to STP Hub. Errors seen: VenueEventsHandlerFailed "Object reference not set to an instance of an object" (21030747), InsertVenueTradeEventsFailed / RetriableMessageNotSuccessfullyHandled (21030712, 21030736).
+- Cancel (XRF): published to STP Hub as a separate trade BloombergToms$<ticket> with a new InternalTradeId and no reference to the Darwin trade. The original booking stays live in STP Hub.
 
-From now on I propose:
-1. Once a ticket is In QA, its ACs are frozen. Any new rule or scope change goes into a new ticket, or is a written edit announced here with the reason.
-2. Approved tickets are not edited; a follow-up ticket references them.
-3. Every defect gets a ticket, even when the fix is on the STP Hub, TOMS or ref data side. The ticket says who owns it and when.
+The TVTIC is empty in two cases:
+1. Tradeweb trades booked into TOMS by STP Hub: EXECUTION_VENUE_TRANSACTION_ID is not populated (the value is in ExternalTradeID / ClientTradeID). Pending TOMS / STP Hub answer.
+2. Off-venue Bloomberg trades (BTBS): the venue sends no TVTIC at all.
+
+Steps to reproduce:
+1. Close an RFQ trade in Darwin (Tradeweb, or Bloomberg off-venue).
+2. Amend it in TOMS, then cancel another one in TOMS.
+3. Read Trade Service and STP Hub gateway logs for the TOMS ticket.
+
+Actual: amend fails (21030209, 21030325, 21030712, 21030736); cancel published as BloombergToms$21030516 with InternalTradeId DWBZoG5xsdEVKi, not linked to TradewebEUGV$20261008.SAN3.EUGV.152.
+Expected: amend published as an Amend of the Darwin trade; cancel published as a Cancel of the Darwin trade, with PreviousTradeId / identity of the Darwin trade.
+
+Environment: UAT2. Evidence: Murat's analyses of 7 and 8 Oct (02-BloombergToms-21030516, 21030023 session).
+Decision needed: (a) TOMS/STP Hub populates EXECUTION_VENUE_TRANSACTION_ID for Darwin-booked trades; (b) Darwin falls back to LongNote2 when TVTIC is empty (needed for off-venue anyway); (c) merge the null check so the event fails with a clear error instead of crashing.
+
+
+
+
+[Bug] Allocation arriving before its trade is not remembered: the held trade is released as a block after the wait period
+
+When Allocation Reporting or Calypso Flow is enabled on the counterparty relationship, Darwin holds the trade (StpHubEventPublishingDeferred) and waits up to AllocationWaitPeriodConfiguration.WaitSeconds for its allocation. If the allocation reaches Trade Service before the trade, no pending trade is found (PendingStpHubTradeSnapshotNotFound) and the allocation is not stored. The trade then waits for an allocation that already passed and is released as a block when the wait period ends.
+
+Allocation-first ordering does happen in UAT2:
+- BondVision 11000111 (6 Oct): allocation 70 ms before the trade; PendingStpHubTradeSnapshotNotFound at 10:40:29.076; trade published as a 2,000,000 block.
+- Tradeweb .380 (6 Oct): allocation 150 ms before the trade.
+In UAT2 the flags were off, so the hold was skipped (ShouldSkipStpHubDeferral). The release as a block after the wait period comes from the code read in Murat's analysis of 6 Oct (finding F2).
+
+Steps to reproduce:
+1. Enable Allocation Reporting on the counterparty relationship (e.g. TELE / EUROGOVIES).
+2. Execute a Tradeweb or BondVision outright pre-allocated at execution, so the allocation arrives before the trade.
+3. Read the Trade Service logs for the trade and the allocation.
+
+Actual result: the allocation is not remembered; the trade is held and released as a block after WaitSeconds.
+Expected result: the allocation is kept and matched when the trade arrives, and the trade is published with the allocation (DWU-550 AC 6).
+
+Note: DWU-550 refinement Q9 says this cannot happen; the UAT2 timestamps show it does. The flags default to false in PROD, so the flow is dormant in Release 1 and becomes active when the flags are turned on.
+
+Environment: UAT2
+Severity: High (Murat)
+Related: DWU-550, DWU-551, DWU-679
+
+
+
+[Bug] ALLOC is published to STP Hub unconditionally, before the pending-trade lookup and before its TRADE
+
+TradeAllocationReceivedEventHandler.HandleAsync publishes the allocation to STP Hub with no condition, before it looks up the pending trade. This has two consequences.
+
+1. Ordering. On BondVision 11000111 (6 Oct, UAT2) the ALLOC was sent at 10:40:29.156 and its TRADE at 10:40:29.221. If STP Hub needs the trade before its allocation, correlation can fail downstream; the transport ACK does not prove that it succeeded.
+2. Flagged counterparties. DWU-550 refinement Q13 says the allocation is not sent to STP Hub for flagged counterparties, and DWU-551 AC 6 says split trades are filtered and held. Publishing unconditionally contradicts both.
+
+Steps to reproduce:
+1. Execute a BondVision or Tradeweb outright with allocation.
+2. Read the STP Hub gateway logs: compare the StpHubPayloadSent time of the ALLOC and of the TRADE.
+3. Repeat on a counterparty with Allocation Reporting enabled.
+
+Actual result: the ALLOC is published straight away, before the TRADE, also for flagged counterparties.
+Expected result: the ALLOC is published after its TRADE, and not published for flagged counterparties (DWU-550 Q13, DWU-551 AC 6).
+
+Question for STP Hub: must the TRADE reach STP Hub before its ALLOC?
+
+Environment: UAT2
+Severity: High (Murat)
+Related: DWU-550, DWU-551
