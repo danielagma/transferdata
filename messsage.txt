@@ -68,7 +68,7 @@ MAÑANA (martes)
 - Cancel del par interno del punto 4.
 
 
-QA Update: AC 2 and AC 4 PASSED ✅, AC 3 pending, AC 1, 5 and 6 development scope
+QA Update: AC 2 and AC 4 PASSED ✅, AC 1, 3 and 5 pending, AC 6 development scope
 
 - Environment: UAT2
 - Trade under test: Tradeweb switch 20261006.SAN3.EUGV.SWAP.380, legs .380 and .381, each allocated to Test 1 (80,000) and Test 2 (20,000)
@@ -87,11 +87,16 @@ The gateway's StpHubPayloadSent carries MessageId TradewebEUGV$20261006.SAN3.EUG
 Evidence: same as AC 2.
 
 ---
-Development scope: AC 1 (retry) and AC 5 (gateway collision) cannot be triggered from a trade in UAT2. AC 6 states they are covered by the unit tests and by the Trade Service component test.
+Pending:
+- AC 1: the same TradeAllocationReceivedEvent handled again (retry or redelivery) publishes the same MessageId.
+- AC 3: a released-trade replacement never shares a MessageId with its allocation. It needs the Calypso Flow flag on for a counterparty in UAT2.
+- AC 5: a second payload with an existing MessageId but a different SourceId, TradeId or kind is quarantined.
 
-Pending: AC 3 (released-trade replacement). It runs once the Calypso Flow flag is switched on for a counterparty in UAT2.
+Development scope: AC 6 (unit tests and the Trade Service component test).
 
-@Murat Guney, as agreed in the 8 Oct daily, could you switch on the Calypso Flow flag for TELE / GILTS in UAT2 so we can run AC 3?
+@Murat Guney, a few questions so we can finish this one:
+1. As agreed in the 8 Oct daily, could you switch on the Calypso Flow flag for TELE / GILTS in UAT2 for AC 3?
+2. Is there a way for QA to run AC 1 and AC 5 in UAT2, or are they covered by the tests in AC 6?
 
 
 
