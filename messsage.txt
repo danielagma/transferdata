@@ -1,27 +1,3 @@
-[Bug] TOMS amends and cancels of Darwin RFQ trades with an empty TVTIC are not linked to the Darwin trade
-
-Darwin links a TOMS lifecycle event to the original Darwin trade only by TVTIC (EXECUTION_VENUE_TRANSACTION_ID). When that field is empty, the event is not linked:
-- Amend (CRF): reaches Trade Service and fails; nothing is published to STP Hub. Errors seen: VenueEventsHandlerFailed "Object reference not set to an instance of an object" (21030747), InsertVenueTradeEventsFailed / RetriableMessageNotSuccessfullyHandled (21030712, 21030736).
-- Cancel (XRF): published to STP Hub as a separate trade BloombergToms$<ticket> with a new InternalTradeId and no reference to the Darwin trade. The original booking stays live in STP Hub.
-
-The TVTIC is empty in two cases:
-1. Tradeweb trades booked into TOMS by STP Hub: EXECUTION_VENUE_TRANSACTION_ID is not populated (the value is in ExternalTradeID / ClientTradeID). Pending TOMS / STP Hub answer.
-2. Off-venue Bloomberg trades (BTBS): the venue sends no TVTIC at all.
-
-Steps to reproduce:
-1. Close an RFQ trade in Darwin (Tradeweb, or Bloomberg off-venue).
-2. Amend it in TOMS, then cancel another one in TOMS.
-3. Read Trade Service and STP Hub gateway logs for the TOMS ticket.
-
-Actual: amend fails (21030209, 21030325, 21030712, 21030736); cancel published as BloombergToms$21030516 with InternalTradeId DWBZoG5xsdEVKi, not linked to TradewebEUGV$20261008.SAN3.EUGV.152.
-Expected: amend published as an Amend of the Darwin trade; cancel published as a Cancel of the Darwin trade, with PreviousTradeId / identity of the Darwin trade.
-
-Environment: UAT2. Evidence: Murat's analyses of 7 and 8 Oct (02-BloombergToms-21030516, 21030023 session).
-Decision needed: (a) TOMS/STP Hub populates EXECUTION_VENUE_TRANSACTION_ID for Darwin-booked trades; (b) Darwin falls back to LongNote2 when TVTIC is empty (needed for off-venue anyway); (c) merge the null check so the event fails with a clear error instead of crashing.
-
-
-
-
 [Bug] Allocation arriving before its trade is not remembered: the held trade is released as a block after the wait period
 
 When Allocation Reporting or Calypso Flow is enabled on the counterparty relationship, Darwin holds the trade (StpHubEventPublishingDeferred) and waits up to AllocationWaitPeriodConfiguration.WaitSeconds for its allocation. If the allocation reaches Trade Service before the trade, no pending trade is found (PendingStpHubTradeSnapshotNotFound) and the allocation is not stored. The trade then waits for an allocation that already passed and is released as a block when the wait period ends.
@@ -153,23 +129,6 @@ HOY (lunes)
 MAÑANA (martes)
 - Amend y cancel del bono del punto 3.
 - Cancel del par interno del punto 4.
-
-Lo que ya sé que no puedes hacer no está en la lista: el futuro G U26, los tipos AE/CAE/PCA/XAE/PXA y el VOICE.
-
-Te debo la revisión de tus tickets del 9 de octubre y lo de por qué TOMS agrega UACTX/USIZE a Transparency; te lo mando hoy.
-
-¡Gracias!
-
-
-Dear MTS Support Team,
-
-I would like to kindly ask for your assistance with the following request:
-
-1. Adding trader codes for quote permission
-   Could you please add the following trader code as authorized to send quotes for the account:
-   PIWI1.30815BSCHM
-   List of trader codes to be enabled:
-- x531532
 
 
 
