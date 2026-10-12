@@ -1,66 +1,4 @@
-[Bug] Allocation arriving before its trade is not remembered: the held trade is released as a block after the wait period
 
-When Allocation Reporting or Calypso Flow is enabled on the counterparty relationship, Darwin holds the trade (StpHubEventPublishingDeferred) and waits up to AllocationWaitPeriodConfiguration.WaitSeconds for its allocation. If the allocation reaches Trade Service before the trade, no pending trade is found (PendingStpHubTradeSnapshotNotFound) and the allocation is not stored. The trade then waits for an allocation that already passed and is released as a block when the wait period ends.
-
-Allocation-first ordering does happen in UAT2:
-- BondVision 11000111 (6 Oct): allocation 70 ms before the trade; PendingStpHubTradeSnapshotNotFound at 10:40:29.076; trade published as a 2,000,000 block.
-- Tradeweb .380 (6 Oct): allocation 150 ms before the trade.
-In UAT2 the flags were off, so the hold was skipped (ShouldSkipStpHubDeferral). The release as a block after the wait period comes from the code read in Murat's analysis of 6 Oct (finding F2).
-
-Steps to reproduce:
-1. Enable Allocation Reporting on the counterparty relationship (e.g. TELE / EUROGOVIES).
-2. Execute a Tradeweb or BondVision outright pre-allocated at execution, so the allocation arrives before the trade.
-3. Read the Trade Service logs for the trade and the allocation.
-
-Actual result: the allocation is not remembered; the trade is held and released as a block after WaitSeconds.
-Expected result: the allocation is kept and matched when the trade arrives, and the trade is published with the allocation (DWU-550 AC 6).
-
-Note: DWU-550 refinement Q9 says this cannot happen; the UAT2 timestamps show it does. The flags default to false in PROD, so the flow is dormant in Release 1 and becomes active when the flags are turned on.
-
-Environment: UAT2
-Severity: High (Murat)
-Related: DWU-550, DWU-551, DWU-679
-
-
-
-[Bug] ALLOC is published to STP Hub unconditionally, before the pending-trade lookup and before its TRADE
-
-TradeAllocationReceivedEventHandler.HandleAsync publishes the allocation to STP Hub with no condition, before it looks up the pending trade. This has two consequences.
-
-1. Ordering. On BondVision 11000111 (6 Oct, UAT2) the ALLOC was sent at 10:40:29.156 and its TRADE at 10:40:29.221. If STP Hub needs the trade before its allocation, correlation can fail downstream; the transport ACK does not prove that it succeeded.
-2. Flagged counterparties. DWU-550 refinement Q13 says the allocation is not sent to STP Hub for flagged counterparties, and DWU-551 AC 6 says split trades are filtered and held. Publishing unconditionally contradicts both.
-
-Steps to reproduce:
-1. Execute a BondVision or Tradeweb outright with allocation.
-2. Read the STP Hub gateway logs: compare the StpHubPayloadSent time of the ALLOC and of the TRADE.
-3. Repeat on a counterparty with Allocation Reporting enabled.
-
-Actual result: the ALLOC is published straight away, before the TRADE, also for flagged counterparties.
-Expected result: the ALLOC is published after its TRADE, and not published for flagged counterparties (DWU-550 Q13, DWU-551 AC 6).
-
-Question for STP Hub: must the TRADE reach STP Hub before its ALLOC?
-
-Environment: UAT2
-Severity: High (Murat)
-Related: DWU-550, DWU-551
-
-
-
-
-
-Hi all, a quick update on how QA will cover STP Hub before go-live on Thursday.
-
-QA runs its own strategy, independent of and complementary to the BA validation Excel. With three days left, the goal is maximum coverage with the fewest trades.
-
-What we did:
-- Read all 62 STP Hub stories: 647 acceptance criteria, 517 testable by QA, 385 in scope for Release 1.
-- Linked every criterion to the exact trade that proves it.
-- Covering everything would take 47 trades; covering all of Release 1, 28.
-- Ranked by how many criteria each trade closes (Pareto): 12 scenarios cover about 85% of Release 1.
-
-Those 12 are our plan for this week, and all our results depend on getting them executed, mostly in UAT2. I'll post the list below. Sergio and I split the trades, and your help unblocking anything along the way (environment, gateways, access) makes the difference.
-
-Thanks!
 
 
 The 12 scenarios, in order of coverage:
@@ -77,7 +15,6 @@ The 12 scenarios, in order of coverage:
 10. D11 (Daniel) BondVision outright with allocation
 11. D3 (Daniel) Tradeweb switch with allocation to 2 accounts
 12. S6 (Sergio) TOMS amend, amend, cancel on Daniel's Tradeweb trade (D1)
-
 
 
 
@@ -129,6 +66,25 @@ HOY (lunes)
 MAÑANA (martes)
 - Amend y cancel del bono del punto 3.
 - Cancel del par interno del punto 4.
+
+
+1. Título. Reemplaza la primera línea por:
+
+QA Execution: PASSED ✅
+
+2. Final. Borra el bloque "Pending:" completo y en su lugar pon:
+
+Sign-off: Approved to close.
+
+Todo lo demás (Environment, Trades under test, los 3 escenarios y sus evidencias) se queda igual.
+
+Así el bug cierra con lo que pide su resultado esperado: el amend sale con el SourceId del ticket de amend. Los escenarios 2 lo refuerzan.
+
+Cuando lo guardes, en QA Pilot pon DWU-708 en Status Closed y en Notes "Closed 12-oct: amend 21030717 + sc2 amend/cancel".
+
+
+
+
 
 
 
