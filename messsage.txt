@@ -1,4 +1,13 @@
-Hola Sergio, revisé el 21030344:
-- Transparency: los dos valores de más (UACTX y USIZE) ya vienen en el XML que TOMS le manda a Darwin (TX669). Darwin no los agrega. No sé por qué TOMS los mete si tú no los pusiste.
-- Waiver: TOMS manda OILQ,PRIC y Darwin manda solo el primero, OILQ. Así lo define la historia DWU-415.
-  Si el Waiver debería llevar todos los valores, o si UACTX y USIZE no deberían venir, lo vemos con Fation. Te paso la captura del XML.
+Hi team, a process point before the QA round, so we all work from the same version of each ticket.
+
+Over the last weeks several tickets changed after testing on them had started:
+- DWU-550 had AC 6, AC 15 and the description edited in Jira.
+- DWU-613's title and scope were extended twice, and its RFQ rule now lives only in DWU-730.
+- DWU-418's InternalTradeType row was superseded by a comment, and DWU-417's TradeSrc row was replaced by DWU-613; both tables still show the old rules.
+- DWU-549's "one id per event" rule exists only in a comment.
+- A comment on DWU-432 was rewritten under its original date.
+
+From now on I propose:
+1. Once a ticket is In QA, its ACs are frozen. Any new rule or scope change goes into a new ticket, or is a written edit announced here with the reason.
+2. Approved tickets are not edited; a follow-up ticket references them.
+3. Every defect gets a ticket, even when the fix is on the STP Hub, TOMS or ref data side. The ticket says who owns it and when.
