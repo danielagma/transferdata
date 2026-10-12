@@ -161,6 +161,17 @@ Te debo la revisión de tus tickets del 9 de octubre y lo de por qué TOMS agreg
 ¡Gracias!
 
 
+Dear MTS Support Team,
+
+I would like to kindly ask for your assistance with the following request:
+
+1. Adding trader codes for quote permission
+   Could you please add the following trader code as authorized to send quotes for the account:
+   PIWI1.30815BSCHM
+   List of trader codes to be enabled:
+- x531532
+
+
 
 
 
