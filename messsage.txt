@@ -1,20 +1,9 @@
-En todas, pon el rango de tiempo en Last 24 hours. Saca captura de cada resultado.
-
-1. Que los servicios arrancaron en modo no-Live (DWU-677, punto 0.2)
-"StpHubRolloutSelected"
-- Añade la columna @log_group y abre 2 o 3 filas.
-- Hay que ver IsStpHubLive en False en Trade, Sentinel y PostTrade.
-- No he verificado si el nombre va en Event.Type. Por eso lo busco como texto libre.
-
-2. Que ningún servicio falló al arrancar por la configuración (punto 0.3)
-"StpHubRollout:IsLive"
-Lo esperado es No results.
-
-3. Que no se envió nada a STP Hub
-"StpHubPayloadSent" or "StpHubAcknowledgementReceived"
-Lo esperado es No results.
-
-4. Si la regresión del QA de DWB ya generó supresiones de Sentinel
-"SentinelReportSuppressed"
-- Si sale algo, abre una fila y captura el campo Feature (NoRfqTrade, TradewebSweep o AllocationAmend) y el TradeId.
-- Eso puede adelantar los puntos 1.2 a 1.5 sin trades nuestros.
+Antes de que entre el hotfix (Piotr dijo 9:10 + 10 min)
+1. Abre las 2 filas de TradeService y captura IsStpHubLive false. Con eso el 0.2 queda completo.
+2. Busca, en Last 1 day:
+"StpHubPayloadDocument" or "StpHubPayloadSuppressed"
+   Sirve para ver si Darwin arma el payload aunque no lo mande. Los nombres salen del resumen de Murat y no los he verificado en QA.
+3. Busca, en Last 1 day:
+"MessageSentToSentinel"
+   Es el evento que usó Joanna. Si hay filas de hoy, los RFQ de la regresión de DWB sí van a Sentinel. Eso es la mitad del 1.1, sin un trade nuestro. Abre una fila y captura el TradeId.
+4. No lances un trade ahora. Si el hotfix entra a la mitad, el trade ya no queda en RC-3217.
