@@ -1,7 +1,48 @@
-1. En OpenSearch de QA escribe:
-Event.Type: "StpHubPayloadSuppressed" and Event.EventType: ("Amend" or "Cancel")
-2. Rango: Last 1 day.
-3. Haz clic en Refresh y captura el resultado.
+1. Preparar Static (UAT2)
 
-Los campos EventType y Type salen en tu captura del suppressed. El filtro combinado no lo he probado.
+1. El trader:
+1. Ve a STATIC > TRADE REFERENCE DATA > Trader > X531532.
+2. Anota el Trading Book que tiene ahora, para dejarlo igual al terminar.
+3. Pon Trading Book = FO_DCORT y guarda.
+4. Comprueba que existe la fila Bloomberg / 5321 / 5321 en Trader Platform Codes. Sin ella el trade no se publica.
 
+2. La contraparte:
+1. Ve a STATIC > TRADE REFERENCE DATA > Counterparty (no Relationship) > TELE.
+2. Anota cómo está Is Internal.
+3. Ponlo en On y guarda.
+
+3. El bono: en el Bond Pricer, comprueba que el ISIN tiene Status ON. Usa GB0002404191 (UKT 6.000 12/28), que ya funcionó.
+
+2. Lanzar el trade
+
+1. Abre TW EUGV Outright Ticket.
+2. Pon el ISIN GB0002404191.
+3. Pulsa BUY o SELL.
+4. Escribe la cantidad.
+5. Pulsa Request Offer y luego Send.
+6. En Darwin, cotiza el RFQ.
+7. Anota el id del trade (20261013.SAN3.EUGV.<número>) y pásamelo.
+
+3. Lo que revisamos en el payload (cuando me pases el id)
+
+Con el id real te doy los comandos de OpenSearch. En el payload miramos:
+- IsInternalTrade: true: DWU-611, el hueco que dejamos al cerrarlo.
+- El book y el Portfolio: DWU-655.
+- Counterparty.Glcs: TELE.
+- Settlement.SettlementLocation: DWU-650 AC 4.
+- User.TraderUuid informado.
+- Que llegue el ACK de STP Hub. UAT2 es Live.
+
+4. Mensaje a Sergio (en cuanto tengas el id)
+
+Bloomberg TOMS está en UAT2 desde las 4:23. Este es el texto para su chat privado, cambiando el id:
+
+Hi Sergio, I just booked a Tradeweb outright in UAT2: 20261013.SAN3.EUGV.<number>. Could you please do in TOMS, on that trade, two amends (for example price, then quantity) and then a cancel, all today? It is for DWU-611 AC 2 and AC 3 and DWU-655. Thanks!
+
+5. Al terminar
+
+- Deja el Trading Book de X531532 como estaba.
+- Deja Is Internal de TELE como estaba.
+- Hazlo después de que Sergio termine los amends y el cancel, porque usan la misma configuración.
+
+Cuando tengas el id, pásamelo. Lo siguiente es el escenario 7: outright con un trader sin book.
