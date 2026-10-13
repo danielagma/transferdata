@@ -1,39 +1,47 @@
-Lo del book del Pricer, en corto
+.14: comprobar si existe
 
-En el Bond Pricer sale FO_DCORT arriba. Si ese es el book por defecto del bono, tu trade .14 sale con FO_DCORT tanto si la regla del trader funciona como si no. No sé seguro qué es ese FO_DCORT del Pricer. Para no depender de eso, metemos un trade más con otro book, FO_BONOS, que existe en UAT2 porque es el book del trader de Sergio. Si el payload sale con FO_BONOS, la regla funciona seguro.
+Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.14"
+Si sale vacío, éste. Si también sale vacío, el trade no se cerró y lo descartamos:
+"20261013.SAN3.EUGV.14"
 
-Trade B. Outright con book distinto
+.15: book FO_BONOS, TELE en Yes
 
-1. STATIC > TRADE REFERENCE DATA > Trader > X531532 > Trading Book = FO_BONOS > Save.
-2. TELE se queda en Is Internal Yes.
-3. Lanza un outright: ISIN GB0002404191, igual que el .14.
-4. Cotiza con Send @ y apunta el id del RFQ.
+Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.15"
+Event.Type: "StpHubPayloadDocument" and "20261013.SAN3.EUGV.15"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261013.SAN3.EUGV.15"
 
-Esperado: Portfolio FO_BONOS e IsInternalTrade true.
+.16: sin book, TELE en No
 
-Trade C. Escenario 7: trader sin book, contraparte normal
+Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.16"
+Event.Type: "StpHubPayloadDocument" and "20261013.SAN3.EUGV.16"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261013.SAN3.EUGV.16"
 
-1. Trader X531532 > Trading Book vacío > Save. Así estaba esta mañana.
-2. Counterparty TELE > Is Internal = No > Save. Así estaba, Sergio lo dejó así a las 3:04.
-3. Outright GB0002404191.
-4. Cotiza y apunta el id del RFQ.
+.19 y .20: switch sin allocation (una búsqueda por pata)
 
-Esperado: Portfolio del bono (el book por defecto) e IsInternalTrade false.
+Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.19"
+Event.Type: "StpHubPayloadDocument" and "20261013.SAN3.EUGV.19"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261013.SAN3.EUGV.19"
+Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.20"
+Event.Type: "StpHubPayloadDocument" and "20261013.SAN3.EUGV.20"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261013.SAN3.EUGV.20"
 
-Trade D. Escenario 11: switch con allocation
+.21 y .22: switch con allocation
 
-Static se queda como en C: trader sin book y TELE en No.
-1. Ticket de Tradeweb > switch.
-2. Patas: GB00BNNGP668 y GB00BL6C7720. Son las del switch que llegó el 7-oct.
-3. En una pata: Pre-Alloc > LOOKUP > marca Test 1 y Test 2 > Select > Percent 60 y 40 > SAVE. #Accts debe decir 2.
-4. Send.
-5. Cotiza en Darwin y apunta el id del RFQ.
+La pata que lleva la allocation devuelve 2 filas en cada búsqueda: una del trade y otra de la allocation.
+Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.21"
+Event.Type: "StpHubPayloadDocument" and "20261013.SAN3.EUGV.21"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261013.SAN3.EUGV.21"
+Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.22"
+Event.Type: "StpHubPayloadDocument" and "20261013.SAN3.EUGV.22"
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261013.SAN3.EUGV.22"
 
-Estos pasos salen de la hoja de ruta del 6-oct. La receta de allocation sólo tiene el outright.
+Para DWU-759 (qué sale antes, la allocation o el trade). En cada pata, captura la lista con la columna Time visible y abre las 2 filas para ver Event.PayloadType:
+Event.Type: "StpHubPayloadSent" and "20261013.SAN3.EUGV.21"
+Event.Type: "StpHubPayloadSent" and "20261013.SAN3.EUGV.22"
 
-Al final
+Si alguna búsqueda de payload sale vacía
 
-- Static queda como estaba: trader sin book y TELE en No. Eso ya lo cumple el trade C.
-- Pásame los 4 ids: .14, B, C y D. Después te doy las búsquedas de cada uno.
+Cambia el número por el del trade:
+"20261013.SAN3.EUGV.15" and Level: Error
 
-Lanza el B ya.
+Empieza por el .15: las 3 búsquedas, con el JSON del payload abierto.
