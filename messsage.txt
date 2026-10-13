@@ -1,3 +1,1 @@
-Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.15"
-Event.Type: "StpHubPayloadDocument" and "20261013.SAN3.EUGV.15"
-Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261013.SAN3.EUGV.15"
+ I will re-run DWU-758 and DWU-759 first thing tomorrow: a Tradeweb outright with pre-allocation, with Allocation Reporting ON for TELE / GILTS. I'll log in two hours early to get more testing done.
