@@ -1,13 +1,7 @@
-Lo que tienes que hacer
-1. En OpenSearch de QA, borra la barra y escribe:
-Event.Type: "MessageSentToSentinel"
-2. Pon el rango en Last 7 days.
-3. Haz clic en Refresh.
-4. Saca una captura de la lista.
-5. Abre la fila más reciente y captura el JSON.
+1. En OpenSearch de QA escribe:
+Event.Type: "StpHubPayloadSuppressed" and Event.EventType: ("Amend" or "Cancel")
+2. Rango: Last 1 day.
+3. Haz clic en Refresh y captura el resultado.
 
-Qué esperamos ver
-- Filas antes de las 4:07 de hoy, de antes de RC-3217.
-- Filas después de las 4:07, ya con RC-3217.
+Los campos EventType y Type salen en tu captura del suppressed. El filtro combinado no lo he probado.
 
-Si salen las dos, Sentinel sigue recibiendo los reportes y la mitad de Sentinel del punto 1.1 queda cubierta.
