@@ -1,31 +1,13 @@
-Son 3 búsquedas en OpenSearch de QA. Hazlas en este orden.
-
-Paso 1. Terminar la revisión de TradeService
-1. Escribe en la barra de búsqueda: "StpHubRolloutSelected"
-2. Pon el rango en Last 1 day.
+Lo que tienes que hacer
+1. En OpenSearch de QA, borra la barra y escribe:
+Event.Type: "MessageSentToSentinel"
+2. Pon el rango en Last 7 days.
 3. Haz clic en Refresh.
-4. Abre la fila de BondsTradeService de las 4:22.
-5. Ve a la pestaña JSON.
-6. Busca la línea "IsStpHubLive": false.
-7. Saca una captura.
-8. Repite los pasos 4 a 7 con la fila de BondsTradeService de las 4:23.
+4. Saca una captura de la lista.
+5. Abre la fila más reciente y captura el JSON.
 
-Para qué sirve: ya tenemos Sentinel, Tradeweb, BondVision y Bloomberg en false. Con TradeService quedan todos.
+Qué esperamos ver
+- Filas antes de las 4:07 de hoy, de antes de RC-3217.
+- Filas después de las 4:07, ya con RC-3217.
 
-Paso 2. Ver si Darwin arma el payload aunque no lo mande
-1. Borra la barra de búsqueda y escribe:
-"StpHubPayloadDocument" or "StpHubPayloadSuppressed"
-2. Deja el rango en Last 1 day y haz clic en Refresh.
-3. Saca una captura del resultado, salga algo o salga "No results".
-4. Si salen filas, abre una y captura el JSON.
-
-Paso 3. Ver si los RFQ siguen llegando a Sentinel como antes
-1. Borra la barra de búsqueda y escribe:
-"MessageSentToSentinel"
-2. Deja el rango en Last 1 day y haz clic en Refresh.
-3. Saca una captura de la lista.
-4. Abre una fila de hoy y captura el JSON.
-
-No lances ningún trade ahora. Piotr va a cambiar el código de QA en unos minutos. Un trade a medias ya no sería de este release.
-
-Cuando termines, deja todas las capturas en Santa y avísame.
+Si salen las dos, Sentinel sigue recibiendo los reportes y la mitad de Sentinel del punto 1.1 queda cubierta.
