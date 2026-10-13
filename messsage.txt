@@ -4,6 +4,13 @@ Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.14"
 Si sale vacío, éste. Si también sale vacío, el trade no se cerró y lo descartamos:
 "20261013.SAN3.EUGV.14"
 
+Siguiente, todavía el .14:
+Event.Type: "StpHubPayloadDocument" and "20261013.SAN3.EUGV.14"
+Abre el JSON y haz la captura con el campo Document completo. Si sale cortado, usa 2 capturas.
+
+Luego:
+Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261013.SAN3.EUGV.14"
+
 .15: book FO_BONOS, TELE en Yes
 
 Event.Type: "TradeEvent" and "20261013.SAN3.EUGV.15"
