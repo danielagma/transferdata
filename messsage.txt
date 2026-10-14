@@ -1,4 +1,1 @@
-Búsqueda sin depender del id. Así veo qué llegó de TOMS justo después de .107:
-- Índice fidw-eu-bonds-uat2*
-- Rango absoluto: 14-oct de 9:48:00 a 9:52:00
-- @log_group: "Darwin-EU-Bonds-UAT2-BondsTransficcGatewayBloombergTomsInbound-BBG-TomsInbound-TOMS" and Event.Type: "TradeEvent"
+@log_group: "Darwin-EU-Bonds-UAT2-BondsTransficcGatewayBloombergTomsInbound-BBG-TomsInbound-TOMS" and Event.Type: "TradeEvent"
