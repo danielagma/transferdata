@@ -1,5 +1,2 @@
-1. Event.Type: "TradeEvent" and "20261014.SAN3.EUGV.108"
-2. Event.Type: "StpHubPayloadSuppressed" and "20261014.SAN3.EUGV.108". Esperado: una fila, New, Reason "The gateway runs in ConnectivityOnly mode, so nothing is put on STP Hub."
-3. Event.Type: "MessageSentToSentinel" and "TRD_20261014_SAN3_EUGV_108". Esperado: Created y TradeAgreed.
-4. Event.Type: "StpHubPayloadSent" and "20261014.SAN3.EUGV.108". Esperado: 0.
-5. Si la 2 da 0: Level: Error and "20261014.SAN3.EUGV.108". Así vemos si vuelve a salir TraderBloombergUuidMissing.
+1. fidw-eu-bonds-qa*: Event.Type: "TradeEvent" and "20261014SAN3EUGV108"
+2. fidw-eu-bonds-uat2*: Event.Type: "TradeEvent" and "20261014SAN3EUGV108"
