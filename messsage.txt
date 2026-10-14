@@ -1,9 +1,5 @@
-Comandos de BondVision (fidw-eu-bonds-uat2*, Last 1 hour):
-1. Event.Type: "TradeEvent" and "21000154_20261014"
-2. Event.Type: "StpHubPayloadSent" and "21000154_20261014". Esperado: TRADE y ALLOC. Apunta la hora de cada una.
-3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21000154_20261014"
-4. Event.Type: "StpHubPayloadDocument" and "21000154_20261014". Abre el del TRADE y mira:
-   - SourceName y SourceOriginalName (DWU-705 Req 5: se espera Mts_<BrokerCode>)
-   - CalculateSalesCredit (DWU-508 AC 2)
-   - MarketCode MTS_BONDVISION
-   - Counterparty.Glcs TELE
+ En OpenSearch busca: Event.Type: "StpHubPayloadDocument" and "20261014.SAN3.EUGV.107"
+2. Abre la fila de las 9:50:40.938. Es la del TRADE, no la del ALLOC.
+3. Pestaña JSON > pulsa el icono de copiar, arriba a la derecha.
+4. Pega en el Bloc de notas. Pulsa Ctrl+F y busca SourceName.
+5. Haz una captura de esa parte con zoom, donde se lean SourceName y SourceOriginalName, y pásala a Santa.
