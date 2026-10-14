@@ -13,5 +13,3 @@ Lo que falta: 4 búsquedas de .107 (Last 15 hours)
 Para el control, una búsqueda más:
 
 5. Event.Type: "StpHubEventPublishingDeferred" and "20261014.SAN3.EUGV.106". Esperado: 0, porque con el flag OFF no se retiene. Es DWU-550 AC 10.
-
-Con estas 5 cierro el resultado de DWU-758 y DWU-759 y te preparo los dos comments para Jira hoy.
