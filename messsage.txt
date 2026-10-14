@@ -1,1 +1,1 @@
-Hi Maksim, quick question: how can I check which code version is deployed in QA right now? Yesterday RC-3217 (STP HUB) was deployed, then Piotr switched QA to another version to test a hotfix. Is QA back on RC-3217?
+Thanks Rodrigo! How do we create a CBOA trade with an allocation to AMUNDI C100 SRK1/1 in QA, to run scenario 1?
