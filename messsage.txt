@@ -1,1 +1,5 @@
-@log_group: "Darwin-EU-Bonds-UAT2-BondsTransficcGatewayBloombergTomsInbound-BBG-TomsInbound-TOMS" and Event.Type: "TradeEvent"
+Hola Sergio, para el escenario 12 del plan hice el outright de Tradeweb 20261013.SAN3.EUGV.15 en UAT2, para los dos amends y el cancel.
+
+Aparte, estamos probando el ticket DWU-677 en QA. Para eso hice el outright 20261014.SAN3.EUGV.108 en QA y necesito también un amend y un cancel. Para este, TOMS tiene que apuntar a QA.
+
+En Darwin no veo ticket de TOMS de ninguno de los dos. ¿Los ves en TOMS?
