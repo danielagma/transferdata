@@ -1,18 +1,7 @@
-1. Hora del trade
-Event.Type: "TradeEvent" [V en UAT2, NV en QA]
-Esperado: la fila de .97. Con su hora ajusta el rango de las búsquedas 2 a 4.
+Perdón. Aquí van con el id. Rango del 14-oct, de 8:55 a 9:10.
 
-2. Payload suprimido
-Event.Type: "StpHubPayloadSuppressed" [V]
-Esperado: una fila de TradewebEUGV$20261014.SAN3.EUGV.97, EventType New, Reason "The gateway runs in ConnectivityOnly mode, so nothing is put on STP Hub."
-
-Opcional, el payload con el mismo MessageId:
-Event.Type: "StpHubPayloadDocument" [V]
-
-3. Sentinel recibe el RFQ
-Event.Type: "MessageSentToSentinel" [V]
-Esperado: Created con ContextId Tradeweb$TRD_20261014_SAN3_EUGV_97 y TradeAgreed con CounterpartyBankId TELE.
-
-4. Nada a STP Hub
-Event.Type: "StpHubPayloadSent" [NV]
-Esperado: ninguna fila de .97.
+1. Event.Type: "TradeEvent" and "20261014.SAN3.EUGV.97"
+2. Event.Type: "StpHubPayloadSuppressed" and "20261014.SAN3.EUGV.97"
+3. Event.Type: "StpHubPayloadDocument" and "20261014.SAN3.EUGV.97"
+4. Event.Type: "MessageSentToSentinel" and "TRD_20261014_SAN3_EUGV_97"
+5. Event.Type: "StpHubPayloadSent" and "20261014.SAN3.EUGV.97". Esperado: 0.
