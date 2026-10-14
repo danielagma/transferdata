@@ -1,1 +1,1 @@
-Hi team, a quick note on testing. Several of the 12 scenarios I shared depend on TOMS and Bloomberg trades that I can't raise on my side, so that part is on hold for now. Could someone help with them, or let me know if there's another way or someone else who can raise them? I'd like to keep moving before Thursday. Thanks!
+Hi Maksim, quick question: how can I check which code version is deployed in QA right now? Yesterday RC-3217 (STP HUB) was deployed, then Piotr switched QA to another version to test a hotfix. Is QA back on RC-3217?
