@@ -1,49 +1,18 @@
-Instrucciones QA · DWU-677 (RC-3244-R)
+1. Hora del trade
+Event.Type: "TradeEvent" [V en UAT2, NV en QA]
+Esperado: la fila de .97. Con su hora ajusta el rango de las búsquedas 2 a 4.
 
-Para todas las búsquedas: índice fidw-eu-bonds-qa*. Haz una captura de cada resultado y déjala en Santa.
+2. Payload suprimido
+Event.Type: "StpHubPayloadSuppressed" [V]
+Esperado: una fila de TradewebEUGV$20261014.SAN3.EUGV.97, EventType New, Reason "The gateway runs in ConnectivityOnly mode, so nothing is put on STP Hub."
 
-Te doy los comandos con Event.Type. Para el id uso un rango de 1 o 2 minutos alrededor del trade, y no texto libre, porque el texto libre falla en QA. [V] es verificado en QA. [NV] es no verificado: si da "No results", no cierra nada.
+Opcional, el payload con el mismo MessageId:
+Event.Type: "StpHubPayloadDocument" [V]
 
-Paso 1. Pre-check 2 (log de arranque)
-- Rango: 14-oct 7:50 hasta ahora.
-- "StpHubRolloutSelected" [V, dio 7 filas el 13-oct]
-- Esperado: Trade, Sentinel y PostTrade, todas con IsStpHubLive false.
+3. Sentinel recibe el RFQ
+Event.Type: "MessageSentToSentinel" [V]
+Esperado: Created con ContextId Tradeweb$TRD_20261014_SAN3_EUGV_97 y TradeAgreed con CounterpartyBankId TELE.
 
-Paso 2. Pre-check 3
-- Mismo rango.
-- Level: Error and "IsLive" [NV]
-- Esperado: ninguna fila con "StpHubRollout:IsLive".
-
-Paso 3. Check 1.3a (filtro en el arranque)
-- Mismo rango.
-- Event.Type: "FeatureFlagStartUpLoggerRunnable" [NV]. Si no sale nada, prueba "FeatureFlagStartUpLoggerRunnable".
-- Esperado: la fila de TWB-PostTrade-EUGV con FilterEvents=true, GILTS/GBP y EUROGOVIES/EUR.
-
-Paso 4. Check 1.1 New (repetirlo con este build)
-1. TeamCity: comprueba que Tradeweb apunta a QA.
-2. Lanza un outright de Tradeweb GB0002404191, sin allocation. Apunta el id y la hora.
-3. Event.Type: "StpHubPayloadSuppressed" [V], rango de la hora del trade a 2 minutos después. Esperado: la fila de tu id, Reason ConnectivityOnly.
-4. Event.Type: "MessageSentToSentinel" [V], mismo rango. Esperado: Created y TradeAgreed de tu trade.
-5. Event.Type: "StpHubPayloadSent" [NV], mismo rango. Esperado: ninguna fila.
-
-Paso 5. Check 1.3b (trade fuera de la lista)
-- Bloqueado: no tengo ISIN. Murat pide un bono fuera de GILTS/GBP y EUROGOVIES/EUR, "for example SSA EUR". En el repo no hay ninguno. El plan de cierre dice "no SSA bond in any environment" (11-sep).
-- Cuando tengas ISIN: lanza el outright y busca Event.Type: "TryIgnoreIncomingTrade" [NV] en el rango del trade. Esperado: "Bond not configured" y nada más de ese trade.
-
-Paso 6. Check 3 "pending"
-1. Static de QA > Counterparty Relationship > TELE / GILTS > Allocation Reporting ON > Save. Captura.
-   - Riesgo: el 13-oct Maksim (9:11) y Anwar (9:14) dijeron que Static no se puede editar en QA. Si no guarda, haz una captura y para.
-2. Lanza un outright de Tradeweb GB0002404191 contra TELE. Murat sólo pide "Book a Tradeweb trade for that counterparty". Apunta el id y la hora.
-3. Rango: de la hora del trade a 3 minutos después. Busca cada uno por separado [NV] y apunta la hora de cada fila de tu id:
-   - Event.Type: "AllocationReportingTradeReceived"
-   - Event.Type: "PostTradeMessageDeliveredEventPublished"
-   - Event.Type: "StpHubEventPublishingDeferred". Esperado: WaitSeconds=100 y PublicationMode=Standard.
-   - Event.Type: "CreateSentinelMessageForTrade". Esperado: segundos después, no 100 s.
-   - Event.Type: "PendingStpHubTradeSaveFailed". Esperado: ninguna fila.
-4. Pasa si PostTradeMessageDelivered va antes que Deferred y sale uno por versión.
-5. Allocation Reporting OFF > Save. Captura. No te lo saltes: con el flag en ON, todos los trades de TELE se retienen 100 s.
-
-No se hacen hoy en QA: 1.1 amend y cancel, y 1.2, porque TOMS apunta a UAT2. 1.5 tampoco, porque los PRs de Rodrigo no están mergeados. 1.4 lo cubre 1.2. 3 "failing" lo cubren los tests de desarrollo.
-
-Haz los pasos 1 a 3 y pasa las capturas a Santa. Las leo mientras lanzas el trade del paso 4.
-
+4. Nada a STP Hub
+Event.Type: "StpHubPayloadSent" [NV]
+Esperado: ninguna fila de .97.
