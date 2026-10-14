@@ -1,5 +1,5 @@
- En OpenSearch busca: Event.Type: "StpHubPayloadDocument" and "20261014.SAN3.EUGV.107"
-2. Abre la fila de las 9:50:40.938. Es la del TRADE, no la del ALLOC.
-3. Pestaña JSON > pulsa el icono de copiar, arriba a la derecha.
-4. Pega en el Bloc de notas. Pulsa Ctrl+F y busca SourceName.
-5. Haz una captura de esa parte con zoom, donde se lean SourceName y SourceOriginalName, y pásala a Santa.
+1. Event.Type: "TradeEvent" and "20261014.SAN3.EUGV.108"
+2. Event.Type: "StpHubPayloadSuppressed" and "20261014.SAN3.EUGV.108". Esperado: una fila, New, Reason "The gateway runs in ConnectivityOnly mode, so nothing is put on STP Hub."
+3. Event.Type: "MessageSentToSentinel" and "TRD_20261014_SAN3_EUGV_108". Esperado: Created y TradeAgreed.
+4. Event.Type: "StpHubPayloadSent" and "20261014.SAN3.EUGV.108". Esperado: 0.
+5. Si la 2 da 0: Level: Error and "20261014.SAN3.EUGV.108". Así vemos si vuelve a salir TraderBloombergUuidMissing.
