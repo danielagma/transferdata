@@ -1,5 +1,21 @@
-Hola Sergio, para el punto 6 hice el outright de Tradeweb 20261013.SAN3.EUGV.15 en UAT2.
+QA Execution: REPRODUCED (UAT2, 14 Oct)
 
-Aparte, estamos probando el ticket DWU-677 en QA. Para eso hice el outright 20261014.SAN3.EUGV.108 en QA y necesito también un amend y un cancel. Para este, TOMS tiene que apuntar a QA.
+Setup: Allocation Reporting on for TELE / GILTS (screenshot 1). Tradeweb outright 20261014.SAN3.EUGV.107, GB0002404191, Pre-Alloc Test 1 80000 / Test 2 20000.
 
-En Darwin no veo ticket de TOMS de ninguno de los dos. ¿Los ves en TOMS?
+What happened, in this order (UTC):
+15:48:58.971 PendingStpHubTradeSnapshotNotFound, from TradeAllocationReceivedEvent. The allocation arrived before the trade (screenshot 2).
+15:48:59.021 ALLOC StpHubPayloadSent, MessageId TradewebEUGV$20261014.SAN3.EUGV.107:allocation:457 (screenshot 3), with Test 1 80000 and Test 2 20000 (screenshot 4). The allocation was sent alone.
+15:48:59.107 AllocationReportingTradeReceived, counterparty TELE (screenshot 5).
+15:48:59.165 PendingStpHubTradeSnapshotNotFound again, same ContextId as AllocationReportingTradeReceived (screenshot 6).
+15:48:59.220 StpHubEventPublishingDeferred, WaitSeconds 100, PublicationMode Standard (screenshot 7).
+15:50:40.938 TRADE StpHubPayloadSent, DWBZouQWp0qk9Q, 101.7 s after the Deferred (screenshot 8). Acknowledged at 15:50:41.207 (screenshot 9).
+
+Actual: the allocation was not kept. The trade was held and released alone after the wait period.
+Expected: the allocation is kept and matched when the trade arrives, and the trade is published with the allocation.
+
+Control: 20261014.SAN3.EUGV.106 with Allocation Reporting off (screenshot 10).
+No StpHubEventPublishingDeferred (screenshot 11).
+TRADE StpHubPayloadSent at 15:45:26.771, with no wait (screenshot 12).
+After the test, Allocation Reporting was set back to off on TELE / GILTS (screenshot 13).
+
+@Murat Guney, does the UAT2 build used today include the fix you mentioned on 12 Oct?
