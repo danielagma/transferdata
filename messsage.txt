@@ -1,1 +1,2 @@
-Thanks Rodrigo! How do we create a CBOA trade with an allocation to AMUNDI C100 SRK1/1 in QA, to run scenario 1?
+Sorry, I misunderstood your message.
+But I don't have anything specific; I have the test cases Murat provided, and I'm working based on those.
