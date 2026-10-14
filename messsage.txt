@@ -1,2 +1,7 @@
-1. fidw-eu-bonds-qa*: Event.Type: "TradeEvent" and "20261014SAN3EUGV108"
-2. fidw-eu-bonds-uat2*: Event.Type: "TradeEvent" and "20261014SAN3EUGV108"
+Un control para saberlo. En UAT2, Last 15 hours:
+
+Event.Type: "TradeEvent" and "20261014SAN3EUGV107"
+
+.107 se hizo en UAT2 con TOMS conectado a UAT2. Ahí sí debería salir el aviso de TOMS.
+- Si sale: la búsqueda funciona y .108 no tiene ticket en TOMS. Entonces Sergio no puede hacer el amend sobre .108 y sí haría falta un trade nuevo con TOMS en QA.
+- Si no sale: la búsqueda no sirve. La manera más rápida de saber si .108 tiene ticket es preguntarle a Sergio, que lo ve directo en TOMS
