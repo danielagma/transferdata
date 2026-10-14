@@ -1,14 +1,17 @@
-Comandos. Índice fidw-eu-bonds-uat2*, Last 1 hour. Haz las búsquedas 1 a 3 para .106 y luego para .107, cambiando el número.
+Lo que falta: 4 búsquedas de .107 (Last 15 hours)
 
-1. Event.Type: "TradeEvent" and "20261014.SAN3.EUGV.106" [V]
-2. Event.Type: "StpHubPayloadSent" and "20261014.SAN3.EUGV.106" [V]
-   - Esperado: dos filas, TRADE y ALLOC. La del ALLOC tiene :allocation: en el MessageId.
-   - Apunta la hora de cada una.
-3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261014.SAN3.EUGV.106" [V]
-   - Esperado: un ACK por cada payload.
+1. Event.Type: "StpHubEventPublishingDeferred" and "20261014.SAN3.EUGV.107" (con la comilla final)
+   - Esperado: una fila hacia las 9:48:59. Abre el JSON: WaitSeconds.
+2. Event.Type: "StpHubPayloadSent" and "20261014.SAN3.EUGV.107"
+   - DWU-759, consecuencia 2: si sale un ALLOC hacia las 9:48:58.9, se mandó aunque TELE tiene el flag. Es el bug.
+   - DWU-758: si el TRADE sale hacia las 9:50:39 (unos 100 s después del Deferred), salió en bloque después de la espera. Es el bug.
+   - Abre las dos filas y haz una captura del JSON.
+3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261014.SAN3.EUGV.107"
+4. Event.Type: "StpHubPayloadDocument" and "20261014.SAN3.EUGV.107". En UAT2 sale a nivel Debug.
+   - Abre la del TRADE y mira si el payload trae las allocations (Test 1 / Test 2) o sale como un bloque de 100.000.
 
-Sólo para .107:
+Para el control, una búsqueda más:
 
-4. Event.Type: "AllocationReportingTradeReceived" and "20261014.SAN3.EUGV.107" [NV]
-5. Event.Type: "StpHubEventPublishingDeferred" and "20261014.SAN3.EUGV.107" [NV]. Es la hora en que empieza la retención.
-6. Event.Type: "PendingStpHubTradeSnapshotNotFound" and "20261014.SAN3.EUGV.107" [NV]. Es la firma de DWU-758 según el ticket: la allocation llega antes que el trade.
+5. Event.Type: "StpHubEventPublishingDeferred" and "20261014.SAN3.EUGV.106". Esperado: 0, porque con el flag OFF no se retiene. Es DWU-550 AC 10.
+
+Con estas 5 cierro el resultado de DWU-758 y DWU-759 y te preparo los dos comments para Jira hoy.
