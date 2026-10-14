@@ -1,7 +1,3 @@
-Perdón. Aquí van con el id. Rango del 14-oct, de 8:55 a 9:10.
-
-1. Event.Type: "TradeEvent" and "20261014.SAN3.EUGV.97"
-2. Event.Type: "StpHubPayloadSuppressed" and "20261014.SAN3.EUGV.97"
-3. Event.Type: "StpHubPayloadDocument" and "20261014.SAN3.EUGV.97"
-4. Event.Type: "MessageSentToSentinel" and "TRD_20261014_SAN3_EUGV_97"
-5. Event.Type: "StpHubPayloadSent" and "20261014.SAN3.EUGV.97". Esperado: 0.
+ Thanks Maksim. Yes, it is expected. STP Hub needs a Bloomberg code as TraderUuid for every trader, also for traders who only
+  trade on Tradeweb or BondVision (agreed with Fation on 1-Oct). My trader X531532 has no Bloomberg row in Trader Platform Codes
+  in QA, so the payload is not built. I will add the row and trade again.
