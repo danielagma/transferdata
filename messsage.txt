@@ -1,9 +1,22 @@
-Paso 6, con el id real: índice fidw-eu-bonds-uat2*, rango Today.
-1. Event.Type: "StpHubPayloadSent" and "20261015.SAN3.EUGV.240"
-   Abre el JSON y copia el MessageId. Mira también Portfolio.PortfolioName.
-2. Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261015.SAN3.EUGV.240"
-   Tiene que salir. Es el ACK.
-3. Sólo si el 1 sale vacío: "20261015.SAN3.EUGV.240" and Level: Error
+Logs (UAT2, fidw-eu-bonds-uat2*, Today)
 
+1. Event.Type: "AllocationReportingTradeReceived" and "<id>"
+- Qué ves: Counterparty TELE.
+- Por qué: confirma que Darwin vio el flag encendido. Si no sale, el flag no se aplicó y lo demás no vale.
 
-Hi Sergio, here is the Tradeweb outright in UAT2: 20261015.SAN3.EUGV.240 (ACK received). Could you do two amends and one cancel in TOMS, today?
+2. Event.Type: "StpHubEventPublishingDeferred" and "<id>"
+- Qué ves: WaitSeconds 100.
+- Por qué: es Darwin diciendo "retengo este trade y espero la allocation". Apunta la hora.
+
+3. Event.Type: "StpHubPayloadDocument" and "<id>" and Event.PayloadType: "StpHubPostTradeAllocationEvent"
+- Qué ves: la allocation, con el fondo Test 1. Apunta la hora.
+- Por qué: la allocation es la que dispara el cambio. Su hora tiene que ser después de la del paso 2. Si llegó antes, es el bug DWU-758: Darwin la olvida y el trade sale con TELE. En ese caso no es fallo de DWU-550.
+
+4. Event.Type: "StpHubPayloadDocument" and "<id>" and Event.PayloadType: "StpHubPostTradeEvent"
+- Qué ves: en el JSON, Counterparty.Glcs.
+- Por qué: es la prueba. Si dice 00XIDP, la tabla funcionó y el escenario pasa. Si dice TELE, puede ser que el mapa no esté cargado en UAT2, que es lo que no sabemos. Entonces se lo preguntamos a Rodrigo con la captura.
+
+5. Event.Type: "StpHubPayloadAcknowledgedPublished" and "<id>"
+- Por qué: confirma que STP Hub aceptó el trade con la contraparte nueva.
+
+Haz una captura de cada paso con el JSON abierto. No apagues el flag: luego viene el escenario 2 con Test 3.
