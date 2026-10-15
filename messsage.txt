@@ -1,6 +1,1 @@
-
-Comandos del .177 (prioridad): índice fidw-eu-bonds-qa*, rango Today.
-1. Event.Type: "TradeEvent" and "20261015.SAN3.EUGV.177"
-2. Event.Type: "StpHubPayloadDocument" and "20261015.SAN3.EUGV.177": abre el JSON y copia Portfolio.PortfolioName. Es el portfolio que pide Sergio.
-3. Event.Type: "StpHubPayloadSuppressed" and "20261015.SAN3.EUGV.177": tiene que decir ConnectivityOnly.
-4. Event.Type: "MessageSentToSentinel" and "TRD_20261015_SAN3_EUGV_177"
+Sorry Sergio, I got confused. QA is in non-live mode, so the trade never reaches STP Hub and there's no ACK. Please ignore this one. As soon as Tradeweb is back in UAT2, I'll send you the other outright that's still pending.
