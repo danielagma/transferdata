@@ -1,0 +1,206 @@
+LOGS DE LOS TICKETS DE TOMS DE SERGIO · 15-oct · UAT2
+Sergio los hizo con TOMS en UAT2 entre las 3:38 y las 4:00 (chat TransFicc). Hay que revisarlos HOY: los logs de UAT2 se borran en pocos días.
+Fuente del análisis: plan de los 12 escenarios (artifact QA Pilot y deliverables/qa-pilot/seed), historias y bugs del repo. Detalle con citas: scratchpad sergio-tickets-plan.md.
+
+
+ANTES DE EMPEZAR
+
+- Índice: fidw-eu-bonds-uat2*   Rango: Today
+- Carpeta de capturas sugerida: Trades\2026-10-15\s1-toms-21032402-403\ (y así por escenario).
+- Una captura por comprobación. Antes de capturar, usa Ctrl+F con el campo que dice cada paso, para que salga marcado.
+- Todos los comandos de este archivo están verificados en UAT2 con tickets de TOMS, salvo los marcados [NV].
+
+
+CÓMO SE LEE UN TICKET DE TOMS (vale para todos)
+
+A. Event.Type: "TradeEvent" and "<ticket>"
+   Qué es: la ENTRADA. Lo que TOMS mandó a Darwin, tal cual.
+   Abre la fila TradeEvent (no la OnTradeEventReceived, que viene en Base64).
+   El XML está en el campo Event.TradeFeedXml. Fuera del XML están LifecycleAction (New, Amend, Reversal...) y ContextId.
+   Por qué: es la referencia. Lo que dice el XML es lo que el payload tiene que copiar o transformar.
+
+B. Event.Type: "StpHubPayloadDocument" and "<ticket>"
+   Qué es: la SALIDA. El JSON completo que Darwin mandó a STP Hub (desde el 7-oct ya no está en StpHubPayloadSent).
+   Por qué: aquí se comprueba cada campo de las historias.
+
+C. Event.Type: "StpHubPayloadAcknowledgedPublished" and "<ticket>"
+   Qué es: el ACK. STP Hub confirma que lo recibió.
+   Por qué: sin ACK, el payload no cuenta como entregado.
+
+D. Si B sale vacío: Event.Type: "TradeEvent" and "<ticket>", copia el ContextId de la fila, y busca ContextId: "<ese ContextId>". Ahí salen los errores de Trade Service. (Buscar "<ticket>" and Level: Error no los encuentra, visto el 6-oct.)
+
+Amend y cancel con el mismo número (21032403, 21032418, 21032413): es posible. Pasó el 3-oct con 21028977. La búsqueda A devuelve 2 filas: se distinguen por LifecycleAction (Amend o Reversal) en A, y por EventType (Amend o Cancel) en B. Abre las dos.
+Desde DWU-708 el amend y el cancel publican con SU ticket como SourceId. Busca siempre por el número del amend o del cancel, no por el original.
+
+
+==================================================================
+S1 · 21032402 (New) · 21032403 (Amend y Cancel) · PRIORIDAD
+Qué pedimos: el "Ticket A" (TT, bono GB0002404191, MIAL, salesperson ETABOADE) con todas las notas. Short Note 1 = EUROCLEAR BANK, Short Note 3 = 5, Short Note 6 = PNT, Long Note 3 = Comp, Long Note 4 = Primary Auction, Long Note 7 = Bond Fwd Delivery, Long Notes 1 y 2 vacías, flags algo en Y. Amend: Short Note 1 = CLEARSTREAM BANKING S.A., Long Note 3 = NonComp, Short Note 3 = 3.
+Para qué: es el ticket que más AC abiertos cierra (DWU-650, 613, 417, 418, 731, 732, 549, 584).
+==================================================================
+
+1. Event.Type: "TradeEvent" and "21032402"
+   Ctrl+F en el XML: TransactionType, ShortNote, LongNote
+   Ves: TT; las notas con los valores de arriba.
+   Por qué: confirma que Sergio metió lo que pedimos. Si una nota no está en el XML, el campo del payload no se puede exigir.
+   Copia el ContextId por si hace falta el paso D.
+   Captura: 01-TradeEvent-402-New
+
+2. Event.Type: "StpHubPayloadDocument" and "21032402"   (abre el JSON)
+   a) Ctrl+F SettlementLocation  ->  EUROCLEAR BANK
+      Por qué: DWU-650 AC 1. La ubicación de liquidación tiene que salir de Short Note 1.
+      Captura: 02-payload-402-SettlementLocation
+   b) Ctrl+F CompNonComp  ->  Comp     y   DealersInCompetition  ->  5
+      Por qué: DWU-731 (Long Note 3) y DWU-732 (Short Note 3). Son los bugs del 5-oct, con retest pendiente.
+      Captura: 03-payload-402-Comp-Dealers
+   c) Ctrl+F Qualifier  ->  Primary Auction     y   ForwardIsStandard  ->  true
+      Por qué: DWU-417 (Long Note 4 y Long Note 7). Qualifier falló el 5-oct en 21028985.
+      Captura: 04-payload-402-Qualifier-Fwd
+   d) Ctrl+F TradeSrc  ->  Voice
+      Por qué: DWU-613 cambio 3b (Short Note 6 = PNT -> Voice). Falló el 9-oct con 21031189 (salió "PNT"). Ese era MT; este es TT.
+      Captura: 05-payload-402-TradeSrc
+   e) Ctrl+F ExecutionMktIdType  y  InvestmentMktIdType  ->  ALGO
+      Por qué: DWU-418 (flags algo en Y). Ojo: hay una pregunta abierta a Fation sobre esta fila; captura lo que salga.
+      Captura: 06-payload-402-MktIdType
+   f) Ctrl+F InternalTradeId  ->  DWB + 11 caracteres (14 en total)
+      Ctrl+F IsInternalTrade  ->  false      Glcs  ->  MIAL      SourceName  ->  BBG_TOMS
+      Por qué: DWU-549 (id interno), DWU-584 AC 9 (MIAL no es interna), DWU-417 (SourceName).
+      Captura: 07-payload-402-ids
+
+3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032402"
+   Ves: el mismo MessageId del payload.
+   Por qué: confirma la entrega.
+   Captura: 08-ack-402
+
+4. Event.Type: "TradeEvent" and "21032403"
+   Ctrl+F LifecycleAction, TransactionType, ShortNote, LongNote
+   Ves: 2 filas, Amend y Reversal (el cancel). En la del Amend: Short Note 1 CLEARSTREAM BANKING S.A., Long Note 3 NonComp, Short Note 3 3.
+   Por qué: confirma que 21032403 lleva los dos eventos y qué valores tiene el amend.
+   Captura: 09-TradeEvent-403-Amend   y   10-TradeEvent-403-Reversal
+
+5. Event.Type: "StpHubPayloadDocument" and "21032403"   (2 filas: abre las dos)
+   Fila EventType Amend:
+   a) SettlementLocation  ->  CLEARSTREAM BANKING S.A.  (exacto, con puntos y espacios)
+      Por qué: DWU-650 AC 3 (sin transformar) y AC 5 (también en amends).
+      Captura: 11-payload-403-Amend-SettlementLocation
+   b) CompNonComp  ->  NonComp     DealersInCompetition  ->  3
+      Por qué: DWU-731 y DWU-732 en el amend.
+      Captura: 12-payload-403-Amend-Comp-Dealers
+   c) InternalTradeId  ->  DWB..., distinto del New
+      Por qué: DWU-549 AC 3 (un id nuevo por evento).
+      Captura: 13-payload-403-Amend-ids
+   Fila EventType Cancel:
+   d) EventType  ->  Cancel     SettlementLocation  ->  lo que diga Short Note 1 en el XML del cancel     InternalTradeId  ->  distinto de los otros dos
+      Por qué: DWU-650 AC 5 (también en cancels) y DWU-549 AC 3.
+      Captura: 14-payload-403-Cancel
+
+6. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032403"
+   Ves: 2 filas (Amend y Cancel).
+   Captura: 15-ack-403
+
+
+==================================================================
+S5 · 21032413 (New y Cancel)
+Qué pedimos: el "Ticket B" (TT, MIAL), Long Note 2 = QA-LN2-20261012 (texto libre), Short Note 6 = Axed. Sólo New; el cancel lo hizo Sergio por su cuenta.
+Para qué: DWU-417 (SourceId sale de Long Note 2) y dos filas de DWU-418 que todavía no tienen regla clara.
+==================================================================
+
+1. Event.Type: "TradeEvent" and "21032413"
+   Ctrl+F LongNote, ShortNote, LifecycleAction
+   Ves: Long Note 2 con el texto que tecleó Sergio; Short Note 6 Axed; 2 filas (New y el cancel).
+   Por qué: el texto exacto de Long Note 2 es lo que tiene que salir en el payload.
+   Captura: 01-TradeEvent-413
+
+2. Event.Type: "StpHubPayloadDocument" and "21032413"
+   a) SourceId  ->  el texto de Long Note 2 (no 21032413)
+      Por qué: DWU-417, fila SourceId.
+      Captura: 02-payload-413-SourceId
+   b) InternalTradeId  ->  apunta lo que salga
+      Por qué: DWU-418 dice Long Note 2 y DWU-549 dice DWB...; chocan. Pregunta 1 a Fation abierta.
+      Captura: 03-payload-413-InternalTradeId
+   c) IsAxed  ->  apunta lo que salga
+      Por qué: DWU-418 fila IsAxed, sin regla clara (pregunta 2 a Fation). El 3-oct, con Axed, salió false.
+      Captura: 04-payload-413-IsAxed
+   d) Fila Cancel: EventType Cancel, SourceId igual a Long Note 2, InternalTradeId distinto del New
+      Captura: 05-payload-413-Cancel
+   Si este comando sale vacío, usa el paso D (ContextId).
+
+3. ACK: copia el MessageId de cada fila del paso 2 y búscalo entre comillas: "<MessageId>"
+   Por qué: como el SourceId es el texto de Long Note 2, buscar por el ticket puede no traer el ACK.
+   Captura: 06-ack-413
+
+
+==================================================================
+S4 · 21032416 (New, futuro G Z6) · 21032418 (Amend y Cancel)
+Qué pedimos: futuro interno G Z6 (FT) contra otro desk, con amend (CFT) y cancel (XFT) el mismo día. Main y mirror.
+Para qué: DWU-730 escenario 4 (el mirror no se publica) y DWU-417 / DWU-418 en un futuro.
+==================================================================
+
+1. Event.Type: "TradeEvent" and "21032416"
+   Ctrl+F TransactionType, SecondHalfTdr2TdrTrade, SecondaryTransactionTicketNumber, Ticker, SecurityIdentifierFlag
+   Ves: FT; SecondHalfTdr2TdrTrade N; el número del mirror; G Z6.
+   Por qué: confirma si de verdad es interno y te da el ticket del mirror, que Sergio no mandó. Si no hay SecondaryTransactionTicketNumber, no es interno y el escenario 4 de DWU-730 queda "not available".
+   Captura: 01-TradeEvent-416
+
+2. Event.Type: "StpHubPayloadDocument" and "21032416"
+   Ctrl+F MaturityCode -> Z6     ForwardIsStandard -> false     IdType -> apunta     AccruedDays / AccruedInterest -> apunta     InternalTradeType -> Main     IsInternalTrade -> true
+   Por qué: DWU-417 (MaturityCode del ticker; en futuros no se mapean los accrued: si sale null o 0 no está decidido, pregunta a Fation) y DWU-418 (IdType por la tabla de conversión).
+   Captura: 02-payload-416
+
+3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032416"
+   Si sale vacío, busca el MessageId del payload entre comillas: con futuros STP Hub ha rechazado antes (21028773).
+   Captura: 03-ack-416
+
+4. Event.Type: "TradeEvent" and "21032418"   ->  2 filas: CFT (Amend) y XFT (cancel). Captura: 04-TradeEvent-418
+5. Event.Type: "StpHubPayloadDocument" and "21032418"   ->  EventType Amend y Cancel, InternalTradeType Main, InternalTradeId distintos. Captura: 05-payload-418
+6. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032418"   ->  2 filas. Captura: 06-ack-418
+
+7. Por cada ticket del mirror (sale en el XML del paso 1 y del paso 4):
+   Event.Type: "StpHubEventPublishingSkipped" and "<ticket mirror>"
+   Ves: Reason "The trade is an internal mirror", IsInternalMirror true.
+   Por qué: DWU-730 escenario 4. El mirror NO se publica a STP Hub.
+   Captura: 07-skipped-mirror
+
+
+==================================================================
+S2 · 21032407 (New, par interno) · 21032409 (Amend)
+Qué pedimos: par interno de bono como 21031187 (GBPASECM contra FO_BONOS). New y amend hoy; el cancel, mañana 16-oct.
+Para qué: hoy, la línea base y el ticket del mirror. Lo importante (DWU-584 AC 6, DWU-730 esc. 3, DWU-706) es el cancel de mañana.
+==================================================================
+
+1. Event.Type: "TradeEvent" and "21032407"
+   Ctrl+F SecondaryTransactionTicketNumber, SecondHalfTdr2TdrTrade, TradingBook
+   Ves: SecondHalfTdr2TdrTrade N y el número del mirror.
+   Por qué: el número del mirror hace falta hoy (paso 5) y mañana para el cancel.
+   Captura: 01-TradeEvent-407
+
+2. Event.Type: "StpHubPayloadDocument" and "21032407"
+   Ctrl+F IsInternalTrade -> true     InternalTradeType -> Main     InternalTradeId -> DWB...
+   Captura: 02-payload-407
+3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032407"   Captura: 03-ack-407
+4. Lo mismo con 21032409 (TradeEvent: LifecycleAction Amend y su mirror; payload: EventType Amend, InternalTradeId distinto; ACK). Capturas 04 a 06.
+5. Event.Type: "StpHubEventPublishingSkipped" and "<ticket mirror del paso 1>"
+   Ves: Reason "The trade is an internal mirror", IsInternalMirror true.
+   Por qué: línea base del par para el cancel de mañana.
+   Captura: 07-skipped-mirror
+
+Mañana 16-oct (con TOMS otra vez en UAT2): cancel del main y del mirror. Se revisa ese día.
+
+
+==================================================================
+S3 · 21032404 (New)
+Qué pedimos: bono normal contra MIAL. Sólo New hoy; amend y cancel mañana 16-oct.
+Para qué: DWU-706 (amend y cancel de un ticket de otro día). Hoy sólo la línea base.
+==================================================================
+
+1. Event.Type: "TradeEvent" and "21032404"   ->  New, MIAL. Captura: 01-TradeEvent-404
+2. Event.Type: "StpHubPayloadDocument" and "21032404"   ->  EventType New, InternalTradeId DWB... Captura: 02-payload-404
+3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032404"   Captura: 03-ack-404
+
+
+LO QUE QUEDA ABIERTO
+
+- Mañana 16-oct: cancel de S2 y amend y cancel de S3. Necesitan TOMS en UAT2 (desde las 8:03 está en QA, salvo que alguien lo haya movido).
+- DWU-730 escenario 5 (replay del mirror): lo hacemos nosotros desde el Trade Blotter. El evento que hay que buscar después (StpHubOutboundReplaySkipped) es [NV].
+- Valores sin regla (se captura lo que salga, no se decide): InternalTradeId e IsAxed en S5, AccruedDays en futuros, ALGO en S1.
+- Si DWU-731 o DWU-732 vuelven a salir mal, antes de reabrir hay que confirmar que UAT2 tiene Trade Service 12.10.0 o más.
