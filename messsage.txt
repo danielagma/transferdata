@@ -1,1 +1,17 @@
-Hi Sergio, for DWU-677 (non-live mode), could you do one amend and one cancel in TOMS on my Tradeweb outright 20261015.SAN3.EUGV.177? TOMS is in QA now.
+En cada comando, abre el primer resultado y haz una captura.
+
+1. Event.Type: "TradeEvent" and "20261015.SAN3.EUGV.178"
+   Apunta la hora del primero.
+2. Event.Type: "AllocationReportingTradeReceived" and "20261015.SAN3.EUGV.178"
+   Tiene que salir una fila.
+3. Event.Type: "PostTradeMessageDeliveredEventPublished" and "20261015.SAN3.EUGV.178"
+   Apunta la hora. Si sale vacío, usa Event.Type: "PostTradeMessageDeliveredEventPublished" and "TRD_20261015_SAN3_EUGV_178".
+4. Event.Type: "StpHubEventPublishingDeferred" and "20261015.SAN3.EUGV.178"
+   Apunta la hora. Tiene que decir WaitSeconds 100.
+   Para pasar, la hora del 3 tiene que ser anterior a la del 4.
+5. Event.Type: "PendingStpHubTradeSaveFailed" and "20261015.SAN3.EUGV.178"
+   Tiene que salir vacío. Si sale vacío, prueba también con "TRD_20261015_SAN3_EUGV_178". Tiene que seguir vacío.
+6. Event.Type: "MessageSentToSentinel" and "TRD_20261015_SAN3_EUGV_178"
+   Tienen que salir Created y TradeAgreed. La hora del TradeAgreed tiene que estar a segundos del paso 1, no 100 segundos después.
+7. Event.Type: "StpHubPayloadSuppressed" and "20261015.SAN3.EUGV.178"
+   Tiene que salir unos 100 segundos después del paso 4, con Reason ConnectivityOnly.
