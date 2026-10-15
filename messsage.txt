@@ -1,6 +1,29 @@
+Aquí van todos, en orden. Una captura por documento abierto. Las capturas las reviso al final, todas juntas.
+
+S5 (21032413), lo que falta
 1. Event.Type: "StpHubEventPublishingDeferred" and "21032413"
-   - Mira si existe y si dice WaitSeconds 100.
-   - Por qué: confirma si el New estuvo retenido.
 2. ContextId: "I39Y1319X10021032413"
-   - Es el ContextId del cancel (captura 04).
-   - Mira qué le pasó al cancel: Skipped, algún error, o nada.
+3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032413"
+
+S4 (21032416 y 21032418), futuro interno
+4. Event.Type: "TradeEvent" and "21032416": apunta SecondaryTransactionTicketNumber (el mirror).
+5. Event.Type: "StpHubPayloadDocument" and "21032416"
+6. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032416"
+7. Event.Type: "TradeEvent" and "21032418": abre cada fila.
+8. Event.Type: "StpHubPayloadDocument" and "21032418": abre cada fila.
+9. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032418"
+10. Event.Type: "StpHubEventPublishingSkipped" and "<mirror del paso 4>"
+
+S2 (21032407 y 21032409), par interno
+11. Event.Type: "TradeEvent" and "21032407": apunta SecondaryTransactionTicketNumber.
+12. Event.Type: "StpHubPayloadDocument" and "21032407"
+13. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032407"
+14. Event.Type: "TradeEvent" and "21032409"
+15. Event.Type: "StpHubPayloadDocument" and "21032409"
+16. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032409"
+17. Event.Type: "StpHubEventPublishingSkipped" and "<mirror del paso 11>"
+
+S3 (21032404)
+18. Event.Type: "TradeEvent" and "21032404"
+19. Event.Type: "StpHubPayloadDocument" and "21032404"
+20. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032404"
