@@ -12,7 +12,7 @@ S4 (21032416 y 21032418), futuro interno
 7. Event.Type: "TradeEvent" and "21032418": abre cada fila.
 8. Event.Type: "StpHubPayloadDocument" and "21032418": abre cada fila.
 9. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032418"
-10. Event.Type: "StpHubEventPublishingSkipped" and "<mirror del paso 4>"
+Event.Type: "StpHubEventPublishingSkipped" and "21032417"
 
 S2 (21032407 y 21032409), par interno
 11. Event.Type: "TradeEvent" and "21032407": apunta SecondaryTransactionTicketNumber.
