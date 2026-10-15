@@ -1,36 +1,38 @@
-Hola Sergio, gracias por los trades de ayer. Para el viernes me quedan pendientes estos:
+@Sergio thanks for yesterday's trades. For Friday, these are still pending:
 
-Continuación de lo de ayer:
-- S3: amend y cancel del 21032404.
-- S2: cancel del par interno (21032407, enmendado en 21032409).
+Follow-up of yesterday:
+- S3: amend and cancel of 21032404.
+- S2: cancel of the internal pair (21032407, amended in 21032409).
 
-Para repetir:
-- S1: el bono con todas las notas (21032402 / 21032403 llegó sin notas).
-- S5: el bono con nota de texto libre (21032413 llegó con otras notas).
+To redo:
+- S1: bond with every note field (21032402 / 21032403 arrived without the notes).
+- S5: bond with free-text note (21032413 arrived with different notes).
 
-Nuevo:
-- S6: dos amends y un cancel sobre un Tradeweb mío. Te mando el ID el viernes antes de las 10:00.
+New:
+- S6: two amends and one cancel on my Tradeweb trade. I'll send you the ID on Friday before 10:00.
 
-Te dejo los detalles a continuación.
+Details below.
 
-S3 y S2
-- S3: amend y luego cancel del 21032404.
-- S2: cancel del par interno (21032407, enmendado en 21032409). Mándame el número del cancel.
+S3 and S2
+- S3: amend, then cancel, of 21032404.
+- S2: cancel of the internal pair (21032407, amended in 21032409). Please send me the cancel ticket number.
 
-S1. Bono con todas las notas (New, amend y cancel, el mismo día)
-- TransactionType TT (no MT), bono GB0002404191, contraparte MIAL, salesperson ETABOADE.
-- Long Note 1 y 2 vacías. Long Note 3 = Comp, Long Note 4 = Primary Auction, Long Note 7 = Bond Fwd Delivery.
-- Short Note 1 = EUROCLEAR BANK (en el campo Short Note 1, no en Settlement Location), Short Note 3 = 5, Short Note 6 = PNT.
-- MiFID: Waiver = OILQ, ILQD y SIZE (los tres), Transparency = LRGS. Decision maker y execution within firm = n317167, con los dos flags de algo en Y.
-- Amend: cambia el nominal, Long Note 3 = NonComp, Short Note 3 = 3, Short Note 1 = CLEARSTREAM BANKING S.A.
-- Después cancela el ticket enmendado. Mándame los 3 números.
+S1. Bond with every note field (New, amend and cancel, same day)
+- TransactionType TT (not MT), bond GB0002404191, counterparty MIAL, salesperson ETABOADE.
+- Long Note 1 and 2 empty. Long Note 3 = Comp, Long Note 4 = Primary Auction, Long Note 7 = Bond Fwd Delivery.
+- Short Note 1 = EUROCLEAR BANK (in the Short Note 1 field, not in Settlement Location), Short Note 3 = 5, Short Note 6 = PNT.
+- MiFID: Waiver = OILQ, ILQD and SIZE (all three), Transparency = LRGS. Decision maker and execution within firm = n317167, both algo flags = Y.
+- Amend: change the nominal, Long Note 3 = NonComp, Short Note 3 = 3, Short Note 1 = CLEARSTREAM BANKING S.A.
+- Then cancel the amended ticket. Please send me the 3 ticket numbers.
 
-S5. Bono con nota de texto libre (New y cancel, el mismo día)
-- TT, contraparte MIAL, salesperson vacío.
-- Long Note 2 = QA-LN2-20261012. Short Note 6 = Axed. Nada más.
-- Cancélalo sin enmendarlo. Mándame el número del New y del cancel.
+S5. Bond with free-text note (New and cancel, same day)
+- TT, counterparty MIAL, salesperson empty.
+- Long Note 2 = QA-LN2-20261012. Short Note 6 = Axed. Nothing else.
+- Cancel it without amending. Please send me the New and cancel ticket numbers.
 
-S6. Amends y cancel sobre mi Tradeweb
-- Te mando el ID del outright el viernes antes de las 10:00.
-- En TOMS: dos amends y luego un cancel, el mismo día, con EXECUTION_VENUE_TRANSACTION_ID lleno.
-- En el primer amend pon Short Note 3 = 5.
+S6. Amends and cancel on my Tradeweb trade
+- I'll send you the outright ID on Friday before 10:00.
+- In TOMS: two amends and then one cancel, same day, with EXECUTION_VENUE_TRANSACTION_ID filled.
+- In the first amend, set Short Note 3 = 5.
+
+@Fation could you please check that all these trades can be booked as described? Just to make sure Sergio doesn't get stuck on any of them.
