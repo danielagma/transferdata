@@ -1,1 +1,5 @@
-Hi Fation, Sergio says he has no rights to close deals on venue in Bloomberg (S11: on-venue outright with allocation to 2 accounts). Do you know who can close it?
+Hola Iris, buenos días. Soy Daniel Aguilar, QA del equipo de Darwin Bonds. Sergio Gutiérrez me pasó tu contacto.
+
+Estamos probando la integración con STP Hub y, para algunos casos de prueba, necesito trades de Bloomberg y de TOMS en UAT2. ¿Hay alguien de tu equipo que me pueda ayudar a hacerlos?
+
+Gracias.
