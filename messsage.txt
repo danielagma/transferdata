@@ -1,9 +1,1 @@
-Hi Piotr, about what you asked me yesterday, I wanted to give you a bit more context on how QA is covering STP Hub.
-
-So, I went through all the STP Hub stories, around 62. Between them there are about 647 acceptance criteria, and 385 of them are in scope for Release 1.
-
-To cover all of Release 1 I need 28 trades, and with 12 of them I cover around 85%, so that's my plan. Sergio and I produce the trades (TOMS, Bloomberg, Tradeweb, BondVision), and I check every trade in the logs. Fation and Murat validate with their own matrix.
-
-So I guess you don't need to repeat all of this testing, and I think your regression is the right complement to it.
-
-But I have one question: is STP Hub on your radar? Have you tested some of it, or do you plan to? Just to know if anything overlaps.
+Hi Sergio, for DWU-677 (non-live mode), could you do one amend and one cancel in TOMS on my Tradeweb outright 20261015.SAN3.EUGV.N? TOMS is in QA now.
