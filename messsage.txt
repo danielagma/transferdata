@@ -1,1 +1,9 @@
-Event.Type: "MessageSentToSentinel" and "21032464"
+
+Check 1.2 (tickets de Maksim):
+1. Event.Type: "MessageSentToSentinel" and "21032464": repetir después de pulsar Update. Tiene que salir vacío.
+2. Event.Type: "NoRfqTradeProcessedSuccessfully", con rango Today. Tiene que salir vacío.
+
+Check 3 (el .178), los tres que quedaban de antes:
+3. Event.Type: "MessageSentToSentinel" and "TRD_20261015_SAN3_EUGV_178": abre las filas de 08:46:57 y 08:47:01.616.
+4. Event.Type: "StpHubEventPublishingDeferred" and "20261015.SAN3.EUGV.178": abre la segunda fila, la de 08:47:03.301.
+5. Event.Type: "PostTradeMessageDeliveredEventPublished" and "20261015.SAN3.EUGV.178": basta la lista, para ver cuántos hits hay.
