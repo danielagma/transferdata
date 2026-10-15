@@ -27,3 +27,9 @@ S3 (21032404)
 18. Event.Type: "TradeEvent" and "21032404"
 19. Event.Type: "StpHubPayloadDocument" and "21032404"
 20. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032404"
+
+
+
+1. Event.Type: "TradeEvent" and "21032407"
+2. Abre la fila. Ctrl+F: SecondaryTransactionTicketNumber. Apunta el número.
+3. Event.Type: "StpHubEventPublishingSkipped" and "<ese número>"
