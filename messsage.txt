@@ -1,1 +1,15 @@
-Sorry Sergio, I got confused. QA is in non-live mode, so the trade never reaches STP Hub and there's no ACK. Please ignore this one. As soon as Tradeweb is back in UAT2, I'll send you the other outright that's still pending.
+Los marcados con [NV] tienen nombres que salen de las instrucciones de Murat y que todavía no hemos probado en QA.
+
+1. Event.Type: "SentinelReportSuppressed" [NV]
+   Abre las filas de 7:50 a 8:07. Tienen que decir Feature NoRfqTrade y traer TradeId, CaptureType, LifecycleAction y Message con valor. Apunta el TradeId de un New, de un Amend y de un Cancel.
+2. Event.Type: "NoRfqTradeProcessedSuccessfully" [NV]
+   Tiene que salir vacío.
+
+Con un ticket del paso 1 (cambia <ticket> por el número):
+
+3. Event.Type: "ProcessingNoRfqTrade" and "<ticket>" [NV]
+   Tiene que existir, y antes que el SentinelReportSuppressed.
+4. Event.Type: "MessageSentToSentinel" and "<ticket>"
+   Tiene que salir vacío. Es la prueba de que no se le mandó nada a Sentinel.
+
+Si el paso 1 sale vacío, mándame la captura antes de seguir.
