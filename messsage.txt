@@ -4,3 +4,6 @@ Paso 6, con el id real: índice fidw-eu-bonds-uat2*, rango Today.
 2. Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261015.SAN3.EUGV.240"
    Tiene que salir. Es el ACK.
 3. Sólo si el 1 sale vacío: "20261015.SAN3.EUGV.240" and Level: Error
+
+
+Hi Sergio, here is the Tradeweb outright in UAT2: 20261015.SAN3.EUGV.240 (ACK received). Could you do two amends and one cancel in TOMS, today?
