@@ -1,1 +1,6 @@
-Thanks Rodrigo! I ran scenario 1 in UAT2 with 20261015.SAN3.EUGV.242 (TELE, Pre-Alloc Test 1, Allocation Reporting on). The trade went out with Glcs TELE, not 00XIDP. The allocation arrived before the trade: ALLOC at 16:29:31.147 UTC, trade deferred at 16:29:31.370, trade published at 16:31:13.636. So the allocation was not matched to the held trade (DWU-758). Could you check it on your side?
+1. Event.Type: "StpHubEventPublishingDeferred" and "21032413"
+   - Mira si existe y si dice WaitSeconds 100.
+   - Por qué: confirma si el New estuvo retenido.
+2. ContextId: "I39Y1319X10021032413"
+   - Es el ContextId del cancel (captura 04).
+   - Mira qué le pasó al cancel: Skipped, algún error, o nada.
