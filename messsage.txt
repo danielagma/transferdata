@@ -1,22 +1,22 @@
-Logs (UAT2, fidw-eu-bonds-uat2*, Today)
+Logs del .242 (UAT2, fidw-eu-bonds-uat2*, Today)
 
-1. Event.Type: "AllocationReportingTradeReceived" and "<id>"
+1. Event.Type: "AllocationReportingTradeReceived" and "20261015.SAN3.EUGV.242"
 - Qué ves: Counterparty TELE.
-- Por qué: confirma que Darwin vio el flag encendido. Si no sale, el flag no se aplicó y lo demás no vale.
+- Por qué: confirma que Darwin vio el flag encendido. Si no sale, nada de lo demás vale.
 
-2. Event.Type: "StpHubEventPublishingDeferred" and "<id>"
-- Qué ves: WaitSeconds 100.
-- Por qué: es Darwin diciendo "retengo este trade y espero la allocation". Apunta la hora.
+2. Event.Type: "StpHubEventPublishingDeferred" and "20261015.SAN3.EUGV.242"
+- Qué ves: WaitSeconds 100. Apunta la hora.
+- Por qué: es Darwin diciendo "retengo el trade y espero la allocation".
 
-3. Event.Type: "StpHubPayloadDocument" and "<id>" and Event.PayloadType: "StpHubPostTradeAllocationEvent"
-- Qué ves: la allocation, con el fondo Test 1. Apunta la hora.
-- Por qué: la allocation es la que dispara el cambio. Su hora tiene que ser después de la del paso 2. Si llegó antes, es el bug DWU-758: Darwin la olvida y el trade sale con TELE. En ese caso no es fallo de DWU-550.
+3. Event.Type: "StpHubPayloadDocument" and "20261015.SAN3.EUGV.242" and Event.PayloadType: "StpHubPostTradeAllocationEvent"
+- Qué ves: la allocation con Test 1. Apunta la hora.
+- Por qué: la allocation dispara el cambio. Tiene que llegar después del paso 2. Si llegó antes, es el bug DWU-758 (Darwin la olvida) y no un fallo de DWU-550.
 
-4. Event.Type: "StpHubPayloadDocument" and "<id>" and Event.PayloadType: "StpHubPostTradeEvent"
+4. Event.Type: "StpHubPayloadDocument" and "20261015.SAN3.EUGV.242" and Event.PayloadType: "StpHubPostTradeEvent"
 - Qué ves: en el JSON, Counterparty.Glcs.
-- Por qué: es la prueba. Si dice 00XIDP, la tabla funcionó y el escenario pasa. Si dice TELE, puede ser que el mapa no esté cargado en UAT2, que es lo que no sabemos. Entonces se lo preguntamos a Rodrigo con la captura.
+- Por qué: es la prueba.
+  - 00XIDP: la tabla funcionó y pasa.
+  - TELE: o el mapa no está cargado en UAT2, o pasó lo del paso 3. Con las horas lo sabremos.
 
-5. Event.Type: "StpHubPayloadAcknowledgedPublished" and "<id>"
-- Por qué: confirma que STP Hub aceptó el trade con la contraparte nueva.
-
-Haz una captura de cada paso con el JSON abierto. No apagues el flag: luego viene el escenario 2 con Test 3.
+5. Event.Type: "StpHubPayloadAcknowledgedPublished" and "20261015.SAN3.EUGV.242"
+- Por qué: confirma que STP Hub aceptó el trade así.
