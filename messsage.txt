@@ -1,17 +1,5 @@
-QA Update: requirement 5 PASSED ✅, all requirements PASSED
+Hola Sergio, para el escenario 12 del plan hice el outright de Tradeweb 20261013.SAN3.EUGV.15 en UAT2, para los dos amends y el cancel.
 
-- Environment: UAT2
-- Trades under test: BondVision outright MtsEUGVBondVision$21000154_20261014 (GB0002404191, TELE); Tradeweb outright 20261014.SAN3.EUGV.107
+Aparte, estamos probando el ticket DWU-677 en QA. Para eso hice el outright 20261014.SAN3.EUGV.108 en QA y necesito también un amend y un cancel. Para este, TOMS tiene que apuntar a QA.
 
----
-Requirement 5. BondVision trade - PASSED ✅
-
-The TRADE is sent at 16:08:26.879 UTC and acknowledged at 16:08:27.158 UTC with SourceName Mts_EUGVBondVision, SourceOriginalName Mts_EUGVBondVision and MarketCode MTS_BONDVISION.
-
-Evidence: 01-bv-trade-payloadsent.png, 02-bv-trade-ack.png, 03-bv-trade-document-sourcename.png
-
-Note. SourceName
-
-SourceName now equals SourceOriginalName for RFQ trades. The Tradeweb trade .107 shows the same: SourceName Tradeweb_EUGV, SourceOriginalName Tradeweb_EUGV. On 12 Oct requirement 2 passed with SourceName Tradeweb, as the ticket says. This follows the final requirement given in the STP Hub Validation chat on 8 Oct (7:12): SourceName = SourceOriginalName.
-
-Evidence: 04-107-trade-document-sourcename.png
+¿Puedes ver si los dos tienen ticket en TOMS?
