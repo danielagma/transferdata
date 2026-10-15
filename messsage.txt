@@ -1,22 +1,17 @@
-QA Execution: REPRODUCED (UAT2, 14 Oct)
+QA Update: requirement 5 PASSED ✅, all requirements PASSED
 
-Setup: Allocation Reporting on for TELE / GILTS. Tradeweb outright 20261014.SAN3.EUGV.107, GB0002404191, Pre-Alloc Test 1 80000 / Test 2 20000.
+- Environment: UAT2
+- Trades under test: BondVision outright MtsEUGVBondVision$21000154_20261014 (GB0002404191, TELE); Tradeweb outright 20261014.SAN3.EUGV.107
 
-What happened, in this order (UTC):
-15:48:58.971 PendingStpHubTradeSnapshotNotFound, from TradeAllocationReceivedEvent. The allocation arrived before the trade.
-15:48:59.021 ALLOC StpHubPayloadSent, MessageId TradewebEUGV$20261014.SAN3.EUGV.107:allocation:457, Test 1 80000 and Test 2 20000. The allocation was sent alone.
-15:48:59.107 AllocationReportingTradeReceived, counterparty TELE.
-15:48:59.165 PendingStpHubTradeSnapshotNotFound again, same ContextId as AllocationReportingTradeReceived.
-15:48:59.220 StpHubEventPublishingDeferred, WaitSeconds 100, PublicationMode Standard.
-15:50:40.938 TRADE StpHubPayloadSent (DWBZouQWp0qk9Q), acknowledged at 15:50:41.207. This is 101.7 s after the Deferred.
+---
+Requirement 5. BondVision trade - PASSED ✅
 
-Evidence: 1 static TELE / GILTS on, 2 PendingStpHubTradeSnapshotNotFound 15:48:58.971, 3 .107 ALLOC StpHubPayloadSent, 4 .107 ALLOC payload Test 1 / Test 2, 5 AllocationReportingTradeReceived, 6 PendingStpHubTradeSnapshotNotFound 15:48:59.165, 7 StpHubEventPublishingDeferred, 8 .107 TRADE StpHubPayloadSent, 9 .107 TRADE ACK.
+The TRADE is sent at 16:08:26.879 UTC and acknowledged at 16:08:27.158 UTC with SourceName Mts_EUGVBondVision, SourceOriginalName Mts_EUGVBondVision and MarketCode MTS_BONDVISION.
 
-Actual: the allocation was not kept. The trade was held and released alone after the wait period.
-Expected: the allocation is kept and matched when the trade arrives, and the trade is published with the allocation.
+Evidence: 01-bv-trade-payloadsent.png, 02-bv-trade-ack.png, 03-bv-trade-document-sourcename.png
 
-Control: 20261014.SAN3.EUGV.106 with Allocation Reporting off. No StpHubEventPublishingDeferred. TRADE StpHubPayloadSent at 15:45:26.771.
+Note. SourceName
 
-Evidence: 10 static TELE / GILTS off, 11 .106 Deferred search with no results, 12 .106 TRADE StpHubPayloadSent, 13 static list TELE / GILTS off after the test.
+SourceName now equals SourceOriginalName for RFQ trades. The Tradeweb trade .107 shows the same: SourceName Tradeweb_EUGV, SourceOriginalName Tradeweb_EUGV. On 12 Oct requirement 2 passed with SourceName Tradeweb, as the ticket says. This follows the final requirement given in the STP Hub Validation chat on 8 Oct (7:12): SourceName = SourceOriginalName.
 
-@Murat Guney, does the UAT2 build used today include the fix you mentioned on 12 Oct?
+Evidence: 04-107-trade-document-sourcename.png
