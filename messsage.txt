@@ -1,40 +1,36 @@
-Aquí van todos, en orden. Una captura por documento abierto. Las capturas las reviso al final, todas juntas.
+Hola Sergio, gracias por los trades de ayer. Para el viernes me quedan pendientes estos:
 
-S5 (21032413), lo que falta
-1. Event.Type: "StpHubEventPublishingDeferred" and "21032413"
-2. ContextId: "I39Y1319X10021032413"
-3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032413"
+Continuación de lo de ayer:
+- S3: amend y cancel del 21032404.
+- S2: cancel del par interno (21032407, enmendado en 21032409).
 
-S4 (21032416 y 21032418), futuro interno
-4. Event.Type: "TradeEvent" and "21032416": apunta SecondaryTransactionTicketNumber (el mirror).
-5. Event.Type: "StpHubPayloadDocument" and "21032416"
-6. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032416"
-7. Event.Type: "TradeEvent" and "21032418": abre cada fila.
-8. Event.Type: "StpHubPayloadDocument" and "21032418": abre cada fila.
-9. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032418"
-Event.Type: "StpHubEventPublishingSkipped" and "21032417"
+Para repetir:
+- S1: el bono con todas las notas (21032402 / 21032403 llegó sin notas).
+- S5: el bono con nota de texto libre (21032413 llegó con otras notas).
 
-S2 (21032407 y 21032409), par interno
-11. Event.Type: "TradeEvent" and "21032407": apunta SecondaryTransactionTicketNumber.
-12. Event.Type: "StpHubPayloadDocument" and "21032407"
-13. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032407"
-14. Event.Type: "TradeEvent" and "21032409"
-15. Event.Type: "StpHubPayloadDocument" and "21032409"
-16. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032409"
-17. Event.Type: "StpHubEventPublishingSkipped" and "<mirror del paso 11>"
+Nuevo:
+- S6: dos amends y un cancel sobre un Tradeweb mío. Te mando el ID el viernes antes de las 10:00.
 
-S3 (21032404)
-18. Event.Type: "TradeEvent" and "21032404"
-19. Event.Type: "StpHubPayloadDocument" and "21032404"
-20. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032404"
+Te dejo los detalles a continuación.
 
+S3 y S2
+- S3: amend y luego cancel del 21032404.
+- S2: cancel del par interno (21032407, enmendado en 21032409). Mándame el número del cancel.
 
+S1. Bono con todas las notas (New, amend y cancel, el mismo día)
+- TransactionType TT (no MT), bono GB0002404191, contraparte MIAL, salesperson ETABOADE.
+- Long Note 1 y 2 vacías. Long Note 3 = Comp, Long Note 4 = Primary Auction, Long Note 7 = Bond Fwd Delivery.
+- Short Note 1 = EUROCLEAR BANK (en el campo Short Note 1, no en Settlement Location), Short Note 3 = 5, Short Note 6 = PNT.
+- MiFID: Waiver = OILQ, ILQD y SIZE (los tres), Transparency = LRGS. Decision maker y execution within firm = n317167, con los dos flags de algo en Y.
+- Amend: cambia el nominal, Long Note 3 = NonComp, Short Note 3 = 3, Short Note 1 = CLEARSTREAM BANKING S.A.
+- Después cancela el ticket enmendado. Mándame los 3 números.
 
-1. Event.Type: "TradeEvent" and "21032407"
-2. Abre la fila. Ctrl+F: SecondaryTransactionTicketNumber. Apunta el número.
-3. Event.Type: "StpHubEventPublishingSkipped" and "<ese número>"
+S5. Bono con nota de texto libre (New y cancel, el mismo día)
+- TT, contraparte MIAL, salesperson vacío.
+- Long Note 2 = QA-LN2-20261012. Short Note 6 = Axed. Nada más.
+- Cancélalo sin enmendarlo. Mándame el número del New y del cancel.
 
-
-
-1. Event.Type: "StpHubEventPublishingSkipped" and "21032408"
-2. Event.Type: "StpHubEventPublishingSkipped" and "21032412"
+S6. Amends y cancel sobre mi Tradeweb
+- Te mando el ID del outright el viernes antes de las 10:00.
+- En TOMS: dos amends y luego un cancel, el mismo día, con EXECUTION_VENUE_TRANSACTION_ID lleno.
+- En el primer amend pon Short Note 3 = 5.
