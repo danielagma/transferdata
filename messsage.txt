@@ -1,6 +1,61 @@
-  - DWU-417 (story)
-  - DWU-549 (story)
-  - DWU-550 (story)
-  - DWU-730 (task)
-  - DWU-731 (bug)
-  - DWU-732 (bug)
+S3 · 21032631: amend y cancel del 21032404, que se bookeó ayer
+Cierra: DWU-706, que el amend y el cancel de un ticket de otro día se publiquen en segundos y no 30 minutos después.
+
+1. Event.Type: "TradeEvent" and "21032631"
+   Deben salir 2 filas, Amend y cancel. Apunta la hora de cada una y su ContextId. Mira también TransactionNumberOfOriginTrans 21032404.
+2. Event.Type: "StpHubPayloadDocument" and "21032631"
+   EventType Amend y Cancel. La hora de cada uno tiene que ser pocos segundos después de su TradeEvent. Mira que PreviousTradeId sea 21032404.
+3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032631"
+   Deben salir 2 ACK.
+4. ContextId: "<ContextId del cancel, paso 1>"
+   Busca con Ctrl+F VenueTradeCollectionCacheUpdateFailed, VenueTradeCollectionCacheEntryRemoved e InsertVenueTradeEventsFailed. Cierran DWU-706 AC 2 y AC 4. Si no sale ninguno, apúntalo.
+
+S2 · 21032409: cancel del par interno
+Cierra: DWU-730 escenario 3, DWU-584 AC 6 y DWU-706.
+
+5. Event.Type: "TradeEvent" and "21032409"
+   La fila del cancel (con Today sólo sale la de hoy). Apunta la hora, el ContextId y SecondaryTransactionTicketNumber, que es el ticket del mirror del cancel.
+6. Event.Type: "StpHubPayloadDocument" and "21032409"
+   EventType Cancel, InternalTradeType Main e IsInternalTrade true. La hora tiene que ser pocos segundos después del paso 5.
+7. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032409"
+8. Event.Type: "StpHubEventPublishingSkipped" and "<mirror del paso 5>"
+   Reason "The trade is an internal mirror", IsInternalMirror true.
+9. ContextId: "<ContextId del paso 5>"
+   Los mismos 3 eventos de caché del paso 4.
+
+S1 rehecho · 21032637 (New) y 21032640 (amend y cancel)
+Cierra: DWU-417 (Qualifier, ForwardIsStandard true), DWU-613 cambio 3 (PNT → Voice), DWU-650 AC 1, 3 y 5, DWU-418 (MktIdType) y DWU-584 AC 9.
+
+10. Event.Type: "TradeEvent" and "21032637"
+    Primero comprueba que trae las notas. Si no las trae, para: como el S1 de ayer, no sirve.
+    - Short Notes: 1 EUROCLEAR BANK, 3 5, 6 PNT.
+    - Long Notes: 3 Comp, 4 Primary Auction, 7 Bond Fwd Delivery.
+    - Counterparty MIAL, TransactionType TT y, fuera del XML, InboundGateway.
+11. Event.Type: "StpHubPayloadDocument" and "21032637"
+    - SettlementLocation "EUROCLEAR BANK", TradeSrc "Voice", Qualifier "Primary Auction" y ForwardIsStandard true.
+    - ExecutionMktIdType e InvestmentMktIdType: esperado ALGO.
+    - Glcs MIAL con IsInternalTrade false.
+    - SourceName y MarketCode BBG_TOMS.
+12. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032637"
+13. Event.Type: "TradeEvent" and "21032640"
+    Deben salir 2 filas, Amend y cancel. En el Amend: Short Note 1 CLEARSTREAM BANKING S.A., Long Note 3 NonComp, Short Note 3 3.
+14. Event.Type: "StpHubPayloadDocument" and "21032640"
+    - Amend: SettlementLocation "CLEARSTREAM BANKING S.A.", igual letra por letra.
+    - Cancel: SettlementLocation, que debe ser lo que traiga la Short Note 1 del cancel.
+15. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032640"
+    Deben salir 2 ACK.
+
+S5 rehecho · 21032642 (New y cancel)
+Cierra: DWU-417 (SourceId = Long Note 2). DWU-418 (InternalTradeId e IsAxed): apunta lo que salga, porque son preguntas abiertas a Fation.
+
+16. Event.Type: "TradeEvent" and "21032642"
+    Long Note 2 QA-LN2-20261012, Short Note 6 Axed. Deben salir 2 filas, New y cancel.
+17. Event.Type: "StpHubPayloadDocument" and "21032642"
+    - SourceId: esperado QA-LN2-20261012.
+    - InternalTradeId e IsAxed: apunta lo que salga.
+    - Lee EventType en cada fila.
+18. ACK: copia el MessageId de cada payload y búscalo entre comillas, "<MessageId>". Por el ticket puede no salir, porque el SourceId es el texto de la Long Note 2.
+
+---
+
+Si el paso de payload de cualquier ticket sale vacío: ContextId: "<ContextId de su TradeEvent>". Ahí salen los errores.
