@@ -10,6 +10,15 @@ Cierra: DWU-706, que el amend y el cancel de un ticket de otro día se publiquen
 4. ContextId: "<ContextId del cancel, paso 1>"
    Busca con Ctrl+F VenueTradeCollectionCacheUpdateFailed, VenueTradeCollectionCacheEntryRemoved e InsertVenueTradeEventsFailed. Cierran DWU-706 AC 2 y AC 4. Si no sale ninguno, apúntalo.
 
+1. ContextId: "C39Y1319X10021032631"
+   Es la búsqueda que ya hiciste. Abre dos filas:
+   - Warning TomsTradeEventCollectionDbInsertFailed (02:32:20.484): mira Level, TradeId, Message, y si hay Exception o StackTrace.
+   - El último Warning TomsTradeEventCollectionCacheFindFailed (02:32:23.063): mira Reason o Message, y si dice el número de intento.
+2. ContextId: "I39Y1319110021032631"
+   Es el amend. Captura la lista y abre lo mismo si sale.
+3. Event.Type: "VenueTradeCollectionCacheUpdateFailed"
+   Sin ticket, con rango Today. Dice si ese log existe hoy en UAT2. Si sale vacío, repítelo con Event.Type: "VenueTradeCollectionCacheEntryRemoved" y Event.Type: "InsertVenueTradeEventsFailed".
+
 S2 · 21032409: cancel del par interno
 Cierra: DWU-730 escenario 3, DWU-584 AC 6 y DWU-706.
 
