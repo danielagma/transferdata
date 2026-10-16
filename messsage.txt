@@ -1,22 +1,10 @@
-1. Event.Type: "TradeEvent" and "21032409"
-   - Debe salir 1 fila: el cancel del main.
-   - Mira: LifecycleAction (cancel), SecondHalfTdr2TdrTrade N y SecondaryTransactionTicketNumber, que es el ticket del mirror del cancel.
-   - Por qué: es la entrada del cancel del main y dice cuál es su mirror.
-   - Captura: 1 (las dos partes si no cabe).
-2. Event.Type: "TradeEvent" and "21032412"
-   - Debe salir 1 fila: el cancel del mirror.
-   - Mira: SecondHalfTdr2TdrTrade Y.
-   - Si en el paso 1 el SecondaryTransactionTicketNumber no era 21032412, usa ese número aquí y en los pasos 3 y 4.
-   - Por qué: el escenario 3 pide confirmar SecondHalfTdr2TdrTrade=Y en el cancel del mirror.
-   - Captura: 1.
-3. Event.Type: "StpHubPayloadDocument" and "21032412"
-   - Esperado: No Results.
-   - Por qué: prueba que el mirror no se publicó.
-   - Captura: 1.
-4. Event.Type: "StpHubEventPublishingSkipped" and "21032412"
-   - Mira: Reason "The trade is an internal mirror" e IsInternalMirror true.
-   - Por qué: dice por qué no se publicó.
-   - Captura: 1.
+El único pendiente de S2, con rango Today:
+
+Event.Type: "StpHubEventPublishingSkipped" and "21032408"
+- Debe salir la fila de hoy, hacia 08:33:57 UTC (02:33:57 en pantalla). Si el rango incluye ayer, también salen las de New y Amend; abre la de hoy.
+- Mira: TradeId BloombergToms$21032408, Reason "The trade is an internal mirror", IsInternalMirror true.
+- Por qué: es el log que dice por qué no se publicó el cancel del mirror. Con él se cierra DWU-730 escenario 3.
+- Captura: 1.
 
 S1 rehecho · 21032637 (New) y 21032640 (amend y cancel)
 Cierra: DWU-417 (Qualifier, ForwardIsStandard true), DWU-613 cambio 3 (PNT → Voice), DWU-650 AC 1, 3 y 5, DWU-418 (MktIdType) y DWU-584 AC 9.
