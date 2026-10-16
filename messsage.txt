@@ -1,38 +1,6 @@
-@Sergio thanks for yesterday's trades. For Friday, these are still pending:
-
-Follow-up of yesterday:
-- S3: amend and cancel of 21032404.
-- S2: cancel of the internal pair (21032407, amended in 21032409).
-
-To redo:
-- S1: bond with every note field (21032402 / 21032403 arrived without the notes).
-- S5: bond with free-text note (21032413 arrived with different notes).
-
-New:
-- S6: two amends and one cancel on my Tradeweb trade. I'll send you the ID on Friday before 10:00.
-
-Details below.
-
-S3 and S2
-- S3: amend, then cancel, of 21032404.
-- S2: cancel of the internal pair (21032407, amended in 21032409). Please send me the cancel ticket number.
-
-S1. Bond with every note field (New, amend and cancel, same day)
-- TransactionType TT (not MT), bond GB0002404191, counterparty MIAL, salesperson ETABOADE.
-- Long Note 1 and 2 empty. Long Note 3 = Comp, Long Note 4 = Primary Auction, Long Note 7 = Bond Fwd Delivery.
-- Short Note 1 = EUROCLEAR BANK (in the Short Note 1 field, not in Settlement Location), Short Note 3 = 5, Short Note 6 = PNT.
-- MiFID: Waiver = OILQ, ILQD and SIZE (all three), Transparency = LRGS. Decision maker and execution within firm = n317167, both algo flags = Y.
-- Amend: change the nominal, Long Note 3 = NonComp, Short Note 3 = 3, Short Note 1 = CLEARSTREAM BANKING S.A.
-- Then cancel the amended ticket. Please send me the 3 ticket numbers.
-
-S5. Bond with free-text note (New and cancel, same day)
-- TT, counterparty MIAL, salesperson empty.
-- Long Note 2 = QA-LN2-20261012. Short Note 6 = Axed. Nothing else.
-- Cancel it without amending. Please send me the New and cancel ticket numbers.
-
-S6. Amends and cancel on my Tradeweb trade
-- I'll send you the outright ID on Friday before 10:00.
-- In TOMS: two amends and then one cancel, same day, with EXECUTION_VENUE_TRANSACTION_ID filled.
-- In the first amend, set Short Note 3 = 5.
-
-@Fation could you please check that all these trades can be booked as described? Just to make sure Sergio doesn't get stuck on any of them.
+  - DWU-417 (story)
+  - DWU-549 (story)
+  - DWU-550 (story)
+  - DWU-730 (task)
+  - DWU-731 (bug)
+  - DWU-732 (bug)
