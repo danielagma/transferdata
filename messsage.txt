@@ -1,41 +1,30 @@
-New · 21032637
+Todo lo que falta buscar, con rango Today:
 
-1. Event.Type: "TradeEvent" and "21032637"
-   - Debe salir 1 fila: LifecycleAction New, TransactionType TT.
-   - Primero comprueba que trae las notas. Si no las trae, para y avísame: como el S1 de ayer, no serviría.
-   - En el XML (Ctrl+F ShortNote y LongNote):
-     - Short Note 1 EUROCLEAR BANK, Short Note 3 5, Short Note 6 PNT.
-     - Long Note 3 Comp, Long Note 4 Primary Auction, Long Note 7 Bond Fwd Delivery. Long Note 1 y 2 vacías.
-     - TX671 y TX672 = n317167. TX692 y TX693 (flags de algo) = Y.
-     - CustomerAccountCounterparty: debe ser MIAL.
-   - Fuera del XML: InboundGateway, que debería ser TOMS TransFicc. Copia también el ContextId.
-   - Por qué: es la entrada. El payload sólo puede copiar lo que venga aquí.
-2. Event.Type: "StpHubPayloadDocument" and "21032637"
-   - En Document, por historia:
-     - DWU-650 AC 1: SettlementLocation = EUROCLEAR BANK.
-     - DWU-417: Qualifier = Primary Auction, ForwardIsStandard = true, CompNonComp = Comp, DealersInCompetition = 5.
-     - DWU-613 cambio 3: TradeSrc = Voice.
-     - DWU-417 AC 9/10: SourceName y MarketCode = BBG_TOMS, frente al InboundGateway del paso 1.
-     - DWU-418: ExecutionMktId e InvestmentMktId = n317167, y ExecutionMktIdType e InvestmentMktIdType, esperado ALGO. Apunta lo que 
-     - DWU-418: ExecutionMktId e InvestmentMktId = n317167, y ExecutionMktIdType e InvestmentMktIdType, esperado ALGO. Apunta lo que salga, porque es pregunta abierta a Fation.
-     - DWU-584 AC 9: Glcs MIAL con IsInternalTrade false.
-3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032637"
-   - Mismo MessageId que en el paso 2.
-   - Por qué: STP Hub lo aceptó.
+S1, para documentar la pérdida
+1. Event.Type: "StpHubEventPublishingDeferred" and "21032637"
+   - Abre la primera fila. Mira WaitSeconds (esperado 100) y la hora (~08:36:04 UTC).
+   - Por qué: prueba que el New se retuvo. Con este comando ayer salió el Deferred de 21032413.
+2. ContextId: "B39Y1319100021032640"
+   - Captura la lista. Si hay filas Warning o Error, abre la primera.
+   - Por qué: es el amend. Dice qué hizo Darwin con él.
+3. ContextId: "E39Y1319X00021032640"
+   - Captura la lista. Si hay filas Warning o Error, abre la primera.
+   - Por qué: lo mismo para el cancel.
 
-Amend y cancel · 21032640
+S5 · 21032642 (New y cancel). Pedimos Long Note 2 QA-LN2-20261012 y Short Note 6 Axed.
 
-4. Event.Type: "TradeEvent" and "21032640"
-   - Deben salir 2 filas: Amend y ReverseAndCancel. Abre las dos.
-   - En el Amend: Short Note 1 CLEARSTREAM BANKING S.A., Long Note 3 NonComp, Short Note 3 3 y TransactionNumberOfOriginTrans 21032637.
-   - En el cancel: Short Note 1, para apuntar qué texto trae.
-   - Si sale una tercera fila con CancelDueToCorrection true (ReversalBeforeAmend), ignórala: no se publica.
-   - Por qué: es la entrada del amend y del cancel.
-5. Event.Type: "StpHubPayloadDocument" and "21032640"
-   - Deben salir 2 filas. Lee EventType en cada una.
-   - Amend (DWU-650 AC 3): SettlementLocation = CLEARSTREAM BANKING S.A., igual letra por letra. También CompNonComp NonComp, DealersInCompetition 3 y PreviousTradeId 21032637.
-   - Cancel (DWU-650 AC 5): SettlementLocation = el Short Note 1 que trae el cancel en el paso 4.
-6. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032640"
-   - Deben salir 2 ACK, uno por cada payload.
-
-Si un payload sale vacío: ContextId: "<ContextId de su TradeEvent>" y captura la lista. Ahí salen los errores.
+4. Event.Type: "TradeEvent" and "21032642"
+   - Deben salir 2 filas, New y Reversal. Abre las dos.
+   - En el XML: Long Note 2, Short Note 6, TransactionType y CustomerAccountCounterparty.
+   - Fuera del XML: TradeId, SourceTradeId y ContextId.
+   - Por qué: es la entrada. Si no trae la Long Note 2, no sirve para DWU-417.
+5. Event.Type: "StpHubPayloadDocument" and "21032642"
+   - Mira:
+     - SourceId: esperado el texto de la Long Note 2 (DWU-417).
+     - InternalTradeId e IsAxed: apunta lo que salga (DWU-418, preguntas abiertas a Fation).
+     - EventType, TradeNo y TomsTicketId.
+   - Si sale No Results: busca "QA-LN2-20261012" entre comillas, sin Event.Type. Con la Long Note 2 el SourceId cambia y puede que el ticket no esté en el documento.
+6. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032642"
+   - Si sale No Results: copia el MessageId del paso 5 y búscalo entre comillas.
+7. Event.Type: "StpHubEventPublishingDeferred" and "21032642"
+   - Por qué: S5 se bookeó con el flag todavía en Yes. Si el cancel no tiene payload, esto lo explica.
