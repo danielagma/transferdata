@@ -1,23 +1,29 @@
-S3 · 21032631: amend y cancel del 21032404, que se bookeó ayer
-Cierra: DWU-706, que el amend y el cancel de un ticket de otro día se publiquen en segundos y no 30 minutos después.
+Esto es lo que falta de S3. Rango Today. Cada paso lleva su porqué.
 
-1. Event.Type: "TradeEvent" and "21032631"
-   Deben salir 2 filas, Amend y cancel. Apunta la hora de cada una y su ContextId. Mira también TransactionNumberOfOriginTrans 21032404.
-2. Event.Type: "StpHubPayloadDocument" and "21032631"
-   EventType Amend y Cancel. La hora de cada uno tiene que ser pocos segundos después de su TradeEvent. Mira que PreviousTradeId sea 21032404.
-3. Event.Type: "StpHubPayloadAcknowledgedPublished" and "21032631"
-   Deben salir 2 ACK.
-4. ContextId: "<ContextId del cancel, paso 1>"
-   Busca con Ctrl+F VenueTradeCollectionCacheUpdateFailed, VenueTradeCollectionCacheEntryRemoved e InsertVenueTradeEventsFailed. Cierran DWU-706 AC 2 y AC 4. Si no sale ninguno, apúntalo.
-
-1. ContextId: "C39Y1319X10021032631"
-   Es la búsqueda que ya hiciste. Abre dos filas:
-   - Warning TomsTradeEventCollectionDbInsertFailed (02:32:20.484): mira Level, TradeId, Message, y si hay Exception o StackTrace.
-   - El último Warning TomsTradeEventCollectionCacheFindFailed (02:32:23.063): mira Reason o Message, y si dice el número de intento.
-2. ContextId: "I39Y1319110021032631"
-   Es el amend. Captura la lista y abre lo mismo si sale.
-3. Event.Type: "VenueTradeCollectionCacheUpdateFailed"
-   Sin ticket, con rango Today. Dice si ese log existe hoy en UAT2. Si sale vacío, repítelo con Event.Type: "VenueTradeCollectionCacheEntryRemoved" y Event.Type: "InsertVenueTradeEventsFailed".
+1. ContextId: "C39Y1319X10021032631" and Event.Type: "TomsTradeEventCollectionDbInsertFailed"
+   - Abre la fila y captura. Mira Level, TradeId, Message y si hay Exception o StackTrace.
+   - Por qué: DWU-706 AC 4 pide que este error se loguee en Info, sin stack trace y con TradeId. En la lista sale en Warning.
+2. ContextId: "C39Y1319X10021032631" and Event.Type: "TomsTradeEventCollectionCacheFindFailed"
+   - Abre la fila de arriba, la de 02:32:23.063, y captura. Mira Message o Reason.
+   - Por qué: DWU-706 AC 2 sólo aplica si el reintento se rinde. Esta fila dice si se rindió o si encontró el dato.
+3. ContextId: "I39Y1319110021032631"
+   - Captura la lista.
+   - Por qué: es el amend. El AC 2 y el AC 4 aplican también al amend. Si en la lista salen DbInsertFailed o CacheFindFailed, sigue con los pasos 4 y 5. Si no salen, ve al 6.
+4. ContextId: "I39Y1319110021032631" and Event.Type: "TomsTradeEventCollectionDbInsertFailed"
+   - Abre la fila y captura. Mira lo mismo que en el paso 1.
+   - Por qué: es el AC 4 en el amend.
+5. ContextId: "I39Y1319110021032631" and Event.Type: "TomsTradeEventCollectionCacheFindFailed"
+   - Abre la fila de arriba y captura. Mira lo mismo que en el paso 2.
+   - Por qué: es el AC 2 en el amend.
+6. Event.Type: "VenueTradeCollectionCacheUpdateFailed"
+   - Si sale algo: abre la primera fila y captura. Si sale vacío: captura el "No results" y sigue al 7.
+   - Por qué: es el nombre exacto que pide el AC 2. Hay que saber si ese log existe hoy en UAT2.
+7. Event.Type: "VenueTradeCollectionCacheEntryRemoved"
+   - Si sale algo: abre la primera fila y captura. Si sale vacío: captura el "No results" y sigue al 8.
+   - Por qué: es el segundo log del AC 2.
+8. Event.Type: "InsertVenueTradeEventsFailed"
+   - Si sale algo: abre la primera fila y captura, y mira que Level sea Information. Si sale vacío: captura el "No results".
+   - Por qué: es el nombre exacto que pide el AC 4. Si no existe y en su lugar sale TomsTradeEventCollectionDbInsertFailed, el nombre cambió o UAT2 tiene otra versión, y eso es una pregunta para Fation.
 
 S2 · 21032409: cancel del par interno
 Cierra: DWU-730 escenario 3, DWU-584 AC 6 y DWU-706.
